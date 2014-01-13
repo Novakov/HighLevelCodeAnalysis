@@ -16,9 +16,11 @@ namespace CodeModel.Graphs
             this.links = new HashSet<Link>();
         }
 
-        public void AddNode(Node node)
+        public Node AddNode(Node node)
         {
             this.nodes.Add(node);
+
+            return node;
         }
 
         public void AddLink(Node source, Node target, Link link)

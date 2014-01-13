@@ -41,13 +41,20 @@
   <ItemGroup>
     <Compile Include="Builder\CodeModelBuilder.cs" />
     <Compile Include="Builder\IGraphMutator.cs" />
+    <Compile Include="Builder\IMutateContext.cs" />
     <Compile Include="Builder\IMutator.cs" />
+    <Compile Include="Builder\INodeMutator.cs" />
+    <Compile Include="Builder\MutateContext.cs" />
+    <Compile Include="EnumerableExtensions.cs" />
     <Compile Include="Graphs\Graph.cs" />
     <Compile Include="Graphs\Link.cs" />
     <Compile Include="Graphs\Node.cs" />
     <Compile Include="Model\AssemblyNode.cs" />
+    <Compile Include="Model\TypeNode.cs" />
     <Compile Include="Mutators\AddAssemblies.cs" />
+    <Compile Include="Mutators\AddTypes.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ReflectionExtensions.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
