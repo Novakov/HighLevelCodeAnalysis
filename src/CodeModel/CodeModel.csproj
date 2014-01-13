@@ -45,19 +45,27 @@
     <Compile Include="Builder\IMutator.cs" />
     <Compile Include="Builder\INodeMutator.cs" />
     <Compile Include="Builder\MutateContext.cs" />
+    <Compile Include="Convetions\IConvention.cs" />
+    <Compile Include="Convetions\IEntityConvention.cs" />
     <Compile Include="EnumerableExtensions.cs" />
     <Compile Include="Graphs\Graph.cs" />
     <Compile Include="Graphs\Link.cs" />
     <Compile Include="Graphs\Node.cs" />
+    <Compile Include="ModelExtensions.cs" />
     <Compile Include="Model\AssemblyNode.cs" />
+    <Compile Include="Model\EntityNode.cs" />
     <Compile Include="Model\TypeNode.cs" />
     <Compile Include="Mutators\AddAssemblies.cs" />
     <Compile Include="Mutators\AddTypes.cs" />
+    <Compile Include="Mutators\DetectEntities.cs" />
     <Compile Include="Mutators\RemoveNode.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ReflectionExtensions.cs" />
+    <Compile Include="TinyIoC.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

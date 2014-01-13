@@ -1,4 +1,5 @@
 ﻿using CodeModel.Graphs;
+using CodeModel.Model;
 
 namespace CodeModel.Builder
 {
@@ -8,5 +9,7 @@ namespace CodeModel.Builder
             where TNode : Node;
 
         void RemoveNode(Node node);
+
+        void ReplaceNode(Node oldNode, Node newNode);
     }
 }

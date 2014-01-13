@@ -4,12 +4,14 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using CodeModel;
 using CodeModel.Builder;
 using CodeModel.Graphs;
 using CodeModel.Model;
 using CodeModel.Mutators;
 using NUnit.Framework;
 using TestTarget;
+using TestTarget.EventSourcing;
 
 namespace Tests.BuilderTests
 {
@@ -25,7 +27,7 @@ namespace Tests.BuilderTests
             var builder = new CodeModelBuilder();
 
             // act
-            builder.RunMutators(new AddAssemblies(TargetAssembly));
+            builder.RunMutator(new AddAssemblies(TargetAssembly));
 
             // assert
             Assert.That(builder.Model.Nodes, Has
@@ -41,7 +43,8 @@ namespace Tests.BuilderTests
             var builder = new CodeModelBuilder();
 
             // act
-            builder.RunMutators(new AddAssemblies(TargetAssembly), new AddTypes());
+            builder.RunMutator(new AddAssemblies(TargetAssembly));
+            builder.RunMutator(new AddTypes());
 
             // assert
             Assert.That(builder.Model.Nodes, Has.Some.InstanceOf<TypeNode>());
@@ -52,13 +55,33 @@ namespace Tests.BuilderTests
         {
             // arrange
             var builder = new CodeModelBuilder();
-            builder.RunMutators(new AddAssemblies(TargetAssembly), new AddTypes());
+            builder.RunMutator(new AddAssemblies(TargetAssembly));
+            builder.RunMutator(new AddTypes());
 
             // act
-            builder.RunMutators(new RemoveNode<TypeNode>(x => x.Type.Name == "ToBeRemovedFromGraph"));
+            builder.RunMutator(new RemoveNode<TypeNode>(x => x.Type.Name == "ToBeRemovedFromGraph"));
 
             // assert
             Assert.That(builder.Model.Nodes, Has.None.Matches<object>(n => n is TypeNode && ((TypeNode)n).Type.Name == "ToBeRemovedFromGraph"));
+        }
+
+        [Test]
+        public void ShouldRecognizeEntity()
+        {
+            // arrange
+            var builder = new CodeModelBuilder();
+
+            builder.RegisterConventionsFrom(typeof(TestTarget.Conventions.Marker).Assembly);
+
+            builder.RunMutator(new AddAssemblies(TargetAssembly));
+            builder.RunMutator(new AddTypes());
+
+            // act
+            builder.RunMutator<DetectEntities>();
+
+            // assert
+            var entityNode = builder.Model.GetNodeForType(typeof(Person));
+            Assert.That(entityNode, Is.InstanceOf<EntityNode>());
         }
     }
 }

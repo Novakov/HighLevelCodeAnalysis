@@ -47,5 +47,13 @@ namespace CodeModel.Builder
 
             this.model.RemoveNode(node);
         }
+
+        public void ReplaceNode(Node oldNode, Node newNode)
+        {
+            this.nodesToProcess.Remove(oldNode);
+            this.nodesToProcess.Add(newNode);
+
+            this.model.ReplaceNode(oldNode, newNode);
+        }
     }
 }

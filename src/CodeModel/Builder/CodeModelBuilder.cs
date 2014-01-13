@@ -1,35 +1,53 @@
 ﻿using System;
 using System.Linq;
+using System.Reflection;
+using CodeModel.Convetions;
 using CodeModel.Graphs;
+using TinyIoC;
 
 namespace CodeModel.Builder
 {
     public class CodeModelBuilder
     {
+        private readonly TinyIoCContainer container;
+
         public Graph Model { get; private set; }
 
         public CodeModelBuilder()
         {
             this.Model = new Graph();
+
+            this.container = new TinyIoCContainer();            
         }
 
-        public void RunMutators(params IMutator[] mutators)
-        {            
-            foreach (var mutator in mutators)
-            {
-                RunMutator<IGraphMutator>(mutator, m => m.Mutate(this.Model));
-                RunMutator<INodeMutator>(mutator, MutateNodes);
-            }
+        public void RegisterConventionsFrom(params Assembly[] assemblies)
+        {
+            var assembliesToScan = assemblies.Union(new[] { typeof(CodeModelBuilder).Assembly });
+
+            this.container.AutoRegister(assembliesToScan, t => typeof(IConvention).IsAssignableFrom(t));
+        }
+
+        public void RunMutator<TMutator>(TMutator mutator)
+            where TMutator : class, IMutator
+        {
+            RunMutator<IGraphMutator>(mutator, m => m.Mutate(this.Model));
+            RunMutator<INodeMutator>(mutator, MutateNodes);
+        }
+
+        public void RunMutator<TMutator>()
+            where TMutator : class, IMutator
+        {
+            RunMutator(this.container.Resolve<TMutator>());
         }
 
         private void MutateNodes(INodeMutator mutator)
-        {            
+        {
             var implementedInterfaces = mutator.GetType().GetGenericImplementationsOfInterface(typeof(INodeMutator<>));
 
             foreach (var interfaceType in implementedInterfaces)
             {
                 var nodeType = interfaceType.GenericTypeArguments[0];
-                
+
                 var mutateMethod = interfaceType.GetMethod("Mutate");
 
                 var context = new MutateContext(this.Model);
