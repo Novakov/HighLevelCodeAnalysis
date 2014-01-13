@@ -5,6 +5,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using CodeModel.Builder;
+using CodeModel.Graphs;
 using CodeModel.Model;
 using CodeModel.Mutators;
 using NUnit.Framework;
@@ -42,9 +43,22 @@ namespace Tests.BuilderTests
             // act
             builder.RunMutators(new AddAssemblies(TargetAssembly), new AddTypes());
 
-            // Assert
+            // assert
             Assert.That(builder.Model.Nodes, Has.Some.InstanceOf<TypeNode>());
+        }
 
+        [Test]
+        public void ShouldRemoveNodesMatchingCondition()
+        {
+            // arrange
+            var builder = new CodeModelBuilder();
+            builder.RunMutators(new AddAssemblies(TargetAssembly), new AddTypes());
+
+            // act
+            builder.RunMutators(new RemoveNode<TypeNode>(x => x.Type.Name == "ToBeRemovedFromGraph"));
+
+            // assert
+            Assert.That(builder.Model.Nodes, Has.None.Matches<object>(n => n is TypeNode && ((TypeNode)n).Type.Name == "ToBeRemovedFromGraph"));
         }
     }
 }

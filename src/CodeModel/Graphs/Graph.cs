@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace CodeModel.Graphs
 {
@@ -71,6 +72,16 @@ namespace CodeModel.Graphs
 
             this.nodes.Remove(old);
             this.nodes.Add(replaceWith);
+        }
+
+        public void RemoveNode(Node node)
+        {
+            foreach (var link in node.InboundLinks.Union(node.OutboundLinks).ToList())
+            {
+                this.RemoveLink(link);
+            }
+
+            this.nodes.Remove(node);
         }
     }
 }

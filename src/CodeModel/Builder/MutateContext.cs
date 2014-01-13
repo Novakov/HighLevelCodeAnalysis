@@ -8,7 +8,7 @@ using CodeModel.Graphs;
 
 namespace CodeModel.Builder
 {
-    public class MutateContext :  IMutateContext
+    public class MutateContext : IMutateContext
     {
         private readonly Graph model;
         private readonly ISet<Node> nodesToProcess;
@@ -17,7 +17,7 @@ namespace CodeModel.Builder
         {
             this.model = model;
 
-            this.nodesToProcess = new SortedSet<Node>(model.Nodes);            
+            this.nodesToProcess = new HashSet<Node>(model.Nodes);
         }
 
         public IEnumerable<Node> NodesToProcess()
@@ -39,6 +39,13 @@ namespace CodeModel.Builder
             this.nodesToProcess.Add(node);
 
             return node;
+        }
+
+        public void RemoveNode(Node node)
+        {
+            this.nodesToProcess.Remove(node);
+
+            this.model.RemoveNode(node);
         }
     }
 }

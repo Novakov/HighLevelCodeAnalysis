@@ -134,7 +134,32 @@ namespace Tests
 
             Assert.That(outboundLink.Source, Is.SameAs(newNode));
             Assert.That(newNode.OutboundLinks, Has.Member(outboundLink));
+        }
 
+        [Test]
+        public void ShouldRemoveNodeInAll()
+        {
+            // arrange
+            var graph = new Graph();
+            var node1 = new SampleNode("node1");
+            var node2 = new SampleNode("node2");
+
+            graph.AddNode(node1);
+            graph.AddNode(node2);
+
+            var inboundLink = new SampleLink();
+            graph.AddLink(node2, node1, inboundLink);
+            
+            var outboundLink = new SampleLink();
+            graph.AddLink(node1, node2, outboundLink);
+
+            // act
+            graph.RemoveNode(node1);
+
+            // assert
+            Assert.That(graph.Nodes, Has.No.Member(node1));
+            Assert.That(node2.InboundLinks, Has.No.Member(outboundLink));
+            Assert.That(node2.OutboundLinks, Has.No.Member(inboundLink));
         }
 
         private class SampleLink : Link
