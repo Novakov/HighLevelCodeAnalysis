@@ -42,6 +42,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BuilderTests\BuilderTest.cs" />
     <Compile Include="GraphTest.cs" />
     <Compile Include="NodeTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -50,6 +51,10 @@
     <ProjectReference Include="..\CodeModel\CodeModel.csproj">
       <Project>{F585754A-EE95-491A-A9CA-E2FA417B992F}</Project>
       <Name>CodeModel</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\TestTarget\TestTarget.csproj">
+      <Project>{d8d9e350-334f-4c68-8c6a-4d498f3fc3ed}</Project>
+      <Name>TestTarget</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
