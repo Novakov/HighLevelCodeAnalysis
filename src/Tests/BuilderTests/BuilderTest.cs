@@ -83,5 +83,21 @@ namespace Tests.BuilderTests
             var entityNode = builder.Model.GetNodeForType(typeof(Person));
             Assert.That(entityNode, Is.InstanceOf<EntityNode>());
         }
+
+        [Test]
+        public void ShouldAddMethods()
+        {
+            // arrange
+            var builder = new CodeModelBuilder();
+           
+            builder.RunMutator(new AddAssemblies(TargetAssembly));
+            builder.RunMutator(new AddTypes());
+
+            // act
+            builder.RunMutator(new AddMethods());
+
+            // assert            
+            Assert.That(builder.Model.Nodes, Has.Some.InstanceOf<MethodNode>());
+        }
     }
 }

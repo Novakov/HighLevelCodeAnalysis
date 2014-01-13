@@ -54,8 +54,10 @@
     <Compile Include="ModelExtensions.cs" />
     <Compile Include="Model\AssemblyNode.cs" />
     <Compile Include="Model\EntityNode.cs" />
+    <Compile Include="Model\MethodNode.cs" />
     <Compile Include="Model\TypeNode.cs" />
     <Compile Include="Mutators\AddAssemblies.cs" />
+    <Compile Include="Mutators\AddMethods.cs" />
     <Compile Include="Mutators\AddTypes.cs" />
     <Compile Include="Mutators\DetectEntities.cs" />
     <Compile Include="Mutators\RemoveNode.cs" />
