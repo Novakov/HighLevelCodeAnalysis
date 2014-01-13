@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using CodeModel;
 using CodeModel.Builder;
 using CodeModel.Graphs;
+using CodeModel.Links;
 using CodeModel.Model;
 using CodeModel.Mutators;
 using NUnit.Framework;
@@ -89,7 +90,7 @@ namespace Tests.BuilderTests
         {
             // arrange
             var builder = new CodeModelBuilder();
-           
+
             builder.RunMutator(new AddAssemblies(TargetAssembly));
             builder.RunMutator(new AddTypes());
 
@@ -98,6 +99,36 @@ namespace Tests.BuilderTests
 
             // assert            
             Assert.That(builder.Model.Nodes, Has.Some.InstanceOf<MethodNode>());
+        }
+
+        [Test]
+        public void ShouldLinkCalls()
+        {
+            // arrange
+            var builder = new CodeModelBuilder();
+
+            builder.RunMutator(new AddAssemblies(TargetAssembly));
+            builder.RunMutator(new AddTypes());
+            builder.RunMutator(new AddMethods());
+
+            // act      
+            builder.RunMutator<LinkMethodCalls>();
+
+            // assert            
+            var source = builder.Model.GetNodeForMethod(typeof(LinkCalls).GetMethod("Source"));
+            var normalCall = builder.Model.GetNodeForMethod(typeof(LinkCalls).GetMethod("NormalCall"));
+            var genericMethodCall = builder.Model.GetNodeForMethod(typeof(LinkCalls).GetMethod("GenericMethodCall"));
+
+            Assert.That(normalCall.InboundLinks, Has.Exactly(1)
+                .InstanceOf<MethodCallLink>()
+                .And.Matches<MethodCallLink>(x => x.Source.Equals(source)),
+                "Normal method call not linked");
+
+            var genericMethodCallLink = genericMethodCall.InboundLinks.OfType<MethodCallLink>().SingleOrDefault();
+
+            Assert.That(genericMethodCallLink, Is.Not.Null, "Generic method call linked");
+            Assert.That(genericMethodCallLink.Source, Is.SameAs(source));
+            Assert.That(genericMethodCallLink.GenericMethodArguments, Is.EqualTo(new[] { typeof(int) }), "Generic method arguments mismatch");           
         }
     }
 }

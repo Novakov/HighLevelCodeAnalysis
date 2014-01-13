@@ -30,6 +30,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Mono.Reflection">
+      <HintPath>..\packages\Mono.Reflection.1.0.0.0\lib\Mono.Reflection.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -51,6 +54,7 @@
     <Compile Include="Graphs\Graph.cs" />
     <Compile Include="Graphs\Link.cs" />
     <Compile Include="Graphs\Node.cs" />
+    <Compile Include="Links\MethodCallLink.cs" />
     <Compile Include="ModelExtensions.cs" />
     <Compile Include="Model\AssemblyNode.cs" />
     <Compile Include="Model\EntityNode.cs" />
@@ -60,6 +64,7 @@
     <Compile Include="Mutators\AddMethods.cs" />
     <Compile Include="Mutators\AddTypes.cs" />
     <Compile Include="Mutators\DetectEntities.cs" />
+    <Compile Include="Mutators\LinkMethodCalls.cs" />
     <Compile Include="Mutators\RemoveNode.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ReflectionExtensions.cs" />

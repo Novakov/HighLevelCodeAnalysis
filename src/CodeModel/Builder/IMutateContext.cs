@@ -1,4 +1,7 @@
-﻿using CodeModel.Graphs;
+﻿using System;
+using System.Collections.Generic;
+using CodeModel.Graphs;
+using CodeModel.Links;
 using CodeModel.Model;
 
 namespace CodeModel.Builder
@@ -11,5 +14,11 @@ namespace CodeModel.Builder
         void RemoveNode(Node node);
 
         void ReplaceNode(Node oldNode, Node newNode);
+
+        IEnumerable<TNode> FindNodes<TNode>(Func<TNode, bool> predicate)
+            where TNode : Node;
+
+        TLink AddLink<TLink>(Node source, Node target, TLink link)
+            where TLink : Link;
     }
 }

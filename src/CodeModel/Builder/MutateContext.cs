@@ -55,5 +55,17 @@ namespace CodeModel.Builder
 
             this.model.ReplaceNode(oldNode, newNode);
         }
+
+        public IEnumerable<TNode> FindNodes<TNode>(Func<TNode, bool> predicate) where TNode : Node
+        {
+            return this.model.Nodes.OfType<TNode>().Where(predicate);
+        }
+
+        public TLink AddLink<TLink>(Node source, Node target, TLink link) where TLink : Link
+        {
+            this.model.AddLink(source, target, link);
+            return link;
+        }
+       
     }
 }
