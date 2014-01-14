@@ -66,6 +66,15 @@ namespace CodeModel.Builder
             this.model.AddLink(source, target, link);
             return link;
         }
-       
+
+        public void ReplaceLink(Link old, Link replaceWith)
+        {
+            this.model.ReplaceLink(old, replaceWith);
+        }
+
+        public void RemoveLink(Link link)
+        {
+            this.model.RemoveLink(link);
+        }
     }
 }

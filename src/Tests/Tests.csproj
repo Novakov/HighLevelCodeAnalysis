@@ -43,6 +43,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BuilderTests\BuilderTest.cs" />
+    <Compile Include="ExtensionsTests\EventSourcingTest.cs" />
     <Compile Include="GraphTest.cs" />
     <Compile Include="NodeTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

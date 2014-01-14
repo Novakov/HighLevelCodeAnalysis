@@ -129,6 +129,6 @@ namespace Tests.BuilderTests
             Assert.That(genericMethodCallLink, Is.Not.Null, "Generic method call linked");
             Assert.That(genericMethodCallLink.Source, Is.SameAs(source));
             Assert.That(genericMethodCallLink.GenericMethodArguments, Is.EqualTo(new[] { typeof(int) }), "Generic method arguments mismatch");           
-        }
+        }        
     }
 }

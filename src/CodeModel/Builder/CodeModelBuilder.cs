@@ -22,9 +22,17 @@ namespace CodeModel.Builder
 
         public void RegisterConventionsFrom(params Assembly[] assemblies)
         {
-            var assembliesToScan = assemblies.Union(new[] { typeof(CodeModelBuilder).Assembly });
+            var toRegister = from assembly in assemblies
+                from type in assembly.GetTypes()
+                where typeof (IConvention).IsAssignableFrom(type)
+                from @interface in type.GetInterfaces()
+                where typeof (IConvention).IsAssignableFrom(@interface)
+                select new {Interface = @interface, Implementation = type};
 
-            this.container.AutoRegister(assembliesToScan, t => typeof(IConvention).IsAssignableFrom(t));
+            foreach (var item in toRegister)
+            {
+                this.container.Register(item.Interface, item.Implementation);
+            }
         }
 
         public void RunMutator<TMutator>(TMutator mutator)

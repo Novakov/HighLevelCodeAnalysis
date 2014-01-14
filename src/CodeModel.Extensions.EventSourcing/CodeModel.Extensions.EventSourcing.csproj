@@ -39,7 +39,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Class1.cs" />
+    <Compile Include="Conventions\IEventSourcingConvention.cs" />
+    <Compile Include="Links\ApplyEventLink.cs" />
+    <Compile Include="Mutators\DetectApplyEvent.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

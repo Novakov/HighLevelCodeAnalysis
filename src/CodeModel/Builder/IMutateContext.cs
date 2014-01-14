@@ -20,5 +20,9 @@ namespace CodeModel.Builder
 
         TLink AddLink<TLink>(Node source, Node target, TLink link)
             where TLink : Link;
+
+        void ReplaceLink(Link old, Link replaceWith);
+
+        void RemoveLink(Link link);
     }
 }
