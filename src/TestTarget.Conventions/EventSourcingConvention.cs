@@ -24,5 +24,16 @@ namespace TestTarget.Conventions
         {
             return methodCallLink.GenericMethodArguments[0];
         }
+
+        public bool IsApplyEventMethod(MethodNode node)
+        {
+            var parameters = node.Method.GetParameters();
+            return !node.Method.IsStatic && node.Method.Name == "On" && parameters.Length == 1 && typeof (DomainEvent).IsAssignableFrom(parameters[0].ParameterType);
+        }
+
+        public Type GetEventAppliedByMethod(MethodNode node)
+        {
+            return node.Method.GetParameters()[0].ParameterType;
+        }
     }
 }

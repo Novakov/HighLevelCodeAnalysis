@@ -1,6 +1,6 @@
 ﻿namespace TestTarget.EventSourcing
 {
-    public class SurnameChanged
+    public class SurnameChanged : DomainEvent
     {
         public string NewSurname { get; private set; }
 

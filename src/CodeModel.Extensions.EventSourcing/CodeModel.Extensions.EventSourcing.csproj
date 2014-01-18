@@ -42,6 +42,8 @@
     <Compile Include="Conventions\IEventSourcingConvention.cs" />
     <Compile Include="Links\ApplyEventLink.cs" />
     <Compile Include="Mutators\DetectApplyEvent.cs" />
+    <Compile Include="Mutators\DetectApplyEventMethods.cs" />
+    <Compile Include="Nodes\ApplyEventMethod.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
