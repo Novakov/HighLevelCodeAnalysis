@@ -45,6 +45,7 @@
     <Compile Include="EventSourcing\SurnameChanged.cs" />
     <Compile Include="LinkCalls.cs" />
     <Compile Include="Marker.cs" />
+    <Compile Include="MemberAccess.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ToBeRemovedFromGraph.cs" />
   </ItemGroup>

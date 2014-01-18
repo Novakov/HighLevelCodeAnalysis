@@ -59,9 +59,11 @@
     <Compile Include="Model\AssemblyNode.cs" />
     <Compile Include="Model\EntityNode.cs" />
     <Compile Include="Model\MethodNode.cs" />
+    <Compile Include="Model\PropertyNode.cs" />
     <Compile Include="Model\TypeNode.cs" />
     <Compile Include="Mutators\AddAssemblies.cs" />
     <Compile Include="Mutators\AddMethods.cs" />
+    <Compile Include="Mutators\AddProperties.cs" />
     <Compile Include="Mutators\AddTypes.cs" />
     <Compile Include="Mutators\DetectEntities.cs" />
     <Compile Include="Mutators\LinkMethodCalls.cs" />

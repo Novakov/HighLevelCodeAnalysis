@@ -6,13 +6,13 @@ namespace CodeModel.Mutators
 {
     public class AddMethods : INodeMutator<TypeNode>
     {
-        public const BindingFlags DefaultFlags = BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public;        
+        public const BindingFlags DefaultFlags = BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public;
 
         public BindingFlags Flags { get; set; }
 
         public AddMethods()
+            : this(DefaultFlags)
         {
-            this.Flags = DefaultFlags;
         }
 
         public AddMethods(BindingFlags flags)

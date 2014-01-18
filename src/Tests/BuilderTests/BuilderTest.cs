@@ -121,6 +121,23 @@ namespace Tests.BuilderTests
             Assert.That(builder.Model, Graph.Has
                 .Links<MethodCallLink>(exactly: 1, from: source, to: normalCall)
                 .Links<MethodCallLink>(exactly: 1, from: source, to: genericMethodCall, matches: x => x.GenericMethodArguments.Length == 1 && x.GenericMethodArguments[0] == typeof (int)));
-        }        
+        }
+
+        [Test]
+        public void ShouldAddProperties()
+        {
+            // arrange
+            var builder = new CodeModelBuilder();
+
+            builder.RunMutator(new AddAssemblies(TargetAssembly));
+            builder.RunMutator<AddTypes>();
+
+            // act
+            builder.RunMutator<AddProperties>();
+
+            // assert
+            Assert.That(builder.Model, Graph.Has
+                .Nodes<PropertyNode>());
+        }
     }
 }
