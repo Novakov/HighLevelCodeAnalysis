@@ -11,7 +11,12 @@ namespace CodeModel.Graphs
         public string Id { get; private set; }
 
         public IEnumerable<Link> InboundLinks { get { return this.inbound; } } 
-        public IEnumerable<Link> OutboundLinks { get { return this.outbound; } } 
+        public IEnumerable<Link> OutboundLinks { get { return this.outbound; } }
+
+        public virtual string DisplayLabel
+        {
+            get { return this.Id; }
+        }
 
         protected Node(string nodeId)
         {
@@ -30,7 +35,7 @@ namespace CodeModel.Graphs
         {
             return this.Id.GetHashCode();
         }
-
+       
         public override bool Equals(object obj)
         {
             var node = obj as Node;

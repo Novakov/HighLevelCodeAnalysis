@@ -7,6 +7,11 @@ namespace CodeModel.Model
     {
         public Type Type { get; private set; }
 
+        public override string DisplayLabel
+        {
+            get { return this.Type.FullName; }
+        }
+
         public TypeNode(Type type)
             : base(type.AssemblyQualifiedName + "_" + type.MetadataToken)
         {

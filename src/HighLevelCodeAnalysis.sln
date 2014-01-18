@@ -19,6 +19,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeModel.Extensions.EventS
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestTarget.Conventions", "TestTarget.Conventions\TestTarget.Conventions.csproj", "{AA9D0D3E-A19D-4C37-B8AB-334C339A50E5}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{86D65182-96DE-4D74-A8C6-9301022965DB}"
+	ProjectSection(SolutionItems) = preProject
+		.nuget\packages.config = .nuget\packages.config
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeModel.Extensions.DgmlExport", "CodeModel.Extensions.DgmlExport\CodeModel.Extensions.DgmlExport.csproj", "{47A0F1FD-F593-48FB-9235-F05B3648CA61}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -45,6 +52,10 @@ Global
 		{AA9D0D3E-A19D-4C37-B8AB-334C339A50E5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AA9D0D3E-A19D-4C37-B8AB-334C339A50E5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AA9D0D3E-A19D-4C37-B8AB-334C339A50E5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{47A0F1FD-F593-48FB-9235-F05B3648CA61}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{47A0F1FD-F593-48FB-9235-F05B3648CA61}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{47A0F1FD-F593-48FB-9235-F05B3648CA61}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{47A0F1FD-F593-48FB-9235-F05B3648CA61}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -55,5 +66,6 @@ Global
 		{D8D9E350-334F-4C68-8C6A-4D498F3FC3ED} = {6E18EB8C-5739-4EE6-A0DD-D08E2C91A9D1}
 		{AA9D0D3E-A19D-4C37-B8AB-334C339A50E5} = {6E18EB8C-5739-4EE6-A0DD-D08E2C91A9D1}
 		{EE94106E-B911-4E33-A19A-0C2DAD04BD71} = {B270694A-5360-46A2-AAEE-B4FADF1654CA}
+		{47A0F1FD-F593-48FB-9235-F05B3648CA61} = {B270694A-5360-46A2-AAEE-B4FADF1654CA}
 	EndGlobalSection
 EndGlobal
