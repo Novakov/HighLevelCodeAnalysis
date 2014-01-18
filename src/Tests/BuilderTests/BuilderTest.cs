@@ -195,6 +195,28 @@ namespace Tests.BuilderTests
                 .Links<SetFieldLink>(to:fieldNode)
                 .Links<GetFieldLink>(to:fieldNode)
                 );
+        }
+
+        [Test]
+        public void ShouldLinkPropertyAccess()
+        {
+            // arrange
+            var builder = new CodeModelBuilder();
+
+            builder.RunMutator(new AddAssemblies(TargetAssembly));
+            builder.RunMutator<AddTypes>();
+            builder.RunMutator<AddMethods>();
+            builder.RunMutator<AddProperties>();
+
+            // act
+            builder.RunMutator<LinkPropertyAccess>();
+
+            // assert
+            var propertyNode = builder.Model.GetNodeForProperty(Get.PropertyOf<MemberAccess>(x => x.ThisProperty));
+            Assert.That(builder.Model, Graph.Has
+                .Links<SetPropertyLink>(to: propertyNode)
+                .Links<GetPropertyLink>(to: propertyNode)
+                );
 
         }
     }

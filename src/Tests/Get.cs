@@ -12,9 +12,20 @@ namespace Tests
     {
         public static FieldInfo FieldOf<T>(Expression<Func<T, object>> fieldAccess)
         {
-            var memberExpression = (MemberExpression)fieldAccess.Body;
+            return ExtractMemberInfo<FieldInfo>(fieldAccess.Body);
+        }
 
-            return (FieldInfo) memberExpression.Member;
+        public static PropertyInfo PropertyOf<T>(Expression<Func<T, object>> propertyAccess)
+        {
+            return ExtractMemberInfo<PropertyInfo>(propertyAccess.Body);
+        }
+
+        private static TMemberInfo ExtractMemberInfo<TMemberInfo>(Expression body)
+            where TMemberInfo : MemberInfo
+        {
+            var memberExpression = (MemberExpression)body;
+
+            return (TMemberInfo)memberExpression.Member;
         }
     }
 }

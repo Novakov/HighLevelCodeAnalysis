@@ -19,5 +19,11 @@ namespace CodeModel
         {
             return @this.GetCustomAttributes(typeof (CompilerGeneratedAttribute), false).Any();
         }
+
+        public static BindingFlags GetBindingFlags(this MethodBase @this)
+        {
+            return (@this.IsPublic ? BindingFlags.Public : BindingFlags.NonPublic)
+                   | (@this.IsStatic ? BindingFlags.Static : BindingFlags.Instance);
+        }
     }
 }

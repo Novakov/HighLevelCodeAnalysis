@@ -25,5 +25,10 @@ namespace CodeModel
         {
             return model.Nodes.OfType<FieldNode>().SingleOrDefault(x => x.Field == field);
         }
+
+        public static PropertyNode GetNodeForProperty(this Graph model, PropertyInfo property)
+        {
+            return model.Nodes.OfType<PropertyNode>().SingleOrDefault(x => x.Property == property);
+        }
     }
 }

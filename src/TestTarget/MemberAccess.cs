@@ -21,6 +21,13 @@ namespace TestTarget
             {
                 throw new Exception("aaaaa");
             }
+
+            this.ThisProperty = "aaaa";
+
+            if (this.ThisProperty.Length == 4)
+            {
+                throw new Exception("aaaaa");
+            }
         }
     }
 }
