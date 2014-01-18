@@ -102,6 +102,24 @@ namespace Tests.BuilderTests
         }
 
         [Test]
+        public void ShouldNotAddInheritedMethods()
+        {
+            // arrange
+            var builder = new CodeModelBuilder();
+
+            builder.RunMutator(new AddAssemblies(TargetAssembly));
+            builder.RunMutator<AddTypes>();
+            builder.RunMutator(new RemoveNode<TypeNode>(x => x.Type != typeof (Inherited)));
+
+            // act            
+            builder.RunMutator<AddMethods>();
+
+            // assert
+            Assert.That(builder.Model, Graph.Has
+                .Nodes<MethodNode>(exactly: 0, matches: x => x.Method.Name == "Method"));
+        }
+
+        [Test]
         public void ShouldLinkCalls()
         {
             // arrange

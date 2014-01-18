@@ -25,5 +25,10 @@ namespace CodeModel
             return (@this.IsPublic ? BindingFlags.Public : BindingFlags.NonPublic)
                    | (@this.IsStatic ? BindingFlags.Static : BindingFlags.Instance);
         }
+
+        public static bool IsInherited(this MemberInfo @this)
+        {
+            return @this.DeclaringType != @this.ReflectedType;
+        }
     }
 }

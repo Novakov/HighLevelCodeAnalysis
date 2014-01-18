@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Reflection;
 using CodeModel.Builder;
 using CodeModel.Model;
@@ -22,7 +23,7 @@ namespace CodeModel.Mutators
 
         public void Mutate(TypeNode node, IMutateContext context)
         {
-            foreach (var propertyInfo in node.Type.GetProperties())
+            foreach (var propertyInfo in node.Type.GetProperties().Where(x => !x.IsInherited()))
             {
                 context.AddNode(new PropertyNode(propertyInfo));
             }

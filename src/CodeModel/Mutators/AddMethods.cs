@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Reflection;
 using CodeModel.Builder;
 using CodeModel.Model;
@@ -22,7 +23,7 @@ namespace CodeModel.Mutators
 
         public void Mutate(TypeNode node, IMutateContext context)
         {
-            foreach (var method in node.Type.GetMethods(Flags))
+            foreach (var method in node.Type.GetMethods(Flags).Where(x => !x.IsInherited()))
             {
                 context.AddNode(new MethodNode(method));
             }

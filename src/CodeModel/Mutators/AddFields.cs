@@ -23,7 +23,7 @@ namespace CodeModel.Mutators
 
         public void Mutate(TypeNode node, IMutateContext context)
         {
-            foreach (var fieldInfo in node.Type.GetFields(Flags).Where(x => !x.IsCompilerGenerated()))
+            foreach (var fieldInfo in node.Type.GetFields(Flags).Where(x => !x.IsCompilerGenerated()).Where(x => !x.IsInherited()))
             {
                 context.AddNode(new FieldNode(fieldInfo));
             }
