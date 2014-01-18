@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using CodeModel;
@@ -138,6 +139,40 @@ namespace Tests.BuilderTests
             // assert
             Assert.That(builder.Model, Graph.Has
                 .Nodes<PropertyNode>());
+        }
+
+        [Test]
+        public void ShouldAddFields()
+        {
+            // arrange
+            var builder = new CodeModelBuilder();
+
+            builder.RunMutator(new AddAssemblies(TargetAssembly));
+            builder.RunMutator<AddTypes>();
+
+            // act
+            builder.RunMutator<AddFields>();
+
+            // assert
+            Assert.That(builder.Model, Graph.Has
+                .Nodes<FieldNode>());
+        }
+
+        [Test]
+        public void ShouldNotAddPropertyBackingFields()
+        {
+            // arrange
+            var builder = new CodeModelBuilder();
+
+            builder.RunMutator(new AddAssemblies(TargetAssembly));
+            builder.RunMutator<AddTypes>();
+
+            // act
+            builder.RunMutator<AddFields>();
+
+            // assert
+            Assert.That(builder.Model, Graph.Has
+                .Nodes<FieldNode>(exactly: 0, matches: x => x.Field.GetCustomAttribute<CompilerGeneratedAttribute>() != null));
         }
     }
 }

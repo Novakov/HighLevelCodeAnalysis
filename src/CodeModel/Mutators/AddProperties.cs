@@ -11,7 +11,7 @@ namespace CodeModel.Mutators
         public BindingFlags Flags { get; set; }
 
         public AddProperties() 
-            : this(BindingFlags.Default)
+            : this(DefaultFlags)
         {
         }
 
