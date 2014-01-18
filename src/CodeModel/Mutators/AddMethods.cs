@@ -6,18 +6,23 @@ namespace CodeModel.Mutators
 {
     public class AddMethods : INodeMutator<TypeNode>
     {
-        public const BindingFlags DefaultFlags = BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public;
+        public const BindingFlags DefaultFlags = BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public;        
 
-        private readonly BindingFlags flags;
+        public BindingFlags Flags { get; set; }
 
-        public AddMethods(BindingFlags flags = DefaultFlags)
+        public AddMethods()
         {
-            this.flags = flags;
+            this.Flags = DefaultFlags;
+        }
+
+        public AddMethods(BindingFlags flags)
+        {
+            this.Flags = flags;
         }
 
         public void Mutate(TypeNode node, IMutateContext context)
         {
-            foreach (var method in node.Type.GetMethods(flags))
+            foreach (var method in node.Type.GetMethods(Flags))
             {
                 context.AddNode(new MethodNode(method));
             }

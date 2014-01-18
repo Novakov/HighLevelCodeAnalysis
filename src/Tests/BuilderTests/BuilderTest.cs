@@ -45,7 +45,7 @@ namespace Tests.BuilderTests
 
             // act
             builder.RunMutator(new AddAssemblies(TargetAssembly));
-            builder.RunMutator(new AddTypes());
+            builder.RunMutator<AddTypes>();
 
             // assert
             Assert.That(builder.Model.Nodes, Has.Some.InstanceOf<TypeNode>());
@@ -57,7 +57,7 @@ namespace Tests.BuilderTests
             // arrange
             var builder = new CodeModelBuilder();
             builder.RunMutator(new AddAssemblies(TargetAssembly));
-            builder.RunMutator(new AddTypes());
+            builder.RunMutator<AddTypes>();
 
             // act
             builder.RunMutator(new RemoveNode<TypeNode>(x => x.Type.Name == "ToBeRemovedFromGraph"));
@@ -75,7 +75,7 @@ namespace Tests.BuilderTests
             builder.RegisterConventionsFrom(typeof(TestTarget.Conventions.Marker).Assembly);
 
             builder.RunMutator(new AddAssemblies(TargetAssembly));
-            builder.RunMutator(new AddTypes());
+            builder.RunMutator<AddTypes>();
 
             // act
             builder.RunMutator<DetectEntities>();
@@ -92,10 +92,10 @@ namespace Tests.BuilderTests
             var builder = new CodeModelBuilder();
 
             builder.RunMutator(new AddAssemblies(TargetAssembly));
-            builder.RunMutator(new AddTypes());
+            builder.RunMutator<AddTypes>();
 
             // act
-            builder.RunMutator(new AddMethods());
+            builder.RunMutator<AddMethods>();
 
             // assert            
             Assert.That(builder.Model.Nodes, Has.Some.InstanceOf<MethodNode>());
@@ -108,8 +108,8 @@ namespace Tests.BuilderTests
             var builder = new CodeModelBuilder();
 
             builder.RunMutator(new AddAssemblies(TargetAssembly));
-            builder.RunMutator(new AddTypes());
-            builder.RunMutator(new AddMethods());
+            builder.RunMutator<AddTypes>();
+            builder.RunMutator<AddMethods>();
 
             // act      
             builder.RunMutator<LinkMethodCalls>();
