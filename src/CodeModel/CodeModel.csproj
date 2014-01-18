@@ -54,7 +54,9 @@
     <Compile Include="Graphs\Graph.cs" />
     <Compile Include="Graphs\Link.cs" />
     <Compile Include="Graphs\Node.cs" />
+    <Compile Include="Links\GetFieldLink.cs" />
     <Compile Include="Links\MethodCallLink.cs" />
+    <Compile Include="Links\SetFieldLink.cs" />
     <Compile Include="ModelExtensions.cs" />
     <Compile Include="Model\AssemblyNode.cs" />
     <Compile Include="Model\EntityNode.cs" />
@@ -68,6 +70,7 @@
     <Compile Include="Mutators\AddProperties.cs" />
     <Compile Include="Mutators\AddTypes.cs" />
     <Compile Include="Mutators\DetectEntities.cs" />
+    <Compile Include="Mutators\LinkFieldAccess.cs" />
     <Compile Include="Mutators\LinkMethodCalls.cs" />
     <Compile Include="Mutators\RemoveNode.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

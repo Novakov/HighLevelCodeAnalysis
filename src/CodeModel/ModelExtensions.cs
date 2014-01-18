@@ -20,5 +20,10 @@ namespace CodeModel
         {
             return model.Nodes.OfType<MethodNode>().SingleOrDefault(x => x.Method == method);
         }
+
+        public static FieldNode GetNodeForField(this Graph model, FieldInfo field)
+        {
+            return model.Nodes.OfType<FieldNode>().SingleOrDefault(x => x.Field == field);
+        }
     }
 }

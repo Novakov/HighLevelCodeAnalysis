@@ -48,6 +48,7 @@
     <Compile Include="Constraints\Graph.cs" />
     <Compile Include="Constraints\NodeForTypeConstraint.cs" />
     <Compile Include="ExtensionsTests\EventSourcingTest.cs" />
+    <Compile Include="Get.cs" />
     <Compile Include="GraphTest.cs" />
     <Compile Include="NodeTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

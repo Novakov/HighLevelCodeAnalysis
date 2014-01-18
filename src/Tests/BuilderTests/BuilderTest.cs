@@ -11,9 +11,9 @@ using CodeModel.Links;
 using CodeModel.Model;
 using CodeModel.Mutators;
 using NUnit.Framework;
-using Tests.Constraints;
 using TestTarget;
 using TestTarget.EventSourcing;
+using Graph = Tests.Constraints.Graph;
 
 namespace Tests.BuilderTests
 {
@@ -173,6 +173,29 @@ namespace Tests.BuilderTests
             // assert
             Assert.That(builder.Model, Graph.Has
                 .Nodes<FieldNode>(exactly: 0, matches: x => x.Field.GetCustomAttribute<CompilerGeneratedAttribute>() != null));
+        }
+
+        [Test]
+        public void ShouldLinkFieldAccess()
+        {
+            // arrange
+            var builder = new CodeModelBuilder();
+
+            builder.RunMutator(new AddAssemblies(TargetAssembly));
+            builder.RunMutator<AddTypes>();
+            builder.RunMutator<AddMethods>();
+            builder.RunMutator<AddFields>();
+
+            // act
+            builder.RunMutator<LinkFieldAccess>();
+
+            // assert
+            var fieldNode = builder.Model.GetNodeForField(Get.FieldOf<MemberAccess>(x => x.ThisField));
+            Assert.That(builder.Model, Graph.Has
+                .Links<SetFieldLink>(to:fieldNode)
+                .Links<GetFieldLink>(to:fieldNode)
+                );
+
         }
     }
 }
