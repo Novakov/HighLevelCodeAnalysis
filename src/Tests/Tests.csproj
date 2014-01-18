@@ -43,6 +43,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BuilderTests\BuilderTest.cs" />
+    <Compile Include="Constraints\ExpressionConstraint.cs" />
+    <Compile Include="Constraints\GraphConstraint.cs" />
+    <Compile Include="Constraints\Graph.cs" />
+    <Compile Include="Constraints\NodeForTypeConstraint.cs" />
     <Compile Include="ExtensionsTests\EventSourcingTest.cs" />
     <Compile Include="GraphTest.cs" />
     <Compile Include="NodeTest.cs" />

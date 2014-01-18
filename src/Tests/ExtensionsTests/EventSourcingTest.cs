@@ -6,6 +6,7 @@ using CodeModel.Extensions.EventSourcing.Mutators;
 using CodeModel.Extensions.EventSourcing.Nodes;
 using CodeModel.Mutators;
 using NUnit.Framework;
+using Tests.Constraints;
 using TestTarget;
 using TestTarget.EventSourcing;
 
@@ -34,10 +35,9 @@ namespace Tests.ExtensionsTests
             // assert
             var methodNode = builder.Model.GetNodeForMethod(typeof (Person).GetMethod("ChangeSurname"));
             var eventNode = builder.Model.GetNodeForType(typeof (SurnameChanged));
-
-            Assert.That(methodNode.OutboundLinks, Has
-                .Exactly(1).InstanceOf<ApplyEventLink>()
-                .And.Matches<ApplyEventLink>(x => x.Target.Equals(eventNode)));
+            
+            Assert.That(builder.Model, Graph.Has
+                .Links<ApplyEventLink>(exactly: 1, from: methodNode, to: eventNode));
         }
 
         [Test]
@@ -59,7 +59,7 @@ namespace Tests.ExtensionsTests
             var methodNode = builder.Model.GetNodeForMethod(typeof (Person).GetMethod("On", BindingFlags.Instance | BindingFlags.NonPublic, null, new[] {typeof (SurnameChanged)}, null));
 
             Assert.That(methodNode, Is.InstanceOf<ApplyEventMethod>());
-            Assert.That(((ApplyEventMethod)methodNode).AppliedEventType, Is.EqualTo(typeof(SurnameChanged)));
+            Assert.That(((ApplyEventMethod)methodNode).AppliedEventType, Is.EqualTo(typeof(SurnameChanged)));            
         }
     }
 }

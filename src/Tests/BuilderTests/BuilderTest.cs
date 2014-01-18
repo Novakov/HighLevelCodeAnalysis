@@ -6,11 +6,11 @@ using System.Text;
 using System.Threading.Tasks;
 using CodeModel;
 using CodeModel.Builder;
-using CodeModel.Graphs;
 using CodeModel.Links;
 using CodeModel.Model;
 using CodeModel.Mutators;
 using NUnit.Framework;
+using Tests.Constraints;
 using TestTarget;
 using TestTarget.EventSourcing;
 
@@ -30,11 +30,9 @@ namespace Tests.BuilderTests
             // act
             builder.RunMutator(new AddAssemblies(TargetAssembly));
 
-            // assert
-            Assert.That(builder.Model.Nodes, Has
-                .Exactly(1)
-                .InstanceOf<AssemblyNode>()
-                .And.Matches<AssemblyNode>(o => o.Assembly == TargetAssembly));
+            // assert          
+            Assert.That(builder.Model, Graph.Has
+                .Nodes<AssemblyNode>(exactly: 1, matches: x => x.Assembly == TargetAssembly));
         }
 
         [Test]
@@ -48,7 +46,7 @@ namespace Tests.BuilderTests
             builder.RunMutator<AddTypes>();
 
             // assert
-            Assert.That(builder.Model.Nodes, Has.Some.InstanceOf<TypeNode>());
+            Assert.That(builder.Model, Graph.Has.Nodes<TypeNode>());
         }
 
         [Test]
@@ -63,7 +61,8 @@ namespace Tests.BuilderTests
             builder.RunMutator(new RemoveNode<TypeNode>(x => x.Type.Name == "ToBeRemovedFromGraph"));
 
             // assert
-            Assert.That(builder.Model.Nodes, Has.None.Matches<object>(n => n is TypeNode && ((TypeNode)n).Type.Name == "ToBeRemovedFromGraph"));
+            Assert.That(builder.Model, Graph.Has
+                .Nodes<TypeNode>(exactly: 0, matches: n => n.Type.Name == "ToBeRemovedFromGraph"));
         }
 
         [Test]
@@ -80,9 +79,9 @@ namespace Tests.BuilderTests
             // act
             builder.RunMutator<DetectEntities>();
 
-            // assert
-            var entityNode = builder.Model.GetNodeForType(typeof(Person));
-            Assert.That(entityNode, Is.InstanceOf<EntityNode>());
+            // assert            
+            Assert.That(builder.Model, Graph.Has
+                .NodeForType<Person>(Is.InstanceOf<EntityNode>()));
         }
 
         [Test]
@@ -98,7 +97,7 @@ namespace Tests.BuilderTests
             builder.RunMutator<AddMethods>();
 
             // assert            
-            Assert.That(builder.Model.Nodes, Has.Some.InstanceOf<MethodNode>());
+            Assert.That(builder.Model, Graph.Has.Nodes<MethodNode>());
         }
 
         [Test]
@@ -118,17 +117,10 @@ namespace Tests.BuilderTests
             var source = builder.Model.GetNodeForMethod(typeof(LinkCalls).GetMethod("Source"));
             var normalCall = builder.Model.GetNodeForMethod(typeof(LinkCalls).GetMethod("NormalCall"));
             var genericMethodCall = builder.Model.GetNodeForMethod(typeof(LinkCalls).GetMethod("GenericMethodCall"));
-
-            Assert.That(normalCall.InboundLinks, Has.Exactly(1)
-                .InstanceOf<MethodCallLink>()
-                .And.Matches<MethodCallLink>(x => x.Source.Equals(source)),
-                "Normal method call not linked");
-
-            var genericMethodCallLink = genericMethodCall.InboundLinks.OfType<MethodCallLink>().SingleOrDefault();
-
-            Assert.That(genericMethodCallLink, Is.Not.Null, "Generic method call linked");
-            Assert.That(genericMethodCallLink.Source, Is.SameAs(source));
-            Assert.That(genericMethodCallLink.GenericMethodArguments, Is.EqualTo(new[] { typeof(int) }), "Generic method arguments mismatch");           
+         
+            Assert.That(builder.Model, Graph.Has
+                .Links<MethodCallLink>(exactly: 1, from: source, to: normalCall)
+                .Links<MethodCallLink>(exactly: 1, from: source, to: genericMethodCall, matches: x => x.GenericMethodArguments.Length == 1 && x.GenericMethodArguments[0] == typeof (int)));
         }        
     }
 }
