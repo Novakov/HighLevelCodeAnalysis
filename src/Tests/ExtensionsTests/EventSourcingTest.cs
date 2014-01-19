@@ -13,30 +13,36 @@ using TestTarget.EventSourcing;
 namespace Tests.ExtensionsTests
 {
     [TestFixture]
-    public class EventSourcingTest
+    public class EventSourcingTest : IHaveBuilder
     {
+        public CodeModelBuilder Builder { get; private set; }
+
+        [SetUp]
+        public void SetUp()
+        {
+            this.Builder = new CodeModelBuilder();
+        }
+
         [Test]
         public void ShouldConvertMethodCallLinkToApplyEventLink()
         {
             // arrange
-            var builder = new CodeModelBuilder();
+            Builder.RegisterConventionsFrom(typeof(TestTarget.Conventions.Marker).Assembly);
 
-            builder.RegisterConventionsFrom(typeof(TestTarget.Conventions.Marker).Assembly);
-
-            builder.RunMutator(new AddAssemblies(typeof(Marker).Assembly));
-            builder.RunMutator<AddTypes>();
-            builder.RunMutator(new AddMethods(AddMethods.DefaultFlags | BindingFlags.NonPublic));
-            builder.RunMutator<DetectEntities>();      
-            builder.RunMutator<LinkMethodCalls>();
+            Builder.RunMutator(new AddAssemblies(typeof(Marker).Assembly));
+            Builder.RunMutator<AddTypes>();
+            Builder.RunMutator(new AddMethods(AddMethods.DefaultFlags | BindingFlags.NonPublic));
+            Builder.RunMutator<DetectEntities>();      
+            Builder.RunMutator<LinkMethodCalls>();
 
             // act
-            builder.RunMutator<DetectApplyEvent>();
+            Builder.RunMutator<DetectApplyEvent>();
 
             // assert
-            var methodNode = builder.Model.GetNodeForMethod(typeof (Person).GetMethod("ChangeSurname"));
-            var eventNode = builder.Model.GetNodeForType(typeof (SurnameChanged));
+            var methodNode = Builder.Model.GetNodeForMethod(typeof (Person).GetMethod("ChangeSurname"));
+            var eventNode = Builder.Model.GetNodeForType(typeof (SurnameChanged));
             
-            Assert.That(builder.Model, Graph.Has
+            Assert.That(Builder.Model, Graph.Has
                 .Links<ApplyEventLink>(exactly: 1, from: methodNode, to: eventNode));
         }
 
@@ -44,19 +50,17 @@ namespace Tests.ExtensionsTests
         public void ShouldDetectEventApplyMethods()
         {
             // arrange
-            var builder = new CodeModelBuilder();
+            Builder.RegisterConventionsFrom(typeof(TestTarget.Conventions.Marker).Assembly);
 
-            builder.RegisterConventionsFrom(typeof(TestTarget.Conventions.Marker).Assembly);
-
-            builder.RunMutator(new AddAssemblies(typeof(Marker).Assembly));
-            builder.RunMutator<AddTypes>();
-            builder.RunMutator(new AddMethods(AddMethods.DefaultFlags | BindingFlags.NonPublic));            
+            Builder.RunMutator(new AddAssemblies(typeof(Marker).Assembly));
+            Builder.RunMutator<AddTypes>();
+            Builder.RunMutator(new AddMethods(AddMethods.DefaultFlags | BindingFlags.NonPublic));            
 
             // act            
-            builder.RunMutator<DetectApplyEventMethods>();
+            Builder.RunMutator<DetectApplyEventMethods>();
 
             // assert
-            var methodNode = builder.Model.GetNodeForMethod(typeof (Person).GetMethod("On", BindingFlags.Instance | BindingFlags.NonPublic, null, new[] {typeof (SurnameChanged)}, null));
+            var methodNode = Builder.Model.GetNodeForMethod(typeof (Person).GetMethod("On", BindingFlags.Instance | BindingFlags.NonPublic, null, new[] {typeof (SurnameChanged)}, null));
 
             Assert.That(methodNode, Is.InstanceOf<ApplyEventMethod>());
             Assert.That(((ApplyEventMethod)methodNode).AppliedEventType, Is.EqualTo(typeof(SurnameChanged)));            

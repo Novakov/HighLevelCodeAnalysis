@@ -59,7 +59,8 @@ namespace Tests.BuilderTests
         [Test]
         public void ShouldRemoveNodesMatchingCondition()
         {
-            // arrange            
+            // arrange
+            
             Builder.RunMutator(new AddAssemblies(TargetAssembly));
             Builder.RunMutator<AddTypes>();
 
@@ -74,7 +75,9 @@ namespace Tests.BuilderTests
         [Test]
         public void ShouldRecognizeEntity()
         {
-            // arrange            
+            // arrange
+            
+
             Builder.RegisterConventionsFrom(typeof(TestTarget.Conventions.Marker).Assembly);
 
             Builder.RunMutator(new AddAssemblies(TargetAssembly));
@@ -122,6 +125,8 @@ namespace Tests.BuilderTests
         public void ShouldLinkCalls()
         {
             // arrange
+            
+
             Builder.RunMutator(new AddAssemblies(TargetAssembly));
             Builder.RunMutator<AddTypes>();
             Builder.RunMutator<AddMethods>();
@@ -143,6 +148,8 @@ namespace Tests.BuilderTests
         public void ShouldAddProperties()
         {
             // arrange
+            
+
             Builder.RunMutator(new AddAssemblies(TargetAssembly));
             Builder.RunMutator<AddTypes>();
 
@@ -158,6 +165,8 @@ namespace Tests.BuilderTests
         public void ShouldAddFields()
         {
             // arrange
+            
+
             Builder.RunMutator(new AddAssemblies(TargetAssembly));
             Builder.RunMutator<AddTypes>();
 
@@ -173,6 +182,8 @@ namespace Tests.BuilderTests
         public void ShouldNotAddPropertyBackingFields()
         {
             // arrange
+            
+
             Builder.RunMutator(new AddAssemblies(TargetAssembly));
             Builder.RunMutator<AddTypes>();
 
@@ -188,6 +199,8 @@ namespace Tests.BuilderTests
         public void ShouldLinkFieldAccess()
         {
             // arrange
+            
+
             Builder.RunMutator(new AddAssemblies(TargetAssembly));
             Builder.RunMutator<AddTypes>();
             Builder.RunMutator<AddMethods>();
@@ -208,6 +221,8 @@ namespace Tests.BuilderTests
         public void ShouldLinkPropertyAccess()
         {
             // arrange
+            
+
             Builder.RunMutator(new AddAssemblies(TargetAssembly));
             Builder.RunMutator<AddTypes>();
             Builder.RunMutator<AddMethods>();

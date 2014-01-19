@@ -47,12 +47,14 @@
     <Compile Include="Constraints\GraphConstraint.cs" />
     <Compile Include="Constraints\Graph.cs" />
     <Compile Include="Constraints\NodeForTypeConstraint.cs" />
+    <Compile Include="ExportFinalGraphAttribute.cs" />
     <Compile Include="ExtensionsTests\DgmlExportTest.cs" />
     <Compile Include="ExtensionsTests\EventSourcingTest.cs" />
     <Compile Include="Get.cs" />
     <Compile Include="GraphTest.cs" />
     <Compile Include="NodeTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TestSettings.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CodeModel.Extensions.DgmlExport\CodeModel.Extensions.DgmlExport.csproj">
