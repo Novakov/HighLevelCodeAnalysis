@@ -1,17 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
+using System.Xml;
 using CodeModel.Graphs;
-using Microsoft.VisualStudio.GraphModel;
-using Microsoft.VisualStudio.GraphModel.Styles;
 using Graph = CodeModel.Graphs.Graph;
 
 namespace CodeModel.Extensions.DgmlExport
 {
     public class DgmlExporter
     {
+        private const string Namespace = "http://schemas.microsoft.com/vs/2009/dgml";
+
         public ICollection<CategoryStyle> CategoryStyles { get; private set; }
+
+        private XmlWriter writer;
 
         public DgmlExporter()
         {
@@ -19,69 +21,102 @@ namespace CodeModel.Extensions.DgmlExport
         }
 
         public void Export(Graph model, Stream output)
-        {
-            var graph = new Microsoft.VisualStudio.GraphModel.Graph();
-
-            var schema = new GraphSchema("CodeModelSchema");
-
-            graph.AddSchema(schema);
-
-            foreach (var modelNode in model.Nodes)
+        {            
+            using (this.writer = XmlWriter.Create(output, new XmlWriterSettings() { Indent = true }))
             {
-                var graphNode = graph.Nodes.GetOrCreate(modelNode.Id);
+                writer.WriteStartElement("DirectedGraph", Namespace);
 
-                graphNode.Label = modelNode.DisplayLabel;
+                WriteNodes(model);
 
-                graphNode.AddCategory(schema.GetOrCreateCategory(modelNode.GetType().FullName));
+                WriteLinks(model);
+
+                writer.WriteStartElement("Styles", Namespace);
+
+                foreach (var categoryStyle in this.CategoryStyles)
+                {
+                    writer.WriteStartElement("Style", Namespace);
+
+                    writer.WriteAttributeString("ValueLabel", "True");
+                    writer.WriteAttributeString("GroupLabel", categoryStyle.Target.Name);                    
+
+                    if (typeof(Node).IsAssignableFrom(categoryStyle.Target))
+                    {
+                        writer.WriteAttributeString("TargetType", "Node");
+                    }
+                    else
+                    {
+                        writer.WriteAttributeString("TargetType", "Link");
+                    }
+                  
+                    writer.WriteStartElement("Condition", Namespace);
+                    writer.WriteAttributeString("Expression", string.Format("HasCategory('{0}')", categoryStyle.Target.FullName));
+                    writer.WriteEndElement();
+                                      
+                    WriteStyleSetter("Background", categoryStyle.Background);
+
+                    WriteStyleSetter("Stroke", categoryStyle.Stroke);
+
+                    writer.WriteEndElement();                                        
+                }
+
+                writer.WriteEndElement();
+
+                writer.WriteEndElement();
             }
+        }
+
+        private void WriteStyleSetter(string property, string value)
+        {
+            if (value != null)
+            {
+                this.writer.WriteStartElement("Setter", Namespace);
+
+                this.writer.WriteAttributeString("Property", property);
+                this.writer.WriteAttributeString("Value", value);
+
+                this.writer.WriteEndElement();
+            }
+        }
+
+        private void WriteLinks(Graph model)
+        {
+            this.writer.WriteStartElement("Links", Namespace);
 
             foreach (var modelLink in model.Links)
             {
-                var graphLink = graph.Links.GetOrCreate(graph.Nodes.Get(modelLink.Source.Id), graph.Nodes.Get(modelLink.Target.Id));
-                graphLink.AddCategory(schema.GetOrCreateCategory(modelLink.GetType().FullName));
+                this.writer.WriteStartElement("Link", Namespace);
+
+                this.writer.WriteAttributeString("Source", modelLink.Source.Id);
+                this.writer.WriteAttributeString("Target", modelLink.Target.Id);
+                this.writer.WriteAttributeString("Category", modelLink.GetType().FullName);
+
+                this.writer.WriteEndElement();
             }
 
-            foreach (var categoryStyle in this.CategoryStyles)
+            this.writer.WriteEndElement();
+        }
+
+        private void WriteNodes(Graph model)
+        {
+            this.writer.WriteStartElement("Nodes", Namespace);
+            foreach (var modelNode in model.Nodes)
             {
-                var style = new GraphConditionalStyle(graph);
+                this.writer.WriteStartElement("Node");
 
-                if (typeof (Node).IsAssignableFrom(categoryStyle.Target))
-                {
-                    style.TargetType = typeof(GraphNode);   
-                }
-                else
-                {
-                    style.TargetType = typeof (GraphLink);
-                }
+                this.writer.WriteAttributeString("Id", modelNode.Id);
+                this.writer.WriteAttributeString("Category", modelNode.GetType().FullName);
+                this.writer.WriteAttributeString("Label", modelNode.DisplayLabel);
 
-                style.ValueLabel = "True";
-                style.GroupLabel = categoryStyle.Target.Name;
-
-                style.Conditions.Add(new GraphCondition(style)
-                {
-                    Expression = string.Format("HasCategory('{0}')", categoryStyle.Target.FullName)
-                });
-
-                if (categoryStyle.Background != null)
-                {
-                    style.Setters.Add(new GraphSetter(style, "Background") {Value = categoryStyle.Background});
-                }
-
-                if (categoryStyle.Stroke != null)
-                {
-                    style.Setters.Add(new GraphSetter(style, "Stroke") { Value = categoryStyle.Stroke });
-                }
-
-                graph.Styles.Add(style);
+                this.writer.WriteEndElement();
             }
 
-            graph.Save(output);
+            this.writer.WriteEndElement();
         }
     }
 
     public class CategoryStyle
     {
-        public Type Target { get; set; }        
+        public Type Target { get; set; }
 
         public string Background { get; set; }
 
