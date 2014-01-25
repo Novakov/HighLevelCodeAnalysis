@@ -33,8 +33,9 @@ namespace Tests.FlowAnalysisTests
             // act
             this.Result = flowAnalyzer.AnalyzeMethod(method);
 
-            // assert
-            Assert.That(this.Result.Links, Has.Count.EqualTo(this.Result.Nodes.Count() - 1));
+            // assert           
+            var paths = this.Result.FindPaths().ToList();
+            Assert.That(paths, Has.Count.EqualTo(1));
         }
 
         [Test]
@@ -48,10 +49,8 @@ namespace Tests.FlowAnalysisTests
             this.Result = flowAnalyzer.AnalyzeMethod(method);
 
             // assert          
-            Assert.That(this.Result, Graph.Has
-                .Nodes<InstructionNode>(exactly: 1, matches: x => x.OutboundLinks.Count() == 2)
-                .Nodes<InstructionNode>(exactly: 1, matches: x => x.InboundLinks.Count() == 2)
-                );
+            var paths = this.Result.FindPaths().ToList();
+            Assert.That(paths, Has.Count.EqualTo(2));
         }
 
         [Test]

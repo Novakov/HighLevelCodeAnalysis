@@ -179,6 +179,27 @@ namespace CodeModel.FlowAnalysis
         {
             return this.Nodes.OfType<InstructionNode>().FirstOrDefault(x => x.Instruction == instruction);
         }
+
+        public IEnumerable<IEnumerable<InstructionNode>> FindPaths()
+        {
+            var paths = FindAllPaths.BetweenNodes(this, this.EntryPoint, this.ExitPoint);
+
+            return paths.Select(EnumeratePath);
+        }
+
+        private static IEnumerable<InstructionNode> EnumeratePath(IEnumerable<Link> path)
+        {
+            var @enum = path.GetEnumerator();
+            
+            @enum.MoveNext();
+
+            yield return (InstructionNode)@enum.Current.Source;
+
+            while (@enum.MoveNext())
+            {
+                yield return (InstructionNode) @enum.Current.Target;
+            }
+        }
     }
 
     public class InstructionNode : Node
