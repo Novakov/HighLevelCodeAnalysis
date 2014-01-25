@@ -7,53 +7,41 @@ using System.Threading.Tasks;
 
 namespace CodeModel.Graphs
 {
-    public class FindAllPaths
+    public class FindAllPaths : DepthFirstSearch
     {
-        public static IEnumerable<IEnumerable<Link>> BetweenNodes(Graph graph, Node startNode, Node endNode)
+        private readonly Node endNode;
+        private readonly List<IEnumerable<Node>> paths;
+        private readonly Stack<Node> currentPath; 
+
+        private FindAllPaths(Node endNode)
         {
-            var paths = new Dictionary<Node, List<List<Link>>>();
+            this.endNode = endNode;
+            this.currentPath = new Stack<Node>();
+            this.paths = new List<IEnumerable<Node>>();
+        }
 
-            paths[startNode] = new List<List<Link>>
+        public static IEnumerable<IEnumerable<Node>> BetweenNodes(Graph graph, Node startNode, Node endNode)
+        {
+            var search = new FindAllPaths(endNode);
+
+            search.Walk(startNode);
+            
+            return search.paths;
+        }
+
+        protected override void EnterNode(Node node, IEnumerable<Link> availableThrough)
+        {
+            this.currentPath.Push(node);
+
+            if (node.Equals(this.endNode))
             {
-                new List<Link>()
-            };
-
-            var q = new Queue<Node>();
-            q.Enqueue(startNode);
-
-            while (q.Any())
-            {
-                var node = q.Dequeue();
-
-                foreach (var target in node.OutboundLinks.GroupBy(x => x.Target))
-                {                                        
-                    if (!paths.ContainsKey(target.Key))
-                    {
-                        paths[target.Key] = new List<List<Link>>();
-
-                        q.Enqueue(target.Key);
-                    }
-
-                    foreach (var pathToCurrentNode in paths[node])
-                    {
-                        foreach (var link in target)
-                        {
-                            var newPath = new List<Link>(pathToCurrentNode.Union(new[] {link}));
-
-                            paths[target.Key].Add(newPath);
-                        }
-                    }
-                }
+                this.paths.Add(new List<Node>(this.currentPath.Reverse()));
             }
+        }
 
-            if (paths.ContainsKey(endNode))
-            {
-                return paths[endNode];
-            }
-            else
-            {
-                return Enumerable.Empty<IEnumerable<Link>>();
-            }
+        protected override void LeaveNode(Node node, IEnumerable<Link> availableThrough)
+        {
+            this.currentPath.Pop();
         }
     }
 }

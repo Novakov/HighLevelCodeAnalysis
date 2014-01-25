@@ -31,8 +31,8 @@ namespace Tests.GraphTests
 
             // assert
             Assert.That(paths, Has.Count.EqualTo(2));
-            Assert.That(paths, Has.Exactly(1).EqualTo(new[] {l1, l3, l5}));
-            Assert.That(paths, Has.Exactly(1).EqualTo(new[] {l2, l4, l5}));
+            Assert.That(paths, Has.Exactly(1).EqualTo(new[] {start, hop1, join, end}));
+            Assert.That(paths, Has.Exactly(1).EqualTo(new[] {start, hop2, join, end}));
         }
 
         [Test]
@@ -55,8 +55,40 @@ namespace Tests.GraphTests
 
             // assert
             Assert.That(paths, Has.Count.EqualTo(2));
-            Assert.That(paths, Has.Exactly(1).EqualTo(new[] { l1, l3, l4 }));
-            Assert.That(paths, Has.Exactly(1).EqualTo(new[] { l2, l4 }));
+            Assert.That(paths, Has.Exactly(1).EqualTo(new[] { start, hop1, hop2, end }));
+            Assert.That(paths, Has.Exactly(1).EqualTo(new[] { start, hop2, end }));
+        }
+
+        [Test]
+        public void SplitAndJoinOnHop()
+        {
+            // arrange
+            var graph = new Graph();
+            var start = graph.AddNode(new SampleNode("start"));
+            var end = graph.AddNode(new SampleNode("end"));
+            var hop1 = graph.AddNode(new SampleNode("hop1"));
+            var split = graph.AddNode(new SampleNode("split"));
+
+            var hop3 = graph.AddNode(new SampleNode("hop3"));
+            var hop4 = graph.AddNode(new SampleNode("hop4"));
+
+            var join = graph.AddNode(new SampleNode("join"));
+            var hop2 = graph.AddNode(new SampleNode("hop2"));
+
+            var l1 = graph.AddLink(start, hop1, new SampleLink());
+            var l2 = graph.AddLink(hop1, split, new SampleLink());
+            var l5 = graph.AddLink(split, join, new SampleLink());
+            var l6 = graph.AddLink(join, end, new SampleLink());
+            var l3 = graph.AddLink(split, hop3, new SampleLink());
+            var l4 = graph.AddLink(hop3, join, new SampleLink());
+
+            // act
+            var paths = FindAllPaths.BetweenNodes(graph, start, end);
+
+            // assert
+            Assert.That(paths, Has.Count.EqualTo(2));
+            Assert.That(paths, Has.Exactly(1).EqualTo(new[] { start, hop1, split, hop3, join, end }));
+            Assert.That(paths, Has.Exactly(1).EqualTo(new[] { start, hop1, split, join, end}));
         }
 
         [Test]
@@ -65,8 +97,7 @@ namespace Tests.GraphTests
         [PathTestCase("One hop", "start->hop->end")]
         [PathTestCase("Two hops", "start->hop1->hop2->end")]
         [PathTestCase("Two connections with one hop", "start->hop1->end", "start->hop2->end")]
-        [PathTestCase("One direct connection one with one hop", "start->end", "start->hop->end")]        
-        [PathTestCase("Two direct connections", "start->end", "start->end")]        
+        [PathTestCase("One direct connection one with one hop", "start->end", "start->hop->end")]                   
         public void TestFindingPaths(string[] z)
         {
             var graphPaths = new List<string>(z);
@@ -103,13 +134,13 @@ namespace Tests.GraphTests
 
             foreach (var foundPath in foundPaths)
             {
-                Console.WriteLine("Found path: {0}", foundPath.First().Source.Id + "->" + string.Join("->", foundPath.Select(x => x.Target)));
+                Console.WriteLine("Found path: {0}", string.Join("->", foundPath.Select(x => x.Id)));
             }
 
             // assert
             foreach (var foundPath in foundPaths)
             {
-                var spec = foundPath.First().Source.Id + "->" + string.Join("->", foundPath.Select(x => x.Target));
+                var spec = string.Join("->", foundPath.Select(x => x.Id));
 
                 if (!graphPaths.Contains(spec))
                 {

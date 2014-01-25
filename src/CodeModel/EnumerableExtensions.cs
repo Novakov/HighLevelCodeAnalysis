@@ -12,6 +12,6 @@ namespace CodeModel
         public static IEnumerable<T> OfType<T>(this IEnumerable<T> @this, Type expectedType)
         {
             return @this.Where(x => expectedType.IsInstanceOfType(x));
-        }
+        }       
     }
 }
