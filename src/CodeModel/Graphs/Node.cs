@@ -28,7 +28,7 @@ namespace CodeModel.Graphs
 
         public bool Equals(Node other)
         {
-            return other != null && other.GetType() == this.GetType() && this.Id == other.Id;
+            return !object.ReferenceEquals(other, null) && other.GetType() == this.GetType() && this.Id == other.Id;
         }
 
         public override int GetHashCode()
@@ -40,7 +40,12 @@ namespace CodeModel.Graphs
         {
             var node = obj as Node;
 
-            return node != null && this.Equals(node);
+            return !object.ReferenceEquals(node, null) && this.Equals(node);
+        }
+
+        public override string ToString()
+        {
+            return this.Id;
         }
 
         internal void AddOutboundLink(Link link)

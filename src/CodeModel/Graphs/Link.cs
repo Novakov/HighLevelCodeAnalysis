@@ -10,5 +10,10 @@
             this.Source = source;
             this.Target = target;
         }
+
+        public override string ToString()
+        {
+            return this.Source + " -> " + this.Target;
+        }
     }
 }

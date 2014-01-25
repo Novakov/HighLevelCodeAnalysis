@@ -20,11 +20,11 @@ namespace CodeModel.Graphs
         public Node AddNode(Node node)
         {
             this.nodes.Add(node);
-
+            
             return node;
         }
 
-        public void AddLink(Node source, Node target, Link link)
+        public Link AddLink(Node source, Node target, Link link)
         {
             link.SetUpConnection(source, target);
 
@@ -32,6 +32,8 @@ namespace CodeModel.Graphs
             target.AddInboundLink(link);
 
             this.links.Add(link);
+
+            return link;
         }
 
         public void RemoveLink(Link link)

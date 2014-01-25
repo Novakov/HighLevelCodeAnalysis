@@ -16,7 +16,7 @@ namespace Tests.ExtensionsTests
     public class DgmlExportTest
     {
         [Test]
-        [Ignore("Cannot provide usefull assertions")]
+        [Explicit("Cannot provide usefull assertions")]
         public void ExportToDgml()
         {
             var builder = new CodeModelBuilder();

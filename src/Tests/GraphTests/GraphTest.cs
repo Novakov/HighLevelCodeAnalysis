@@ -1,7 +1,7 @@
 ﻿using CodeModel.Graphs;
 using NUnit.Framework;
 
-namespace Tests
+namespace Tests.GraphTests
 {
     [TestFixture]
     public class GraphTest
