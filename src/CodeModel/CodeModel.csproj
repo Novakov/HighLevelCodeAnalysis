@@ -52,6 +52,7 @@
     <Compile Include="Convetions\IEntityConvention.cs" />
     <Compile Include="EnumerableExtensions.cs" />
     <Compile Include="Graphs\BreadthFirstSearch.cs" />
+    <Compile Include="FlowAnalysis\ControlFlow.cs" />
     <Compile Include="Graphs\FindAllPaths.cs" />
     <Compile Include="Graphs\Graph.cs" />
     <Compile Include="Graphs\Link.cs" />

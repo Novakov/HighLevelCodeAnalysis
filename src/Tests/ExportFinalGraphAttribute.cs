@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using CodeModel.Builder;
 using CodeModel.Extensions.DgmlExport;
+using CodeModel.Graphs;
 using NUnit.Framework;
 
 namespace Tests
@@ -23,21 +24,37 @@ namespace Tests
 
             if (haveBuilder != null && haveBuilder.Builder != null)
             {
-                var exporter = new DgmlExporter();
+                ExportGraph(testDetails, haveBuilder.Builder.Model);
+            }
 
-                var targetDirectory = Path.Combine(TestContext.CurrentContext.WorkDirectory, "Graphs", testDetails.Fixture.GetType().FullName);
+            var haveGraph = testDetails.Fixture as IHaveGraph;
+            if (haveGraph != null && haveGraph.Result != null)
+            {
+                ExportGraph(testDetails, haveGraph.Result);
+            }
+        }               
 
-                if (!Directory.Exists(targetDirectory))
-                {
-                    Directory.CreateDirectory(targetDirectory);
-                }
+        private static void ExportGraph(TestDetails testDetails, Graph graph)
+        {
+            var exporter = new DgmlExporter();
 
-                using (var output = File.Create(Path.Combine(targetDirectory, testDetails.Method.Name + ".dgml")))
-                {
-                    exporter.Export(haveBuilder.Builder.Model, output);
-                }
+            var targetDirectory = Path.Combine(TestContext.CurrentContext.WorkDirectory, "Graphs", testDetails.Fixture.GetType().FullName);
+
+            if (!Directory.Exists(targetDirectory))
+            {
+                Directory.CreateDirectory(targetDirectory);
+            }
+
+            using (var output = File.Create(Path.Combine(targetDirectory, testDetails.Method.Name + ".dgml")))
+            {
+                exporter.Export(graph, output);
             }
         }
+    }
+
+    internal interface IHaveGraph
+    {
+        Graph Result { get; }
     }
 
     internal interface IHaveBuilder

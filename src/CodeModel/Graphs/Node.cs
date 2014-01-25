@@ -48,6 +48,11 @@ namespace CodeModel.Graphs
             return this.Id;
         }
 
+        public override string ToString()
+        {
+            return this.Id;
+        }
+
         internal void AddOutboundLink(Link link)
         {
             this.outbound.Add(link);

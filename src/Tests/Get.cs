@@ -20,6 +20,11 @@ namespace Tests
             return ExtractMemberInfo<PropertyInfo>(propertyAccess.Body);
         }
 
+        public static MethodInfo MethodOf<T>(Expression<Action<T>> methodAccess)
+        {
+            return ((MethodCallExpression) methodAccess.Body).Method;
+        }
+
         private static TMemberInfo ExtractMemberInfo<TMemberInfo>(Expression body)
             where TMemberInfo : MemberInfo
         {

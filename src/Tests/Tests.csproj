@@ -30,6 +30,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Mono.Reflection, Version=1.0.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Mono.Reflection.1.0.0.0\lib\Mono.Reflection.dll</HintPath>
+    </Reference>
     <Reference Include="nunit.framework">
       <HintPath>..\packages\NUnit.2.6.3\lib\nunit.framework.dll</HintPath>
     </Reference>
@@ -50,6 +54,7 @@
     <Compile Include="ExportFinalGraphAttribute.cs" />
     <Compile Include="ExtensionsTests\DgmlExportTest.cs" />
     <Compile Include="ExtensionsTests\EventSourcingTest.cs" />
+    <Compile Include="FlowAnalysisTests\ControlFlowTest.cs" />
     <Compile Include="Get.cs" />
     <Compile Include="GraphTests\AllPathsTest.cs" />
     <Compile Include="GraphTests\GraphTest.cs" />
