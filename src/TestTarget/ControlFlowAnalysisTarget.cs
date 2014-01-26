@@ -153,5 +153,23 @@ namespace TestTarget
         public static void Marker3() { }
         public static void Marker4() { }
         public static void Marker5() { }
+
+        public void MethodWithSwitch()
+        {
+            switch (DateTime.Now.Day)
+            {
+                case 0:
+                    Marker1();
+                    break;
+                case 1:
+                    Marker2();
+                    break;
+                case 3:
+                    Marker3();
+                    break;                    
+            }
+
+            Marker4();
+        }
     }
 }

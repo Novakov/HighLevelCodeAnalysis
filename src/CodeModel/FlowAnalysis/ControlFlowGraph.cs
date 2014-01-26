@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Emit;
 using CodeModel.Graphs;
 using Mono.Reflection;
 
@@ -7,7 +8,7 @@ namespace CodeModel.FlowAnalysis
 {
     public class ControlFlowGraph : Graph
     {
-        public InstructionNode ExitPoint { get; private set; }
+        public Node ExitPoint { get; private set; }
         public InstructionNode EntryPoint { get; private set; }
 
         public ControlFlowGraph(Instruction entrypoint, Instruction exitPoint)
@@ -15,7 +16,8 @@ namespace CodeModel.FlowAnalysis
             this.EntryPoint = new InstructionNode(entrypoint);
             this.AddNode(this.EntryPoint);
 
-            this.ExitPoint = new InstructionNode(exitPoint);
+            this.ExitPoint = new DummyExitPoint();
+            // new InstructionNode(exitPoint);
             this.AddNode(this.ExitPoint);
         }
 
@@ -30,7 +32,16 @@ namespace CodeModel.FlowAnalysis
 
             paths.Walk(this.EntryPoint);
 
-            return paths.Paths.Select(x => x.Select(y => (InstructionNode)y));
+            return paths.Paths.Select(x => x.OfType<InstructionNode>());
+        }
+
+        private class DummyExitPoint : Node
+        {
+            public DummyExitPoint()
+                : base("exit-point")
+            {
+                
+            }
         }
     }
 }

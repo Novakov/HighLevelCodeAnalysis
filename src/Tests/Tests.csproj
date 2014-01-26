@@ -55,6 +55,7 @@
     <Compile Include="ExtensionsTests\DgmlExportTest.cs" />
     <Compile Include="ExtensionsTests\EventSourcingTest.cs" />
     <Compile Include="FlowAnalysisTests\ControlFlowTest.cs" />
+    <Compile Include="FlowAnalysisTests\StackWalkerTest.cs" />
     <Compile Include="Get.cs" />
     <Compile Include="GraphTests\AllPathsTest.cs" />
     <Compile Include="GraphTests\GraphTest.cs" />

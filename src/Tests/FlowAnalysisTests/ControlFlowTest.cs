@@ -191,6 +191,21 @@ namespace Tests.FlowAnalysisTests
             Assert.That(this.Result.ExitPoint.InboundLinks, Has.Count.EqualTo(2), "Exit point can be reached from throw or catched exception");
         }
 
+        [Test]
+        public void MethodWithSwitch()
+        {
+            // arrage
+            var flowAnalyzer = new ControlFlow();
+            var method = Get.MethodOf<ControlFlowAnalysisTarget>(x => x.MethodWithSwitch());
+
+            // act
+            this.Result = flowAnalyzer.AnalyzeMethod(method);
+
+            // assert
+            var paths = this.Result.FindPaths().ToList();
+            Assert.That(paths, Has.Count.EqualTo(4));
+        }
+
         private InstructionNode FindMethodCallInstruction(Expression<Action<ControlFlowAnalysisTarget>> target)
         {
             var method = Get.MethodOf(target);

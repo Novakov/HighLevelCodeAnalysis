@@ -55,6 +55,7 @@
     <Compile Include="FlowAnalysis\ControlTransition.cs" />
     <Compile Include="FlowAnalysis\FindAllControlFlowPaths.cs" />
     <Compile Include="FlowAnalysis\InstructionNode.cs" />
+    <Compile Include="FlowAnalysis\StackWalker.cs" />
     <Compile Include="FlowAnalysis\TransitionKind.cs" />
     <Compile Include="Graphs\BreadthFirstSearch.cs" />
     <Compile Include="FlowAnalysis\ControlFlow.cs" />

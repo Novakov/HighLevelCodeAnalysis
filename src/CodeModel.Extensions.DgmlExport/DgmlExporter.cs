@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Xml;
+using CodeModel.FlowAnalysis;
 using CodeModel.Graphs;
 using Graph = CodeModel.Graphs.Graph;
 
@@ -89,6 +90,12 @@ namespace CodeModel.Extensions.DgmlExport
                 this.writer.WriteAttributeString("Source", modelLink.Source.Id);
                 this.writer.WriteAttributeString("Target", modelLink.Target.Id);
                 this.writer.WriteAttributeString("Category", modelLink.GetType().FullName);
+
+                var ct = modelLink as ControlTransition;
+                if (ct != null)
+                {
+                    this.writer.WriteAttributeString("TransitionKind", ct.Kind.ToString());
+                }
 
                 this.writer.WriteEndElement();
             }

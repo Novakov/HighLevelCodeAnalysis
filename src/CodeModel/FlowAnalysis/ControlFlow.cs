@@ -66,6 +66,9 @@ namespace CodeModel.FlowAnalysis
                     case FlowControl.Throw:
                         Throw(instruction);
                         break;
+                    case FlowControl.Meta:
+                        Meta(instruction);
+                        break;
                     default:
                         throw new InvalidOperationException(string.Format("Unrecognized flow control {0} on instruction {1}", instruction.Instruction.OpCode.FlowControl, instruction.Instruction));
                 }
@@ -75,10 +78,16 @@ namespace CodeModel.FlowAnalysis
             return graph;
         }
 
+        private void Meta(InstructionNode instruction)
+        {
+            NextInstruction(instruction);
+        }
+
         private void Return(InstructionNode instruction)
         {
             if (instruction.Instruction.OpCode == OpCodes.Ret)
             {
+                this.graph.AddLink(instruction, this.graph.ExitPoint, new ControlTransition(TransitionKind.Forward));
                 return;
             }
 
@@ -117,7 +126,7 @@ namespace CodeModel.FlowAnalysis
         {
             var body = analyzedMethod.GetMethodBody();
 
-            var handlingClause = body.ExceptionHandlingClauses.SingleOrDefault(x => instruction.Instruction.Next.Offset == x.TryOffset + x.TryLength);
+            var handlingClause = body.ExceptionHandlingClauses.OrderBy(x => x.HandlerOffset).FirstOrDefault(x => instruction.Instruction.Next.Offset == x.TryOffset + x.TryLength);
 
             if (handlingClause != null && handlingClause.Flags.HasFlag(ExceptionHandlingClauseOptions.Finally))
             {
@@ -131,22 +140,46 @@ namespace CodeModel.FlowAnalysis
 
             var target = this.graph.NodeForInstruction((Instruction)instruction.Instruction.Operand);
 
-            graph.AddLink(instruction, target, new ControlTransition(TransitionKind.Forward));
+            graph.AddLink(instruction, target, new ControlTransition(TransitionKindForBranch(instruction, target)));
 
             this.remainingInstructions.Push(target);
         }
 
         private void ConditionalBranch(InstructionNode instruction)
         {
-            var branchTarget = graph.NodeForInstruction((Instruction)instruction.Instruction.Operand);
-            graph.AddLink(instruction, branchTarget, new ControlTransition(TransitionKindForBranch(instruction, branchTarget)));
+            switch (instruction.Instruction.OpCode.OperandType)
+            {
+                case OperandType.InlineSwitch:
+                    JumpTable(instruction);
+                    break;
+                default:
+                    var branchTarget = graph.NodeForInstruction((Instruction)instruction.Instruction.Operand);
+                    graph.AddLink(instruction, branchTarget, new ControlTransition(TransitionKindForBranch(instruction, branchTarget)));
 
-            this.remainingInstructions.Push(branchTarget);
+                    this.remainingInstructions.Push(branchTarget);
 
-            var next = graph.NodeForInstruction(instruction.Instruction.Next);
-            graph.AddLink(instruction, next, new ControlTransition(TransitionKind.Forward));
+                    var next = graph.NodeForInstruction(instruction.Instruction.Next);
+                    graph.AddLink(instruction, next, new ControlTransition(TransitionKind.Forward));
 
-            this.remainingInstructions.Push(next);
+                    this.remainingInstructions.Push(next);
+                    break;
+            }
+        }
+
+        private void JumpTable(InstructionNode instruction)
+        {
+            var targets = ((Instruction[]) instruction.Instruction.Operand).Select(x => this.graph.NodeForInstruction(x));
+
+            foreach (var target in targets)
+            {
+                graph.AddLink(instruction, target, new ControlTransition(TransitionKind.Forward));
+                this.remainingInstructions.Push(target);
+            }
+
+            //var next = this.graph.NodeForInstruction(instruction.Instruction.Next);
+            //this.graph.AddLink(instruction, next, new ControlTransition(TransitionKind.Forward));
+
+            //this.remainingInstructions.Push(next);
         }
 
         private static TransitionKind TransitionKindForBranch(InstructionNode @from, InstructionNode to)
