@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
-using CodeModel.Graphs;
 using Mono.Reflection;
 
 namespace CodeModel.FlowAnalysis
@@ -85,7 +85,7 @@ namespace CodeModel.FlowAnalysis
             if (instruction.Instruction.OpCode == OpCodes.Endfinally)
             {
                 var nextNode = this.graph.NodeForInstruction(instruction.Instruction.Next);
-                this.graph.AddLink(instruction, nextNode, new ControlTransition());
+                this.graph.AddLink(instruction, nextNode, new ControlTransition(TransitionKind.Forward));
                 this.remainingInstructions.Push(nextNode);
 
                 LinkToThrowTarget(instruction);
@@ -93,24 +93,24 @@ namespace CodeModel.FlowAnalysis
         }
 
         private void Throw(InstructionNode instruction)
-        {           
+        {
             LinkToThrowTarget(instruction);
         }
 
         private void LinkToThrowTarget(InstructionNode instruction)
         {
             var body = this.analyzedMethod.GetMethodBody();
-            
+
             var possibleExceptionHandlerBlocks = body.ExceptionHandlingClauses.Where(x => x.TryOffset <= instruction.Instruction.Offset && instruction.Instruction.Offset <= x.TryOffset + x.TryLength);
 
             foreach (var handlerBlock in possibleExceptionHandlerBlocks)
             {
                 var handlerStartNode = this.graph.Nodes.OfType<InstructionNode>().Single(x => x.Instruction.Offset == handlerBlock.HandlerOffset);
-                this.graph.AddLink(instruction, handlerStartNode, new ControlTransition());
+                this.graph.AddLink(instruction, handlerStartNode, new ControlTransition(TransitionKind.Forward));
                 this.remainingInstructions.Push(handlerStartNode);
-            }          
+            }
 
-            this.graph.AddLink(instruction, this.graph.ExitPoint, new ControlTransition());
+            this.graph.AddLink(instruction, this.graph.ExitPoint, new ControlTransition(TransitionKind.Forward));
         }
 
         private void UnconditionalBranch(InstructionNode instruction)
@@ -122,7 +122,7 @@ namespace CodeModel.FlowAnalysis
             if (handlingClause != null && handlingClause.Flags.HasFlag(ExceptionHandlingClauseOptions.Finally))
             {
                 var finallyClauseStart = this.graph.Nodes.OfType<InstructionNode>().Single(x => x.Instruction.Offset == handlingClause.HandlerOffset);
-                this.graph.AddLink(instruction, finallyClauseStart, new ControlTransition());
+                this.graph.AddLink(instruction, finallyClauseStart, new ControlTransition(TransitionKind.Forward));
 
                 this.remainingInstructions.Push(finallyClauseStart);
 
@@ -131,7 +131,7 @@ namespace CodeModel.FlowAnalysis
 
             var target = this.graph.NodeForInstruction((Instruction)instruction.Instruction.Operand);
 
-            graph.AddLink(instruction, target, new ControlTransition());
+            graph.AddLink(instruction, target, new ControlTransition(TransitionKind.Forward));
 
             this.remainingInstructions.Push(target);
         }
@@ -139,77 +139,33 @@ namespace CodeModel.FlowAnalysis
         private void ConditionalBranch(InstructionNode instruction)
         {
             var branchTarget = graph.NodeForInstruction((Instruction)instruction.Instruction.Operand);
-            graph.AddLink(instruction, branchTarget, new ControlTransition());
+            graph.AddLink(instruction, branchTarget, new ControlTransition(TransitionKindForBranch(instruction, branchTarget)));
 
             this.remainingInstructions.Push(branchTarget);
 
             var next = graph.NodeForInstruction(instruction.Instruction.Next);
-            graph.AddLink(instruction, next, new ControlTransition());
+            graph.AddLink(instruction, next, new ControlTransition(TransitionKind.Forward));
 
             this.remainingInstructions.Push(next);
+        }
+
+        private static TransitionKind TransitionKindForBranch(InstructionNode @from, InstructionNode to)
+        {
+            if (to.Instruction.Offset > @from.Instruction.Offset)
+            {
+                return TransitionKind.Forward;
+            }
+            else
+            {
+                return TransitionKind.Backward;
+            }
         }
 
         private void NextInstruction(InstructionNode instruction)
         {
             var next = this.graph.NodeForInstruction(instruction.Instruction.Next);
-            this.graph.AddLink(instruction, next, new ControlTransition());
+            this.graph.AddLink(instruction, next, new ControlTransition(TransitionKind.Forward));
             this.remainingInstructions.Push(next);
-        }
-    }
-
-    public class ControlTransition : Link
-    {
-    }
-
-    public class ControlFlowGraph : Graph
-    {
-        public InstructionNode ExitPoint { get; private set; }
-        public InstructionNode EntryPoint { get; private set; }
-
-        public ControlFlowGraph(Instruction entrypoint, Instruction exitPoint)
-        {
-            this.EntryPoint = new InstructionNode(entrypoint);
-            this.AddNode(this.EntryPoint);
-
-            this.ExitPoint = new InstructionNode(exitPoint);
-            this.AddNode(this.ExitPoint);
-        }
-
-        public InstructionNode NodeForInstruction(Instruction instruction)
-        {
-            return this.Nodes.OfType<InstructionNode>().FirstOrDefault(x => x.Instruction == instruction);
-        }
-
-        public IEnumerable<IEnumerable<InstructionNode>> FindPaths()
-        {
-            var paths = FindAllPaths.BetweenNodes(this, this.EntryPoint, this.ExitPoint);
-
-            return paths.Select(EnumeratePath);
-        }
-
-        private static IEnumerable<InstructionNode> EnumeratePath(IEnumerable<Link> path)
-        {
-            var @enum = path.GetEnumerator();
-            
-            @enum.MoveNext();
-
-            yield return (InstructionNode)@enum.Current.Source;
-
-            while (@enum.MoveNext())
-            {
-                yield return (InstructionNode) @enum.Current.Target;
-            }
-        }
-    }
-
-    public class InstructionNode : Node
-    {
-        public Instruction Instruction { get; private set; }
-
-        public InstructionNode(Instruction instruction)
-            : base(instruction.ToString())
-        {
-            this.Instruction = instruction;
         }
     }
 }

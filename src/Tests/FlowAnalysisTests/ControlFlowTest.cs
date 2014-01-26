@@ -63,11 +63,9 @@ namespace Tests.FlowAnalysisTests
             // act
             this.Result = flowAnalyzer.AnalyzeMethod(method);
 
-            // assert          
-            Assert.That(this.Result, Graph.Has
-                .Nodes<InstructionNode>(exactly: 2, matches: x => x.OutboundLinks.Count() == 2)
-                .Nodes<InstructionNode>(exactly: 2, matches: x => x.InboundLinks.Count() == 2)
-                );
+            // assert    
+            var paths = this.Result.FindPaths().ToList();
+            Assert.That(paths, Has.Count.EqualTo(4));
         }
 
         [Test]
@@ -81,10 +79,8 @@ namespace Tests.FlowAnalysisTests
             this.Result = flowAnalyzer.AnalyzeMethod(method);
 
             // assert          
-            Assert.That(this.Result, Graph.Has
-                .Nodes<InstructionNode>(exactly: 1, matches: x => x.OutboundLinks.Count() == 2)
-                .Nodes<InstructionNode>(exactly: 1, matches: x => x.InboundLinks.Count() == 2)
-                );
+            var paths = this.Result.FindPaths().ToList();
+            Assert.That(paths, Has.Count.EqualTo(2));
         }
 
         [Test]
@@ -98,6 +94,8 @@ namespace Tests.FlowAnalysisTests
             this.Result = flowAnalyzer.AnalyzeMethod(method);
 
             // assert          
+            var paths = this.Result.FindPaths().ToList();
+
             Assert.That(this.Result, Graph.Has
                 .Nodes<InstructionNode>(exactly: 1, matches: x => x.OutboundLinks.Count() == 2)
                 .Nodes<InstructionNode>(exactly: 1, matches: x => x.InboundLinks.Count() == 2)
@@ -133,14 +131,13 @@ namespace Tests.FlowAnalysisTests
 
             // assert
             var marker2Call = FindMethodCallInstruction(x => ControlFlowAnalysisTarget.Marker2());
-
-            Assert.That(marker2Call.InboundLinks, Has.Count.EqualTo(1), "Finally block not reached");
-
+           
             var marker3Call = FindMethodCallInstruction(x => ControlFlowAnalysisTarget.Marker3());
-
-            Assert.That(marker3Call.InboundLinks, Has.Count.EqualTo(1), "Block after finally not reached");
-
-            Assert.That(this.Result.ExitPoint.InboundLinks, Has.Count.EqualTo(2), "Return should be reachable from normal flow and finally block");
+          
+            var paths = this.Result.FindPaths().ToList();
+            Assert.That(paths, Has.Count.EqualTo(2)
+                .And.Exactly(1).Contains(marker3Call)
+                .And.Exactly(2).Contains(marker2Call));
         }
 
         [Test]
@@ -153,12 +150,12 @@ namespace Tests.FlowAnalysisTests
             // act
             this.Result = flowAnalyzer.AnalyzeMethod(method);
 
-            // assert            
+            // assert   
             var marker1Call = FindMethodCallInstruction(x => ControlFlowAnalysisTarget.Marker1());
 
-            Assert.That(marker1Call.InboundLinks, Has.Count.EqualTo(1), "Catch block not reached");
-
-            Assert.That(this.Result.ExitPoint.InboundLinks, Has.Count.EqualTo(2), "Exit point can be reached from normal flow or not handled exception");
+            var paths = this.Result.FindPaths().ToList();
+            Assert.That(paths, Has.Count.EqualTo(2)
+                .And.Exactly(1).Contains(marker1Call));
         }
 
         [Test]
@@ -172,6 +169,9 @@ namespace Tests.FlowAnalysisTests
             this.Result = flowAnalyzer.AnalyzeMethod(method);
 
             // assert
+            var paths = this.Result.FindPaths().ToList();
+            Assert.That(paths, Has.Count.EqualTo(4));
+
             var marker1Call = FindMethodCallInstruction(x => ControlFlowAnalysisTarget.Marker1());
 
             Assert.That(marker1Call.InboundLinks, Has.Count.EqualTo(1), "Catch block not reached");
