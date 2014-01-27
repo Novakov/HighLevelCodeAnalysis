@@ -53,9 +53,17 @@
     <Compile Include="EnumerableExtensions.cs" />
     <Compile Include="FlowAnalysis\ControlFlowGraph.cs" />
     <Compile Include="FlowAnalysis\ControlTransition.cs" />
+    <Compile Include="FlowAnalysis\DetermineCallParameterTypes.cs" />
     <Compile Include="FlowAnalysis\FindAllControlFlowPaths.cs" />
+    <Compile Include="FlowAnalysis\InstructionExtensions.cs" />
     <Compile Include="FlowAnalysis\InstructionNode.cs" />
+    <Compile Include="FlowAnalysis\PotentialType.cs" />
     <Compile Include="FlowAnalysis\StackWalker.cs" />
+    <Compile Include="FlowAnalysis\StackWalker.partial.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>StackWalker.partial.tt</DependentUpon>
+    </Compile>
     <Compile Include="FlowAnalysis\TransitionKind.cs" />
     <Compile Include="Graphs\BreadthFirstSearch.cs" />
     <Compile Include="FlowAnalysis\ControlFlow.cs" />
@@ -88,10 +96,18 @@
     <Compile Include="Mutators\RemoveNode.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ReflectionExtensions.cs" />
+    <Compile Include="StackExtensions.cs" />
     <Compile Include="TinyIoC.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="FlowAnalysis\StackWalker.partial.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>StackWalker.partial.cs</LastGenOutput>
+    </None>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

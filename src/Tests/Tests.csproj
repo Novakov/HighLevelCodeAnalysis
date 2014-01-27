@@ -54,6 +54,7 @@
     <Compile Include="ExportFinalGraphAttribute.cs" />
     <Compile Include="ExtensionsTests\DgmlExportTest.cs" />
     <Compile Include="ExtensionsTests\EventSourcingTest.cs" />
+    <Compile Include="FlowAnalysisTests\CallParameterTypesStackWalkerTest.cs" />
     <Compile Include="FlowAnalysisTests\ControlFlowTest.cs" />
     <Compile Include="FlowAnalysisTests\StackWalkerTest.cs" />
     <Compile Include="Get.cs" />
