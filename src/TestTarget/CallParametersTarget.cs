@@ -30,22 +30,25 @@ namespace TestTarget
 
         public void UseVariables()
         {
-            object i = 2;
+            object i = Get<int>();
             
             TargetWithObject(i);
         }
 
         public void ManyParameters(object arg1, object arg2, object arg3, object arg4, object arg5)
-        {
-            
+        {            
         }
 
         public void TargetWithObject(object value)
         { }
 
         public void StaticTarget(object value)
+        {            
+        }
+
+        public static T Get<T>()
         {
-            
+            return default(T);
         }
     }
 }

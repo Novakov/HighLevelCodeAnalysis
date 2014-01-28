@@ -26,8 +26,8 @@ namespace Tests.FlowAnalysisTests
             walker.Walk(method, path);
 
             // assert
-            Assert.That(walker.Calls, Has.Count.EqualTo(1));
-            Assert.That(walker.Calls[0].Item2, Is.EqualTo(expected));
+            Assert.That(walker.Calls, Has.Count.AtLeast(1));
+            Assert.That(walker.Calls.Last().Item2, Is.EqualTo(expected));
         }
 
         public IEnumerable<TestCaseData> GetTestCases()

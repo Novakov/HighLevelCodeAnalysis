@@ -84,6 +84,8 @@ namespace CodeModel.FlowAnalysis
             }
 
             this.Calls.Add(Tuple.Create(instruction, types));
+
+            this.stack.Push(PotentialType.Simple(calledMethod.ReturnType));
         }
 
         protected override void HandleStoreVariable(Instruction instruction, LocalVariableInfo variable)
