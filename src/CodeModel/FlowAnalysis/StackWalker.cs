@@ -42,6 +42,9 @@ namespace CodeModel.FlowAnalysis
 
             var body = new Lazy<MethodBody>(() => this.AnalyzedMethod.GetMethodBody());
 
+            registry[OpCodes.Starg] = i => HandleStoreArgument(i, (ParameterInfo) i.Operand);
+            registry[OpCodes.Starg_S] = i => HandleStoreArgument(i, (ParameterInfo) i.Operand);
+
             registry[OpCodes.Ldarg_1] = i => LoadArgByIndex(i, 1);
             registry[OpCodes.Ldarg_2] = i => LoadArgByIndex(i, 2);
             registry[OpCodes.Ldarg_3] = i => LoadArgByIndex(i, 3);
@@ -70,6 +73,11 @@ namespace CodeModel.FlowAnalysis
             registry[OpCodes.Ldc_I4_6] = i => HandleLoadInt32(i, 6);
             registry[OpCodes.Ldc_I4_7] = i => HandleLoadInt32(i, 7);
             registry[OpCodes.Ldc_I4_8] = i => HandleLoadInt32(i, 8);            
+        }
+
+        protected virtual void HandleStoreArgument(Instruction instruction, ParameterInfo parameter)
+        {
+            this.HandleUnrecognized(instruction);
         }
 
         protected virtual void HandleLoadInt32(Instruction instruction, int constant)
@@ -131,12 +139,13 @@ namespace CodeModel.FlowAnalysis
         }
 
         protected virtual void HandleLoadThis(Instruction instruction)
-        {            
+        {
+            this.HandleUnrecognized(instruction);
         }
 
         protected virtual void HandleLoadArgument(Instruction instruction, ParameterInfo parameter)
         {
-            
+            this.HandleUnrecognized(instruction);
         }
     }
 }

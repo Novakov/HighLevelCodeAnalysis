@@ -35,6 +35,13 @@ namespace TestTarget
             TargetWithObject(i);
         }
 
+        public void OverrideArgument(object test)
+        {
+            test = "aaaaa";
+
+            TargetWithObject(test);
+        }
+
         public void ManyParameters(object arg1, object arg2, object arg3, object arg4, object arg5)
         {            
         }

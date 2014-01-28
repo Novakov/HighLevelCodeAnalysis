@@ -51,6 +51,7 @@ namespace Tests.FlowAnalysisTests
             );
 
             yield return TestCase(x => x.UseVariables(), PotentialType.Integer);
+            yield return TestCase(x => x.OverrideArgument(null), PotentialType.String);
         }
 
         private static TestCaseData TestCase(Expression<Action<CallParametersTarget>> method, params PotentialType[] types)

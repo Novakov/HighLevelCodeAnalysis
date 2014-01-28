@@ -12,6 +12,7 @@ namespace CodeModel.FlowAnalysis
         private Stack<PotentialType> stack;
 
         private IDictionary<int, PotentialType> variableTypes;
+        private IDictionary<int, PotentialType> parameterTypes;
 
         public List<Tuple<Instruction, PotentialType[]>> Calls { get; private set; }                
 
@@ -35,7 +36,12 @@ namespace CodeModel.FlowAnalysis
 
         protected override void HandleLoadArgument(Instruction instruction, ParameterInfo parameter)
         {
-            this.stack.Push(PotentialType.Simple(parameter.ParameterType));
+            this.stack.Push(this.parameterTypes[parameter.Position]);
+        }
+
+        protected override void HandleStoreArgument(Instruction instruction, ParameterInfo parameter)
+        {
+            this.parameterTypes[parameter.Position] = this.stack.Pop();
         }
 
         protected override void HandleLdstr(Instruction instruction)
@@ -96,12 +102,13 @@ namespace CodeModel.FlowAnalysis
         protected override void HandleLoadVariable(Instruction instruction, LocalVariableInfo variable)
         {
             this.stack.Push(this.variableTypes[variable.LocalIndex]);
-        }
+        }        
 
         public override void Walk(MethodInfo method, IEnumerable<InstructionNode> instructions)
         {
             this.stack = new Stack<PotentialType>();
             this.variableTypes = method.GetMethodBody().LocalVariables.ToDictionary(x => x.LocalIndex, x => PotentialType.Simple(x.LocalType));
+            this.parameterTypes = method.GetParameters().ToDictionary(x => x.Position, x => PotentialType.Simple(x.ParameterType));
 
             this.Calls = new List<Tuple<Instruction, PotentialType[]>>();
 
