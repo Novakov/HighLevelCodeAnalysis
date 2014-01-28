@@ -11,6 +11,8 @@ namespace CodeModel.FlowAnalysis
     {
         private Stack<PotentialType> stack;
 
+        private IDictionary<int, PotentialType> variableTypes;
+
         public List<Tuple<Instruction, PotentialType[]>> Calls { get; private set; }                
 
         protected override void HandleUnrecognized(Instruction instruction)
@@ -84,9 +86,21 @@ namespace CodeModel.FlowAnalysis
             this.Calls.Add(Tuple.Create(instruction, types));
         }
 
+        protected override void HandleStoreVariable(Instruction instruction, LocalVariableInfo variable)
+        {
+            this.variableTypes[variable.LocalIndex] = this.stack.Pop();
+        }
+
+        protected override void HandleLoadVariable(Instruction instruction, LocalVariableInfo variable)
+        {
+            this.stack.Push(this.variableTypes[variable.LocalIndex]);
+        }
+
         public override void Walk(MethodInfo method, IEnumerable<InstructionNode> instructions)
         {
             this.stack = new Stack<PotentialType>();
+            this.variableTypes = method.GetMethodBody().LocalVariables.ToDictionary(x => x.LocalIndex, x => PotentialType.Simple(x.LocalType));
+
             this.Calls = new List<Tuple<Instruction, PotentialType[]>>();
 
             base.Walk(method, instructions);

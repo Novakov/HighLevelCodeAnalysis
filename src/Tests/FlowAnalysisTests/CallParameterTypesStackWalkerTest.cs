@@ -34,22 +34,23 @@ namespace Tests.FlowAnalysisTests
         {
             yield return TestCase(x => x.InlineParameter(), new[] {PotentialType.String});
             yield return TestCase(x => x.CallToStaticMethod(6), new[] {PotentialType.Integer});
-            yield return TestCase(x => x.UseManyParameters(6, "a", 4f, 5m, false), new[]
-            {
+            yield return TestCase(x => x.UseManyParameters(6, "a", 4f, 5m, false), 
                 PotentialType.Integer,
                 PotentialType.String,
                 typeof(float),
                 typeof(decimal),
                 typeof(Boolean)
-            });
-            yield return TestCase(x => x.UseInlineValues(), new[]
-            {
+            );
+            yield return TestCase(x => x.UseInlineValues(), 
+            
                 PotentialType.Integer,
                 PotentialType.String,
                 typeof(float),
                 typeof(decimal),
                 typeof(Boolean)
-            });
+            );
+
+            yield return TestCase(x => x.UseVariables(), PotentialType.Integer);
         }
 
         private static TestCaseData TestCase(Expression<Action<CallParametersTarget>> method, params PotentialType[] types)

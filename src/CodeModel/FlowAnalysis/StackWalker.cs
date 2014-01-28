@@ -40,10 +40,24 @@ namespace CodeModel.FlowAnalysis
         {
             base.RegisterHandlers(registry);
 
+            var body = new Lazy<MethodBody>(() => this.AnalyzedMethod.GetMethodBody());
+
             registry[OpCodes.Ldarg_1] = i => LoadArgByIndex(i, 1);
             registry[OpCodes.Ldarg_2] = i => LoadArgByIndex(i, 2);
             registry[OpCodes.Ldarg_3] = i => LoadArgByIndex(i, 3);
-            
+
+            registry[OpCodes.Stloc] = i => HandleStoreVariable(i, (LocalVariableInfo) i.Operand);
+            registry[OpCodes.Stloc_0] = i => HandleStoreVariable(i, body.Value.LocalVariables[0]);
+            registry[OpCodes.Stloc_1] = i => HandleStoreVariable(i, body.Value.LocalVariables[1]);
+            registry[OpCodes.Stloc_2] = i => HandleStoreVariable(i, body.Value.LocalVariables[2]);
+            registry[OpCodes.Stloc_3] = i => HandleStoreVariable(i, body.Value.LocalVariables[3]);
+
+            registry[OpCodes.Ldloc] = i => HandleLoadVariable(i, (LocalVariableInfo)i.Operand);
+            registry[OpCodes.Ldloc_0] = i => HandleLoadVariable(i, body.Value.LocalVariables[0]);
+            registry[OpCodes.Ldloc_1] = i => HandleLoadVariable(i, body.Value.LocalVariables[1]);
+            registry[OpCodes.Ldloc_2] = i => HandleLoadVariable(i, body.Value.LocalVariables[2]);
+            registry[OpCodes.Ldloc_3] = i => HandleLoadVariable(i, body.Value.LocalVariables[3]);
+
             registry[OpCodes.Ldc_I4] = i => HandleLoadInt32(i, (int)i.Operand);
             registry[OpCodes.Ldc_I4_S] = i => HandleLoadInt32(i, (int)i.Operand);
             registry[OpCodes.Ldc_I4_M1] = i => HandleLoadInt32(i, -1);
@@ -59,6 +73,16 @@ namespace CodeModel.FlowAnalysis
         }
 
         protected virtual void HandleLoadInt32(Instruction instruction, int constant)
+        {
+            this.HandleUnrecognized(instruction);
+        }
+
+        protected virtual void HandleStoreVariable(Instruction instruction, LocalVariableInfo variable)
+        {
+            this.HandleUnrecognized(instruction);
+        }
+
+        protected virtual void HandleLoadVariable(Instruction instruction, LocalVariableInfo variable)
         {
             this.HandleUnrecognized(instruction);
         }

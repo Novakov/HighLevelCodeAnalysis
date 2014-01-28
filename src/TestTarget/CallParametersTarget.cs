@@ -26,7 +26,14 @@ namespace TestTarget
         public void UseInlineValues()
         {
             ManyParameters(1, "aaaa", 3f, 4m, false);
-        }        
+        }
+
+        public void UseVariables()
+        {
+            object i = 2;
+            
+            TargetWithObject(i);
+        }
 
         public void ManyParameters(object arg1, object arg2, object arg3, object arg4, object arg5)
         {
