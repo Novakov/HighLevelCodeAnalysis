@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Reflection;
 using System.Reflection.Emit;
 using Mono.Reflection;
@@ -14,7 +15,7 @@ namespace CodeModel.FlowAnalysis
         private IDictionary<int, PotentialType> variableTypes;
         private IDictionary<int, PotentialType> parameterTypes;
 
-        public List<Tuple<Instruction, PotentialType[]>> Calls { get; private set; }                
+        public List<Tuple<Instruction, PotentialType[]>> Calls { get; private set; }
 
         protected override void HandleUnrecognized(Instruction instruction)
         {
@@ -22,17 +23,17 @@ namespace CodeModel.FlowAnalysis
         }
 
         protected override void HandleNop(Instruction instruction)
-        {            
+        {
         }
 
         protected override void HandleRet(Instruction instruction)
-        {            
+        {
         }
 
         protected override void HandleLoadThis(Instruction instruction)
         {
             this.stack.Push(PotentialType.Simple(this.AnalyzedMethod.ReflectedType));
-        }      
+        }
 
         protected override void HandleLoadArgument(Instruction instruction, ParameterInfo parameter)
         {
@@ -68,7 +69,7 @@ namespace CodeModel.FlowAnalysis
         {
             this.stack.PopMany(instruction.PopedValuesCount(this.AnalyzedMethod));
 
-            this.stack.Push(PotentialType.Simple(((ConstructorInfo) instruction.Operand).ReflectedType));
+            this.stack.Push(PotentialType.Simple(((ConstructorInfo)instruction.Operand).ReflectedType));
         }
 
         protected override void HandleCall(Instruction instruction)
@@ -102,7 +103,75 @@ namespace CodeModel.FlowAnalysis
         protected override void HandleLoadVariable(Instruction instruction, LocalVariableInfo variable)
         {
             this.stack.Push(this.variableTypes[variable.LocalIndex]);
+        }
+
+        protected override void HandleBinaryOperator(Instruction instruction, BinaryOperator @operator)
+        {
+            PotentialType[] types;
+
+            switch (@operator)
+            {
+                case BinaryOperator.Add:
+                case BinaryOperator.Subtract:
+                case BinaryOperator.Multiply:
+                case BinaryOperator.Divide:
+                case BinaryOperator.Remainder:
+                    types = this.stack.PopMany(2);
+                    this.stack.Push(types[0].AfterBinaryOperationWith(types[1]));
+                    break;
+                case BinaryOperator.And:
+                case BinaryOperator.Or:
+                case BinaryOperator.Xor:
+                    types = this.stack.PopMany(2);
+                    //this.stack.Push(types[0].Signed().BitwiseBinaryWith(types[1].Signed()));
+                    this.stack.Push(types[0].AfterBinaryOperationWith(types[1]));
+                    break;
+                case BinaryOperator.ShiftLeft:
+                case BinaryOperator.ShiftRight:
+                    types = this.stack.PopMany(2);
+                    this.stack.Push(types[0].AfterBinaryOperationWith(types[1]));
+                    break;
+                case BinaryOperator.GreaterThan:
+                case BinaryOperator.LessThan:
+                case BinaryOperator.Equal:
+                    this.stack.PopMany(2);
+                    this.stack.Push(PotentialType.Simple(typeof(bool)));
+                    break;
+                default:
+                    base.HandleBinaryOperator(instruction, @operator);
+                    break;
+            }
         }        
+
+        protected override void HandleConv_R8(Instruction instruction)
+        {
+            this.stack.Pop();
+            this.stack.Push(PotentialType.Simple(typeof(double)));
+        }
+
+        protected override void HandleConv_R4(Instruction instruction)
+        {
+            this.stack.Pop();
+            this.stack.Push(PotentialType.Simple(typeof(float)));
+        }
+
+        protected override void HandleConv_U8(Instruction instruction)
+        {
+            this.stack.Pop();
+            this.stack.Push(PotentialType.UnsignedLong);
+        }
+
+        protected override void HandleConv_I8(Instruction instruction)
+        {
+            this.stack.Pop();
+            this.stack.Push(PotentialType.Simple(typeof(Int64)));
+        }
+
+        protected override void HandleConv_R_Un(Instruction instruction)
+        {
+            this.stack.Pop();
+            this.stack.Push(PotentialType.Double);
+        }
 
         public override void Walk(MethodInfo method, IEnumerable<InstructionNode> instructions)
         {

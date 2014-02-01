@@ -56,6 +56,7 @@
     <Compile Include="ExtensionsTests\EventSourcingTest.cs" />
     <Compile Include="FlowAnalysisTests\CallParameterTypesStackWalkerTest.cs" />
     <Compile Include="FlowAnalysisTests\ControlFlowTest.cs" />
+    <Compile Include="FlowAnalysisTests\PotentialTypeTest.cs" />
     <Compile Include="FlowAnalysisTests\StackWalkerTest.cs" />
     <Compile Include="Get.cs" />
     <Compile Include="GraphTests\AllPathsTest.cs" />

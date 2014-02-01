@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
+using System.Runtime.CompilerServices;
 using CodeModel.FlowAnalysis;
 using NUnit.Framework;
 using TestTarget;
@@ -10,13 +12,35 @@ namespace Tests.FlowAnalysisTests
 {
     [TestFixture]
     public class CallParameterTypesStackWalkerTest
-    {     
+    {
+        [Test]
+        public void Operators()
+        {
+            // arrange
+            var method = Get.MethodOf<CallParametersTarget>(x => x.Operators());
+            var flowGraph = new ControlFlow().AnalyzeMethod(method);
+            var path = flowGraph.FindPaths().Single();
+
+            var walker = new DetermineCallParameterTypes();
+
+            // act
+            walker.Walk(method, path);
+
+            // assert
+            foreach (var call in walker.Calls.Where(x => ((MethodInfo)x.Item1.Operand).Name.StartsWith("ShouldBe")))
+            {
+                var expectedType = ((MethodInfo) call.Item1.Operand).GetGenericArguments()[0];
+
+                Assert.That(call.Item2, Is.EqualTo(new[] {PotentialType.Simple(expectedType)}), call.Item1 + " Parameter type should be " + expectedType.Name);
+            }
+        }      
+
         [Test]
         [TestCaseSource("GetTestCases")]
         public void CheckDeterminedTypes(string methodName, PotentialType[] expected)
         {
             // arrange            
-            var method = typeof (CallParametersTarget).GetMethod(methodName);
+            var method = typeof(CallParametersTarget).GetMethod(methodName);
             var flowGraph = new ControlFlow().AnalyzeMethod(method);
             var path = flowGraph.FindPaths().Single();
 
@@ -32,17 +56,17 @@ namespace Tests.FlowAnalysisTests
 
         public IEnumerable<TestCaseData> GetTestCases()
         {
-            yield return TestCase(x => x.InlineParameter(), new[] {PotentialType.String});
-            yield return TestCase(x => x.CallToStaticMethod(6), new[] {PotentialType.Integer});
-            yield return TestCase(x => x.UseManyParameters(6, "a", 4f, 5m, false), 
+            yield return TestCase(x => x.InlineParameter(), new[] { PotentialType.String });
+            yield return TestCase(x => x.CallToStaticMethod(6), new[] { PotentialType.Integer });
+            yield return TestCase(x => x.UseManyParameters(6, "a", 4f, 5m, false),
                 PotentialType.Integer,
                 PotentialType.String,
                 typeof(float),
                 typeof(decimal),
                 typeof(Boolean)
             );
-            yield return TestCase(x => x.UseInlineValues(), 
-            
+            yield return TestCase(x => x.UseInlineValues(),
+
                 PotentialType.Integer,
                 PotentialType.String,
                 typeof(float),
