@@ -15,5 +15,19 @@ namespace TestTarget
 
     public class Inherited : Base
     {
+        public int Arg { get; set; }
+
+        public Inherited()
+        {            
+        }
+
+        public Inherited(int arg)
+        {
+            this.Arg = arg;
+        }
+    }
+
+    public class SecondInherited : Base
+    {
     }
 }

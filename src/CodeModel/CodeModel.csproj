@@ -42,6 +42,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ArrayComparer.cs" />
     <Compile Include="Builder\CodeModelBuilder.cs" />
     <Compile Include="Builder\IGraphMutator.cs" />
     <Compile Include="Builder\IMutateContext.cs" />

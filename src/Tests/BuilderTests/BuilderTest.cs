@@ -111,29 +111,7 @@ namespace Tests.BuilderTests
             // assert
             Assert.That(Builder.Model, Graph.Has
                 .Nodes<MethodNode>(exactly: 0, matches: x => x.Method.Name == "Method"));
-        }
-
-        [Test]
-        public void ShouldLinkCalls()
-        {
-            // arrange
-            Builder.RunMutator(new AddAssemblies(TargetAssembly));
-            Builder.RunMutator<AddTypes>();
-            Builder.RunMutator(new RemoveNode<TypeNode>(x => x.Type != typeof (LinkCalls)));
-            Builder.RunMutator<AddMethods>();
-
-            // act      
-            Builder.RunMutator<LinkMethodCalls>();
-
-            // assert            
-            var source = Builder.Model.GetNodeForMethod(typeof(LinkCalls).GetMethod("Source"));
-            var normalCall = Builder.Model.GetNodeForMethod(typeof(LinkCalls).GetMethod("NormalCall"));
-            var genericMethodCall = Builder.Model.GetNodeForMethod(typeof(LinkCalls).GetMethod("GenericMethodCall"));
-         
-            Assert.That(Builder.Model, Graph.Has
-                .Links<MethodCallLink>(exactly: 1, from: source, to: normalCall)
-                .Links<MethodCallLink>(exactly: 1, from: source, to: genericMethodCall, matches: x => x.GenericMethodArguments.Length == 1 && x.GenericMethodArguments[0] == typeof (int)));
-        }
+        }      
 
         [Test]
         public void ShouldAddProperties()

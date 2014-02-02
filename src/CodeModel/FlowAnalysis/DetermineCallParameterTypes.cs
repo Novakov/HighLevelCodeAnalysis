@@ -19,7 +19,7 @@ namespace CodeModel.FlowAnalysis
 
         protected override void HandleUnrecognized(Instruction instruction)
         {
-            throw new InvalidOperationException("Unrecognized opcode " + instruction);
+            //throw new InvalidOperationException("Unrecognized opcode " + instruction);
         }
 
         protected override void HandleNop(Instruction instruction)
@@ -92,7 +92,10 @@ namespace CodeModel.FlowAnalysis
 
             this.Calls.Add(Tuple.Create(instruction, types));
 
-            this.stack.Push(PotentialType.FromType(calledMethod.ReturnType));
+            if (calledMethod.ReturnType != typeof(void))
+            {
+                this.stack.Push(PotentialType.FromType(calledMethod.ReturnType));                
+            }            
         }
 
         protected override void HandleStoreVariable(Instruction instruction, LocalVariableInfo variable)
@@ -106,23 +109,23 @@ namespace CodeModel.FlowAnalysis
         }
 
         protected override void HandleBinaryOperator(Instruction instruction, BinaryOperator @operator)
-        {            
+        {
             switch (@operator)
             {
                 case BinaryOperator.Add:
                 case BinaryOperator.Subtract:
                 case BinaryOperator.Multiply:
                 case BinaryOperator.Divide:
-                case BinaryOperator.Remainder:                    
+                case BinaryOperator.Remainder:
                     this.stack.Push(PotentialType.Numeric);
                     break;
                 case BinaryOperator.And:
                 case BinaryOperator.Or:
-                case BinaryOperator.Xor:                                        
+                case BinaryOperator.Xor:
                     this.stack.Push(PotentialType.Numeric);
                     break;
                 case BinaryOperator.ShiftLeft:
-                case BinaryOperator.ShiftRight:                    
+                case BinaryOperator.ShiftRight:
                     this.stack.Push(PotentialType.Numeric);
                     break;
                 case BinaryOperator.GreaterThan:
@@ -135,7 +138,7 @@ namespace CodeModel.FlowAnalysis
                     base.HandleBinaryOperator(instruction, @operator);
                     break;
             }
-        }        
+        }
 
         protected override void HandleConv_R8(Instruction instruction)
         {
@@ -167,6 +170,36 @@ namespace CodeModel.FlowAnalysis
             this.stack.Push(PotentialType.Numeric);
         }
 
+        protected override void HandleLdloca(Instruction instruction)
+        {
+            this.stack.Push(this.variableTypes[((LocalVariableInfo)instruction.Operand).LocalIndex]);
+        }
+
+        protected override void HandleLdloca_S(Instruction instruction)
+        {
+            this.HandleLdloca(instruction);
+        }
+
+        protected override void HandleBrfalse(Instruction instruction)
+        {
+            this.stack.Pop();
+        }
+
+        protected override void HandleBrfalse_S(Instruction instruction)
+        {
+            this.stack.Pop();
+        }
+
+        protected override void HandleBrtrue(Instruction instruction)
+        {
+            this.stack.Pop();
+        }
+
+        protected override void HandleBrtrue_S(Instruction instruction)
+        {
+            this.stack.Pop();
+        }
+
         public override void Walk(MethodInfo method, IEnumerable<InstructionNode> instructions)
         {
             this.stack = new Stack<PotentialType>();
@@ -176,6 +209,11 @@ namespace CodeModel.FlowAnalysis
             this.Calls = new List<Tuple<Instruction, PotentialType[]>>();
 
             base.Walk(method, instructions);
+
+            if (this.stack.Count > 0)
+            {
+                throw new InvalidOperationException("Stack at the end of walking was not empty!");
+            }
         }
     }
 }

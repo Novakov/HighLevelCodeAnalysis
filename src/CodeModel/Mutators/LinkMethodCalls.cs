@@ -1,7 +1,11 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
 using CodeModel.Builder;
+using CodeModel.FlowAnalysis;
+using CodeModel.Graphs;
 using CodeModel.Links;
 using CodeModel.Model;
 using Mono.Reflection;
@@ -19,28 +23,40 @@ namespace CodeModel.Mutators
                 return;
             }
 
-            var calledMethods = from instr in node.Method.GetInstructions()
-                where
-                    instr.OpCode == OpCodes.Call
-                    || instr.OpCode == OpCodes.Callvirt
-                where instr.Operand is MethodInfo
-                select (MethodInfo) instr.Operand;
+            var executionPaths = new ControlFlow().AnalyzeMethod(node.Method).FindPaths();
 
-            foreach (var calledMethod in calledMethods)
+            var calls = new List<Tuple<Instruction, PotentialType[]> >();
+
+            foreach (var executionPath in executionPaths)
             {
-                var targetMethod = calledMethod;
+                var parameters = new DetermineCallParameterTypes();
+                parameters.Walk(node.Method, executionPath);   
+            
+                calls.AddRange(parameters.Calls);
+            }
 
-                if (calledMethod.IsGenericMethod)
-                {
-                    targetMethod = calledMethod.GetGenericMethodDefinition();
-                }
+            foreach (var call in calls.GroupBy(x => (MethodInfo)x.Item1.Operand))
+            {
+                var link = new MethodCallLink(call.Key.GetGenericArguments(), call.Select(x => x.Item2).Distinct(new ArrayComparer<PotentialType>()).ToArray());
 
-                var targetNode = context.FindNodes<MethodNode>(x => x.Method == targetMethod).SingleOrDefault();
+                LinkToMethod(node, context, call.Key, link);
+            }
+        }
 
-                if (targetNode != null)
-                {
-                    context.AddLink(node, targetNode, new MethodCallLink(calledMethod.GetGenericArguments()));
-                }
+        private static void LinkToMethod(MethodNode node, IMutateContext context, MethodInfo calledMethod, MethodCallLink link)
+        {
+            var targetMethod = calledMethod;
+
+            if (calledMethod.IsGenericMethod)
+            {
+                targetMethod = calledMethod.GetGenericMethodDefinition();
+            }
+
+            var targetNode = context.FindNodes<MethodNode>(x => x.Method == targetMethod).SingleOrDefault();
+
+            if (targetNode != null)
+            {
+                context.AddLink(node, targetNode, link);
             }
         }
     }
