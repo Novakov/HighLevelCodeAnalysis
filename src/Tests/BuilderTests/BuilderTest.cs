@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
+﻿using System.Reflection;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 using CodeModel;
 using CodeModel.Builder;
 using CodeModel.Links;
@@ -124,6 +119,7 @@ namespace Tests.BuilderTests
             // arrange
             Builder.RunMutator(new AddAssemblies(TargetAssembly));
             Builder.RunMutator<AddTypes>();
+            Builder.RunMutator(new RemoveNode<TypeNode>(x => x.Type != typeof (LinkCalls)));
             Builder.RunMutator<AddMethods>();
 
             // act      

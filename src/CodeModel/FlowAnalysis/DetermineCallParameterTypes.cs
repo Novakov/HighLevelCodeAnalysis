@@ -32,7 +32,7 @@ namespace CodeModel.FlowAnalysis
 
         protected override void HandleLoadThis(Instruction instruction)
         {
-            this.stack.Push(PotentialType.Simple(this.AnalyzedMethod.ReflectedType));
+            this.stack.Push(PotentialType.FromType(this.AnalyzedMethod.ReflectedType));
         }
 
         protected override void HandleLoadArgument(Instruction instruction, ParameterInfo parameter)
@@ -57,19 +57,19 @@ namespace CodeModel.FlowAnalysis
 
         protected override void HandleLoadInt32(Instruction instruction, int constant)
         {
-            this.stack.Push(PotentialType.Integer);
+            this.stack.Push(PotentialType.Numeric);
         }
 
         protected override void HandleLdc_R4(Instruction instruction)
         {
-            this.stack.Push(PotentialType.Simple(typeof(float)));
+            this.stack.Push(PotentialType.FromType(typeof(float)));
         }
 
         protected override void HandleNewobj(Instruction instruction)
         {
             this.stack.PopMany(instruction.PopedValuesCount(this.AnalyzedMethod));
 
-            this.stack.Push(PotentialType.Simple(((ConstructorInfo)instruction.Operand).ReflectedType));
+            this.stack.Push(PotentialType.FromType(((ConstructorInfo)instruction.Operand).ReflectedType));
         }
 
         protected override void HandleCall(Instruction instruction)
@@ -92,7 +92,7 @@ namespace CodeModel.FlowAnalysis
 
             this.Calls.Add(Tuple.Create(instruction, types));
 
-            this.stack.Push(PotentialType.Simple(calledMethod.ReturnType));
+            this.stack.Push(PotentialType.FromType(calledMethod.ReturnType));
         }
 
         protected override void HandleStoreVariable(Instruction instruction, LocalVariableInfo variable)
@@ -106,36 +106,30 @@ namespace CodeModel.FlowAnalysis
         }
 
         protected override void HandleBinaryOperator(Instruction instruction, BinaryOperator @operator)
-        {
-            PotentialType[] types;
-
+        {            
             switch (@operator)
             {
                 case BinaryOperator.Add:
                 case BinaryOperator.Subtract:
                 case BinaryOperator.Multiply:
                 case BinaryOperator.Divide:
-                case BinaryOperator.Remainder:
-                    types = this.stack.PopMany(2);
-                    this.stack.Push(types[0].AfterBinaryOperationWith(types[1]));
+                case BinaryOperator.Remainder:                    
+                    this.stack.Push(PotentialType.Numeric);
                     break;
                 case BinaryOperator.And:
                 case BinaryOperator.Or:
-                case BinaryOperator.Xor:
-                    types = this.stack.PopMany(2);
-                    //this.stack.Push(types[0].Signed().BitwiseBinaryWith(types[1].Signed()));
-                    this.stack.Push(types[0].AfterBinaryOperationWith(types[1]));
+                case BinaryOperator.Xor:                                        
+                    this.stack.Push(PotentialType.Numeric);
                     break;
                 case BinaryOperator.ShiftLeft:
-                case BinaryOperator.ShiftRight:
-                    types = this.stack.PopMany(2);
-                    this.stack.Push(types[0].AfterBinaryOperationWith(types[1]));
+                case BinaryOperator.ShiftRight:                    
+                    this.stack.Push(PotentialType.Numeric);
                     break;
                 case BinaryOperator.GreaterThan:
                 case BinaryOperator.LessThan:
                 case BinaryOperator.Equal:
                     this.stack.PopMany(2);
-                    this.stack.Push(PotentialType.Simple(typeof(bool)));
+                    this.stack.Push(PotentialType.Boolean);
                     break;
                 default:
                     base.HandleBinaryOperator(instruction, @operator);
@@ -146,38 +140,38 @@ namespace CodeModel.FlowAnalysis
         protected override void HandleConv_R8(Instruction instruction)
         {
             this.stack.Pop();
-            this.stack.Push(PotentialType.Simple(typeof(double)));
+            this.stack.Push(PotentialType.Numeric);
         }
 
         protected override void HandleConv_R4(Instruction instruction)
         {
             this.stack.Pop();
-            this.stack.Push(PotentialType.Simple(typeof(float)));
+            this.stack.Push(PotentialType.Numeric);
         }
 
         protected override void HandleConv_U8(Instruction instruction)
         {
             this.stack.Pop();
-            this.stack.Push(PotentialType.UnsignedLong);
+            this.stack.Push(PotentialType.Numeric);
         }
 
         protected override void HandleConv_I8(Instruction instruction)
         {
             this.stack.Pop();
-            this.stack.Push(PotentialType.Simple(typeof(Int64)));
+            this.stack.Push(PotentialType.Numeric);
         }
 
         protected override void HandleConv_R_Un(Instruction instruction)
         {
             this.stack.Pop();
-            this.stack.Push(PotentialType.Double);
+            this.stack.Push(PotentialType.Numeric);
         }
 
         public override void Walk(MethodInfo method, IEnumerable<InstructionNode> instructions)
         {
             this.stack = new Stack<PotentialType>();
-            this.variableTypes = method.GetMethodBody().LocalVariables.ToDictionary(x => x.LocalIndex, x => PotentialType.Simple(x.LocalType));
-            this.parameterTypes = method.GetParameters().ToDictionary(x => x.Position, x => PotentialType.Simple(x.ParameterType));
+            this.variableTypes = method.GetMethodBody().LocalVariables.ToDictionary(x => x.LocalIndex, x => PotentialType.FromType(x.LocalType));
+            this.parameterTypes = method.GetParameters().ToDictionary(x => x.Position, x => PotentialType.FromType(x.ParameterType));
 
             this.Calls = new List<Tuple<Instruction, PotentialType[]>>();
 
