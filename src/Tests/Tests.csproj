@@ -53,6 +53,7 @@
     <Compile Include="Constraints\Graph.cs" />
     <Compile Include="Constraints\NodeForTypeConstraint.cs" />
     <Compile Include="ExportFinalGraphAttribute.cs" />
+    <Compile Include="ExtensionsTests\CqrsTest.cs" />
     <Compile Include="ExtensionsTests\DgmlExportTest.cs" />
     <Compile Include="ExtensionsTests\EventSourcingTest.cs" />
     <Compile Include="FlowAnalysisTests\CallParameterTypesStackWalkerTest.cs" />
@@ -66,6 +67,10 @@
     <Compile Include="TestSettings.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\CodeModel.Extensions.Cqrs\CodeModel.Extensions.Cqrs.csproj">
+      <Project>{C2707935-FA1A-4BB7-94FD-B38B7D2335AF}</Project>
+      <Name>CodeModel.Extensions.Cqrs</Name>
+    </ProjectReference>
     <ProjectReference Include="..\CodeModel.Extensions.DgmlExport\CodeModel.Extensions.DgmlExport.csproj">
       <Project>{47A0F1FD-F593-48FB-9235-F05B3648CA61}</Project>
       <Name>CodeModel.Extensions.DgmlExport</Name>
