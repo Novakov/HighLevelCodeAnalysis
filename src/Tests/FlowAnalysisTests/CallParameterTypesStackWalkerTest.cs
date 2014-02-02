@@ -14,6 +14,18 @@ namespace Tests.FlowAnalysisTests
     public class CallParameterTypesStackWalkerTest
     {
         [Test]
+        public void CheckMethodWithOpcodeInitobj()
+        {
+            var method = Get.MethodOf<CallParametersTarget>(x => CallParametersTarget.Get<int>()).GetGenericMethodDefinition();
+
+            var flowGraph = new ControlFlow().AnalyzeMethod(method);
+            var path = flowGraph.FindPaths().Single();
+            
+            var types = new DetermineCallParameterTypes();
+            types.Walk(method, path);
+        }
+
+        [Test]
         [TestCaseSource("GetTestCases")]
         public void CheckDeterminedTypes(string methodName, PotentialType[] expected)
         {

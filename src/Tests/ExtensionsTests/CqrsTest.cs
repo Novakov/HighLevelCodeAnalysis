@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using CodeModel;
 using CodeModel.Builder;
 using CodeModel.Extensions.Cqrs;
 using CodeModel.Mutators;
@@ -17,14 +18,13 @@ namespace Tests.ExtensionsTests
         public void Setup()
         {
             this.Builder = new CodeModelBuilder();
+            Builder.RegisterConventionsFrom(typeof(TestTarget.Conventions.Marker).Assembly);
         }
 
         [Test]
         public void ShouldRecognizeQueryTypes()
         {            
-            // arrange
-            Builder.RegisterConventionsFrom(typeof(TestTarget.Conventions.Marker).Assembly);
-
+            // arrange            
             Builder.RunMutator(new AddAssemblies(typeof(Marker).Assembly));
             Builder.RunMutator<AddTypes>();            
 
@@ -35,6 +35,27 @@ namespace Tests.ExtensionsTests
 
             Assert.That(Builder.Model, Graph.Has
                 .NodeForType<GetUser>(Is.InstanceOf<QueryNode>()));
+        }
+
+        [Test]
+        public void ShouldLinkQueryExecutions()
+        {
+            // arrange            
+            Builder.RunMutator(new AddAssemblies(typeof(Marker).Assembly));
+            Builder.RunMutator<AddTypes>();
+            Builder.RunMutator<AddMethods>();
+            Builder.RunMutator<LinkMethodCalls>();
+            Builder.RunMutator<DetectQueries>();
+
+            // act
+            Builder.RunMutator<LinkQueryExecutions>();
+
+            // assert
+            var origin = Builder.Model.GetNodeForMethod(Get.MethodOf<CallOrigin>(x => x.CallQuery()));
+            var query = Builder.Model.GetNodeForType(typeof (GetUser));
+
+            Assert.That(Builder.Model, Graph.Has
+                .Links<QueryExecutionLink>(exactly:1, from:origin, to:query));
         }
     }
 }

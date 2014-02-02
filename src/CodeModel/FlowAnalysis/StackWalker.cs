@@ -25,11 +25,23 @@ namespace CodeModel.FlowAnalysis
 
             foreach (var instruction in instructions.Select(x => x.Instruction))
             {
+                this.BeforeInstruction(instruction);
+
                 this.handlers[instruction.OpCode].Invoke(instruction);
+
+                this.AfterInstruction(instruction);
             }
         }
 
         protected virtual void HandleUnrecognized(Instruction instruction)
+        {
+        }
+
+        protected virtual void BeforeInstruction(Instruction instruction)
+        {
+        }
+
+        protected virtual void AfterInstruction(Instruction instruction)
         {
         }
     }

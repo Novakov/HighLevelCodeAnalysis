@@ -19,7 +19,15 @@ namespace CodeModel.FlowAnalysis
 
         protected override void HandleUnrecognized(Instruction instruction)
         {
-            //throw new InvalidOperationException("Unrecognized opcode " + instruction);
+            var popped = instruction.PopedValuesCount(this.AnalyzedMethod);
+            var pushed = instruction.PushedValuesCount(this.AnalyzedMethod);
+
+            if (pushed != 0)
+            {
+                throw new InvalidOperationException("Unrecognized opcode that pushes on stack");
+            }
+
+            this.stack.PopMany(popped);
         }
 
         protected override void HandleNop(Instruction instruction)
@@ -28,6 +36,10 @@ namespace CodeModel.FlowAnalysis
 
         protected override void HandleRet(Instruction instruction)
         {
+            if (this.AnalyzedMethod.ReturnType != typeof(void))
+            {
+                this.stack.Pop();
+            }
         }
 
         protected override void HandleLoadThis(Instruction instruction)
@@ -98,6 +110,17 @@ namespace CodeModel.FlowAnalysis
             }            
         }
 
+        protected override void HandleCallvirt(Instruction instruction)
+        {
+            //TODO: try to determine callee type
+            this.HandleCall(instruction);            
+        }
+
+        protected override void HandleInitobj(Instruction instruction)
+        {
+            this.stack.PopMany(instruction.PopedValuesCount(this.AnalyzedMethod));            
+        }
+
         protected override void HandleStoreVariable(Instruction instruction, LocalVariableInfo variable)
         {
             this.variableTypes[variable.LocalIndex] = this.stack.Pop();
@@ -117,15 +140,18 @@ namespace CodeModel.FlowAnalysis
                 case BinaryOperator.Multiply:
                 case BinaryOperator.Divide:
                 case BinaryOperator.Remainder:
+                    this.stack.PopMany(2);
                     this.stack.Push(PotentialType.Numeric);
                     break;
                 case BinaryOperator.And:
                 case BinaryOperator.Or:
                 case BinaryOperator.Xor:
+                    this.stack.PopMany(2);
                     this.stack.Push(PotentialType.Numeric);
                     break;
                 case BinaryOperator.ShiftLeft:
                 case BinaryOperator.ShiftRight:
+                    this.stack.PopMany(2);
                     this.stack.Push(PotentialType.Numeric);
                     break;
                 case BinaryOperator.GreaterThan:
@@ -200,6 +226,50 @@ namespace CodeModel.FlowAnalysis
             this.stack.Pop();
         }
 
+        protected override void HandleStfld(Instruction instruction)
+        {
+            var fieldInfo = (FieldInfo) instruction.Operand;
+
+            this.stack.Pop();
+
+            if (!fieldInfo.IsStatic)
+            {
+                this.stack.Pop();
+            }
+        }
+
+        protected override void HandleLdfld(Instruction instruction)
+        {
+            var fieldInfo = (FieldInfo)instruction.Operand;
+
+            if (!fieldInfo.IsStatic)
+            {
+                this.stack.Pop();
+            }
+
+            this.stack.Push(PotentialType.FromType(fieldInfo.FieldType));
+        }
+
+        protected override void HandlePop(Instruction instruction)
+        {            
+            this.stack.Pop();
+        }
+
+        protected override void HandleThrow(Instruction instruction)
+        {
+            this.stack.Pop();
+        }
+
+        protected override void BeforeInstruction(Instruction instruction)
+        {
+            var clause = this.AnalyzedMethod.GetMethodBody().ExceptionHandlingClauses.SingleOrDefault(x => x.HandlerOffset == instruction.Offset);
+
+            if (clause != null && clause.Flags != ExceptionHandlingClauseOptions.Finally)
+            {
+                this.stack.Push(PotentialType.FromType(clause.CatchType));
+            }
+        }
+
         public override void Walk(MethodInfo method, IEnumerable<InstructionNode> instructions)
         {
             this.stack = new Stack<PotentialType>();
@@ -208,7 +278,7 @@ namespace CodeModel.FlowAnalysis
 
             this.Calls = new List<Tuple<Instruction, PotentialType[]>>();
 
-            base.Walk(method, instructions);
+            base.Walk(method, instructions);           
 
             if (this.stack.Count > 0)
             {
