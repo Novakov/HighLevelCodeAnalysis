@@ -260,6 +260,11 @@ namespace CodeModel.FlowAnalysis
             this.stack.Pop();
         }
 
+        protected override void HandleLdnull(Instruction instruction)
+        {
+            this.stack.Push(PotentialType.FromType(typeof(object)));
+        }
+
         protected override void BeforeInstruction(Instruction instruction)
         {
             var clause = this.AnalyzedMethod.GetMethodBody().ExceptionHandlingClauses.SingleOrDefault(x => x.HandlerOffset == instruction.Offset);
