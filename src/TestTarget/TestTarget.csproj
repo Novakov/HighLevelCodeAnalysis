@@ -43,8 +43,13 @@
     <Compile Include="Cqrs\CallOrigin.cs" />
     <Compile Include="CallParametersTarget.cs" />
     <Compile Include="ControlFlowAnalysisTarget.cs" />
+    <Compile Include="Cqrs\CommandHandlers.cs" />
+    <Compile Include="Cqrs\ICommand.cs" />
+    <Compile Include="Cqrs\ICommandDispatcher.cs" />
+    <Compile Include="Cqrs\ICommandHandler.cs" />
     <Compile Include="Cqrs\IQuery.cs" />
     <Compile Include="Cqrs\IQueryDispatcher.cs" />
+    <Compile Include="Cqrs\RegisterUser.cs" />
     <Compile Include="EventSourcing\DomainEvent.cs" />
     <Compile Include="EventSourcing\EntityBase.cs" />
     <Compile Include="EventSourcing\Person.cs" />

@@ -22,7 +22,7 @@ namespace CodeModel.Extensions.Cqrs
                 {
                     context.RemoveLink(call);
 
-                    var queryType = call.ActualParameterTypes[0][0].Type; //TODO
+                    var queryType = convention.GetCalledQueryType(call);
 
                     var query = context.FindNodes<QueryNode>(n => n.Type == queryType).SingleOrDefault();
                     if (query != null)

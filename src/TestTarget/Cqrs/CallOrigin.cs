@@ -15,6 +15,18 @@ namespace TestTarget.Cqrs
             queryDispatcher.Query(new GetUser("aaaa"));
         }
 
+        public void ExecuteCommand()
+        {
+            var commandDispatcher = GetCommandDispatcher();
+
+            commandDispatcher.Execute(new RegisterUser());
+        }
+
+        private static ICommandDispatcher GetCommandDispatcher()
+        {
+            return null;
+        }
+
         private static IQueryDispatcher GetQueryDispatcher()
         {
             return null;

@@ -2,6 +2,8 @@
 using CodeModel;
 using CodeModel.Builder;
 using CodeModel.Extensions.Cqrs;
+using CodeModel.Extensions.EventSourcing.Mutators;
+using CodeModel.Extensions.EventSourcing.Nodes;
 using CodeModel.Mutators;
 using NUnit.Framework;
 using Tests.Constraints;
@@ -56,6 +58,23 @@ namespace Tests.ExtensionsTests
 
             Assert.That(Builder.Model, Graph.Has
                 .Links<QueryExecutionLink>(exactly:1, from:origin, to:query));
+        }
+
+        [Test]
+        public void ShouldDetectCommandHandlerMethods()
+        {
+            // arrange
+            Builder.RunMutator(new AddAssemblies(typeof(Marker).Assembly));
+            Builder.RunMutator<AddTypes>();
+            Builder.RunMutator<AddMethods>();
+
+            // act
+            Builder.RunMutator<DetectCommandHandlers>();
+
+            // assert
+            var handlerMethod = Builder.Model.GetNodeForMethod(Get.MethodOf<CommandHandlers>(x => x.Execute((RegisterUser) null)));
+            Assert.That(handlerMethod, Is.InstanceOf<CommandHandlerNode>()
+                .And.Property("HandledCommand").EqualTo(typeof(RegisterUser)));
         }
     }
 }

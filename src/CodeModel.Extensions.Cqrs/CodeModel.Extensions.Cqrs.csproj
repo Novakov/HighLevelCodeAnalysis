@@ -39,6 +39,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CommandHandlerNode.cs" />
+    <Compile Include="DetectCommandHandlers.cs" />
     <Compile Include="DetectQueries.cs" />
     <Compile Include="ICqrsConvention.cs" />
     <Compile Include="LinkQueryExecutions.cs" />

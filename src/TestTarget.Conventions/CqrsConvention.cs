@@ -24,7 +24,21 @@ namespace TestTarget.Conventions
 
         public Type GetCalledQueryType(MethodCallLink call)
         {
-            throw new NotImplementedException();
+            return call.ActualParameterTypes[0][0].Type;
+        }
+
+        public bool IsCommandHandlerMethod(MethodNode node)
+        {
+            var parameters = node.Method.GetParameters();
+
+            return node.Method.Name == "Execute"
+                   && parameters.Length == 1
+                   && typeof (ICommandHandler<>).MakeGenericType(parameters[0].ParameterType).IsAssignableFrom(node.Method.DeclaringType);
+        }
+
+        public Type GetHandledCommand(MethodInfo method)
+        {
+            return method.GetParameters()[0].ParameterType;
         }
     }
 }
