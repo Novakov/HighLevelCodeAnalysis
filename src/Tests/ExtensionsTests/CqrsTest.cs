@@ -111,5 +111,26 @@ namespace Tests.ExtensionsTests
             Assert.That(Builder.Model, Graph.Has
                 .Links<ExecutedByLink>(exactly: 1, from: commandNode, to: handlerMethod));
         }
+
+        [Test]
+        public void ShouldLinkCommandExecutions()
+        {
+            // arrange
+            Builder.RunMutator(new AddAssemblies(typeof(Marker).Assembly));
+            Builder.RunMutator<AddTypes>();
+            Builder.RunMutator<AddMethods>();
+            Builder.RunMutator<LinkMethodCalls>();
+
+            Builder.RunMutator<DetectCommands>();            
+
+            // act
+            Builder.RunMutator<LinkCommandExecutions>();
+
+            // assert           
+            var callOrigin = Builder.Model.GetNodeForMethod(Get.MethodOf<CallOrigin>(x => x.ExecuteCommand()));
+            var command = Builder.Model.GetNodeForType(typeof (RegisterUser));
+            Assert.That(Builder.Model, Graph.Has
+                .Links<ExecuteCommandLink>(exactly: 1, from: callOrigin, to: command));
+        }
     }
 }

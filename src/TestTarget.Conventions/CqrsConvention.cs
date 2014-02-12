@@ -11,6 +11,7 @@ namespace TestTarget.Conventions
     public class CqrsConvention : ICqrsConvention
     {
         private static readonly MethodInfo QueryExecute = typeof (IQueryDispatcher).GetMethod("Query");
+        private static readonly MethodInfo CommandExecute = typeof (ICommandDispatcher).GetMethod("Execute");
 
         public bool IsQuery(TypeNode node)
         {
@@ -44,6 +45,16 @@ namespace TestTarget.Conventions
         public bool IsCommand(TypeNode node)
         {
             return typeof (ICommand).IsAssignableFrom(node.Type);
+        }
+
+        public bool IsCommandExecuteMethod(MethodNode node)
+        {
+            return node.Method == CommandExecute;
+        }
+
+        public Type GetExecutedCommandType(MethodCallLink call)
+        {
+            return call.ActualParameterTypes[0][0].Type;
         }
     }
 }

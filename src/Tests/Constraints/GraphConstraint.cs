@@ -22,7 +22,7 @@ namespace Tests.Constraints
         public GraphConstraint Nodes<TNode>(int? exactly = null, Expression<Func<TNode, bool>> matches = null)
             where TNode : Node
         {
-            var builder = new ConstraintBuilder();                                    
+            var builder = new ConstraintBuilder();
 
             if (exactly.HasValue)
             {
@@ -59,7 +59,7 @@ namespace Tests.Constraints
                 builder.Append(new SomeOperator());
             }
 
-            builder.Append(new InstanceOfTypeConstraint(typeof(TLink)));           
+            builder.Append(new InstanceOfTypeConstraint(typeof(TLink)));
 
             if (from != null)
             {
