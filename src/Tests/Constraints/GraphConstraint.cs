@@ -81,7 +81,7 @@ namespace Tests.Constraints
             return this;
         }
 
-        public GraphConstraint NodeForType<T>(Constraint constraint)
+        public GraphConstraint NodeForType<T>(IResolveConstraint constraint)
         {
             this.constraints.Add(new NodeForTypeConstraint(typeof(T), constraint));
 

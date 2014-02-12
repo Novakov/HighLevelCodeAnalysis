@@ -17,5 +17,6 @@ namespace CodeModel.Extensions.Cqrs
         Type GetCalledQueryType(MethodCallLink call);
         bool IsCommandHandlerMethod(MethodNode node);
         Type GetHandledCommand(MethodInfo method);
+        bool IsCommand(TypeNode node);
     }
 }

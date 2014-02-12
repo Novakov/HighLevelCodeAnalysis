@@ -40,7 +40,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CommandHandlerNode.cs" />
+    <Compile Include="CommandNode.cs" />
     <Compile Include="DetectCommandHandlers.cs" />
+    <Compile Include="DetectCommands.cs" />
     <Compile Include="DetectQueries.cs" />
     <Compile Include="ICqrsConvention.cs" />
     <Compile Include="LinkQueryExecutions.cs" />

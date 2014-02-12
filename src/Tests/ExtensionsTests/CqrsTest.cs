@@ -76,5 +76,20 @@ namespace Tests.ExtensionsTests
             Assert.That(handlerMethod, Is.InstanceOf<CommandHandlerNode>()
                 .And.Property("HandledCommand").EqualTo(typeof(RegisterUser)));
         }
+
+        [Test]
+        public void ShouldDetectCommands()
+        {
+            // arrange
+            Builder.RunMutator(new AddAssemblies(typeof(Marker).Assembly));
+            Builder.RunMutator<AddTypes>();            
+
+            // act
+            Builder.RunMutator<DetectCommands>();
+
+            // assert           
+            Assert.That(Builder.Model, Graph.Has
+                .NodeForType<RegisterUser>(Is.InstanceOf<CommandNode>()));
+        }
     }
 }

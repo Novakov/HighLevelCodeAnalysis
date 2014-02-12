@@ -40,5 +40,10 @@ namespace TestTarget.Conventions
         {
             return method.GetParameters()[0].ParameterType;
         }
+
+        public bool IsCommand(TypeNode node)
+        {
+            return typeof (ICommand).IsAssignableFrom(node.Type);
+        }
     }
 }
