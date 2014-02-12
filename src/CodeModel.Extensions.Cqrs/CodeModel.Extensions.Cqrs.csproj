@@ -44,7 +44,9 @@
     <Compile Include="DetectCommandHandlers.cs" />
     <Compile Include="DetectCommands.cs" />
     <Compile Include="DetectQueries.cs" />
+    <Compile Include="ExecutedByLink.cs" />
     <Compile Include="ICqrsConvention.cs" />
+    <Compile Include="LinkCommandsToHandlers.cs" />
     <Compile Include="LinkQueryExecutions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="QueryExecutionLink.cs" />
