@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System.Linq;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using CodeModel;
 using CodeModel.Builder;
@@ -16,7 +17,7 @@ namespace Tests.BuilderTests
     public class BuilderTest : IHaveBuilder
     {
         private static readonly Assembly TargetAssembly = typeof(Marker).Assembly;
-        
+
         public CodeModelBuilder Builder { get; private set; }
 
         [SetUp]
@@ -42,7 +43,7 @@ namespace Tests.BuilderTests
         public void ShouldAddTypes()
         {
             // arrange
-            
+
             // act
             Builder.RunMutator(new AddAssemblies(TargetAssembly));
             Builder.RunMutator<AddTypes>();
@@ -103,7 +104,7 @@ namespace Tests.BuilderTests
             // arrange
             Builder.RunMutator(new AddAssemblies(TargetAssembly));
             Builder.RunMutator<AddTypes>();
-            Builder.RunMutator(new RemoveNode<TypeNode>(x => x.Type != typeof (Inherited)));
+            Builder.RunMutator(new RemoveNode<TypeNode>(x => x.Type != typeof(Inherited)));
 
             // act            
             Builder.RunMutator<AddMethods>();
@@ -111,7 +112,7 @@ namespace Tests.BuilderTests
             // assert
             Assert.That(Builder.Model, Graph.Has
                 .Nodes<MethodNode>(exactly: 0, matches: x => x.Method.Name == "Method"));
-        }      
+        }
 
         [Test]
         public void ShouldAddProperties()
@@ -173,8 +174,8 @@ namespace Tests.BuilderTests
             // assert
             var fieldNode = Builder.Model.GetNodeForField(Get.FieldOf<MemberAccess>(x => x.ThisField));
             Assert.That(Builder.Model, Graph.Has
-                .Links<SetFieldLink>(to:fieldNode)
-                .Links<GetFieldLink>(to:fieldNode)
+                .Links<SetFieldLink>(to: fieldNode)
+                .Links<GetFieldLink>(to: fieldNode)
                 );
         }
 
@@ -196,7 +197,34 @@ namespace Tests.BuilderTests
                 .Links<SetPropertyLink>(to: propertyNode)
                 .Links<GetPropertyLink>(to: propertyNode)
                 );
+        }
 
+        [Test]
+        public void ShouldLinkMemberToTypeAndTypeToAssembly()
+        {
+            // arrange
+            Builder.RunMutator(new AddAssemblies(TargetAssembly));
+            Builder.RunMutator<AddTypes>();
+            Builder.RunMutator<AddMethods>();
+            Builder.RunMutator<AddProperties>();
+            Builder.RunMutator<AddFields>();
+
+            // act
+            Builder.RunMutator<LinkToContainer>();
+
+            // assert
+            var fieldNode = Builder.Model.GetNodeForField(Get.FieldOf<MemberAccess>(x => x.ThisField));
+            var propertyNode = Builder.Model.GetNodeForProperty(Get.PropertyOf<MemberAccess>(x => x.ThisProperty));
+            var methodNode = Builder.Model.GetNodeForMethod(Get.MethodOf<MemberAccess>(x => x.Access()));
+            var typeNode = Builder.Model.GetNodeForType(typeof (MemberAccess));
+            var assemblyNode = Builder.Model.Nodes.OfType<AssemblyNode>().Single();
+
+            Assert.That(Builder.Model, Graph.Has
+                .Links<ContainedInLink>(from:fieldNode, to:typeNode)
+                .Links<ContainedInLink>(from:propertyNode, to:typeNode)
+                .Links<ContainedInLink>(from:methodNode, to:typeNode)
+                .Links<ContainedInLink>(from:typeNode, to:assemblyNode)
+                );
         }
     }
 }
