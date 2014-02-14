@@ -8,6 +8,17 @@ namespace TestTarget.AspNetMvc
 
     public class MyController1 : BaseController
     {
-        
+        public ActionResult MyAction()
+        {
+            return Content("aaa");
+        }
+    }
+
+    public class NotAController
+    {
+        public ActionResult MyAction()
+        {
+            return null;
+        }
     }
 }

@@ -97,6 +97,7 @@
     <Compile Include="Mutators\LinkPropertyAccess.cs" />
     <Compile Include="Mutators\LinkToContainer.cs" />
     <Compile Include="Mutators\RemoveNode.cs" />
+    <Compile Include="NodeExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ReflectionExtensions.cs" />
     <Compile Include="StackExtensions.cs" />

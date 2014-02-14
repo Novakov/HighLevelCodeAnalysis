@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using CodeModel;
 using CodeModel.Builder;
 using CodeModel.Extensions.AspNetMvc;
 using CodeModel.Mutators;
@@ -38,6 +39,42 @@ namespace Tests.ExtensionsTests
             // assert
             Assert.That(Builder.Model, Graph.Has
                 .NodeForType<MyController1>(Is.InstanceOf<ControllerNode>()));
+        }
+
+        [Test]
+        public void ShouldRecognizeActions()
+        {
+            // arrange
+            Builder.RunMutator(new AddAssemblies(typeof(Marker).Assembly));
+            Builder.RunMutator<AddTypes>();
+            Builder.RunMutator<AddMethods>();
+            Builder.RunMutator<LinkToContainer>();
+            Builder.RunMutator<DetectControllers>();
+
+            // act            
+            Builder.RunMutator<DetectActions>();
+
+            // assert
+            var actionNode = Builder.Model.GetNodeForMethod(Get.MethodOf<MyController1>(x => x.MyAction()));
+            Assert.That(actionNode, Is.InstanceOf<ActionNode>());
+        }
+
+        [Test]
+        public void ShouldNotRecognizeActionsInNotControllers()
+        {
+            // arrange
+            Builder.RunMutator(new AddAssemblies(typeof(Marker).Assembly));
+            Builder.RunMutator<AddTypes>();
+            Builder.RunMutator<AddMethods>();
+            Builder.RunMutator<LinkToContainer>();
+            Builder.RunMutator<DetectControllers>();
+
+            // act            
+            Builder.RunMutator<DetectActions>();
+
+            // assert
+            var actionNode = Builder.Model.GetNodeForMethod(Get.MethodOf<NotAController>(x => x.MyAction()));
+            Assert.That(actionNode, Is.Not.InstanceOf<ActionNode>());
         }
     }
 }
