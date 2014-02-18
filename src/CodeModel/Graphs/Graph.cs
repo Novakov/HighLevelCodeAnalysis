@@ -85,5 +85,21 @@ namespace CodeModel.Graphs
 
             this.nodes.Remove(node);
         }
+
+        public void Merge(Graph otherGraph)
+        {
+            this.nodes.UnionWith(otherGraph.nodes);
+            foreach (var link in otherGraph.links)
+            {
+                var source = this.nodes.First(x => x.Id == link.Source.Id);
+                var target = this.nodes.First(x => x.Id == link.Target.Id);
+
+                link.SetUpConnection(source, target);
+                source.AddOutboundLink(link);
+                target.AddInboundLink(link);
+
+                this.links.Add(link);
+            }
+        }
     }
 }
