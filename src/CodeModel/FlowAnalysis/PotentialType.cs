@@ -11,6 +11,7 @@ namespace CodeModel.FlowAnalysis
         public static readonly PotentialType Boolean = PotentialType.FromType(typeof(bool));             
 
         public static readonly PotentialType Numeric = new NumericPotentialType();
+        public static readonly PotentialType Token = new TokenPotentialType();
 
         public Type Type { get; private set; }        
 
@@ -55,6 +56,11 @@ namespace CodeModel.FlowAnalysis
             return new PotentialType {Type = boxedType};
         }
 
+        public PotentialType GetArrayElement()
+        {
+            return this.Type.GetElementType();
+        }
+
         private class NumericPotentialType : PotentialType
         {
             public override string ToString()
@@ -72,5 +78,14 @@ namespace CodeModel.FlowAnalysis
                 return this;
             }
         }
+       
+        private class TokenPotentialType : PotentialType
+        {
+            public override string ToString()
+            {
+                return "Token";
+            }           
+        }
+        
     }
 }

@@ -54,15 +54,17 @@ namespace CodeModel.FlowAnalysis
 
             var body = new Lazy<MethodBody>(() => this.AnalyzedMethod.GetMethodBody());
 
-            registry[OpCodes.Starg] = i => HandleStoreArgument(i, (ParameterInfo) i.Operand);
-            registry[OpCodes.Starg_S] = i => HandleStoreArgument(i, (ParameterInfo) i.Operand);
+            registry[OpCodes.Starg] = i => HandleStoreArgument(i, (ParameterInfo)i.Operand);
+            registry[OpCodes.Starg_S] = i => HandleStoreArgument(i, (ParameterInfo)i.Operand);
 
             registry[OpCodes.Ldarg_1] = i => LoadArgByIndex(i, 1);
             registry[OpCodes.Ldarg_2] = i => LoadArgByIndex(i, 2);
             registry[OpCodes.Ldarg_3] = i => LoadArgByIndex(i, 3);
+            registry[OpCodes.Ldarga] = i => HandleLoadArgument(i, (ParameterInfo)i.Operand);
+            registry[OpCodes.Ldarga_S] = i => HandleLoadArgument(i, (ParameterInfo)i.Operand);
 
-            registry[OpCodes.Stloc] = i => HandleStoreVariable(i, (LocalVariableInfo) i.Operand);
-            registry[OpCodes.Stloc_S] = i => HandleStoreVariable(i, (LocalVariableInfo) i.Operand);
+            registry[OpCodes.Stloc] = i => HandleStoreVariable(i, (LocalVariableInfo)i.Operand);
+            registry[OpCodes.Stloc_S] = i => HandleStoreVariable(i, (LocalVariableInfo)i.Operand);
             registry[OpCodes.Stloc_0] = i => HandleStoreVariable(i, body.Value.LocalVariables[0]);
             registry[OpCodes.Stloc_1] = i => HandleStoreVariable(i, body.Value.LocalVariables[1]);
             registry[OpCodes.Stloc_2] = i => HandleStoreVariable(i, body.Value.LocalVariables[2]);
@@ -102,9 +104,17 @@ namespace CodeModel.FlowAnalysis
             registry[OpCodes.And] = i => HandleBinaryOperator(i, BinaryOperator.And);
             registry[OpCodes.Or] = i => HandleBinaryOperator(i, BinaryOperator.Or);
             registry[OpCodes.Xor] = i => HandleBinaryOperator(i, BinaryOperator.Xor);
-            registry[OpCodes.Shl] = i => HandleBinaryOperator(i, BinaryOperator.ShiftLeft);            
+            registry[OpCodes.Shl] = i => HandleBinaryOperator(i, BinaryOperator.ShiftLeft);
             registry[OpCodes.Shr] = i => HandleBinaryOperator(i, BinaryOperator.ShiftRight);
             registry[OpCodes.Shr_Un] = i => HandleBinaryOperator(i, BinaryOperator.ShiftRight);
+
+            //conversions            
+            registry[OpCodes.Conv_I4] = i => HandleConversion(i, typeof(int));
+        }
+
+        protected virtual void HandleConversion(Instruction instruction, Type targetType)
+        {
+            this.HandleUnaligned(instruction);
         }
 
         protected virtual void HandleBinaryOperator(Instruction instruction, BinaryOperator @operator)
@@ -143,7 +153,7 @@ namespace CodeModel.FlowAnalysis
             else
             {
                 this.HandleLoadArgument(instruction, this.AnalyzedMethod.GetParameters()[paramIndex]);
-            }            
+            }
         }
 
         protected override void HandleLdarg_0(Instruction instruction)

@@ -24,7 +24,7 @@ namespace CodeModel.FlowAnalysis
 
             if (pushed != 0)
             {
-                throw new InvalidOperationException("Unrecognized opcode that pushes on stack");
+                throw new InvalidOperationException("Unrecognized opcode that pushes on stack. Instruction: " + instruction);
             }
 
             this.stack.PopMany(popped);
@@ -82,6 +82,13 @@ namespace CodeModel.FlowAnalysis
             this.stack.PopMany(instruction.PopedValuesCount(this.AnalyzedMethod));
 
             this.stack.Push(PotentialType.FromType(((ConstructorInfo)instruction.Operand).ReflectedType));
+        }
+
+        protected override void HandleNewarr(Instruction instruction)
+        {
+            // TODO: Test for newarr
+            this.stack.Pop();
+            this.stack.Push(PotentialType.FromType(((Type)instruction.Operand).MakeArrayType()));
         }
 
         protected override void HandleCall(Instruction instruction)
@@ -242,10 +249,15 @@ namespace CodeModel.FlowAnalysis
         {
             var fieldInfo = (FieldInfo)instruction.Operand;
 
-            if (!fieldInfo.IsStatic)
-            {
-                this.stack.Pop();
-            }
+            this.stack.Pop();
+
+            this.stack.Push(PotentialType.FromType(fieldInfo.FieldType));
+        }
+
+        protected override void HandleLdsfld(Instruction instruction)
+        {
+            //TODO: test for accessing static field
+            var fieldInfo = (FieldInfo)instruction.Operand;
 
             this.stack.Push(PotentialType.FromType(fieldInfo.FieldType));
         }
@@ -264,6 +276,35 @@ namespace CodeModel.FlowAnalysis
         {
             this.stack.Push(PotentialType.FromType(typeof(object)));
         }
+
+        protected override void HandleLdlen(Instruction instruction)
+        {
+            //TODO: test for ldlen
+            this.stack.Pop();
+            this.stack.Push(PotentialType.Numeric);                
+        }
+
+        protected override void HandleLdelem_Ref(Instruction instruction)
+        {
+            //TODO: for ldelem.ref
+            var index = stack.Pop();
+            var arrayType = this.stack.Pop();
+
+            this.stack.Push(arrayType.GetArrayElement());
+        }
+
+        protected override void HandleLdtoken(Instruction instruction)
+        {
+            //TODO: test for ldtoken
+            this.stack.Push(PotentialType.Token);
+        }
+
+        protected override void HandleConversion(Instruction instruction, Type targetType)
+        {
+            //TODO: test for conversion
+            this.stack.Pop();
+            this.stack.Push(PotentialType.Numeric);
+        }        
 
         protected override void BeforeInstruction(Instruction instruction)
         {
