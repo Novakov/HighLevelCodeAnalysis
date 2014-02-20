@@ -11,10 +11,12 @@ namespace CodeModel.FlowAnalysis
 {
     public class ControlFlow
     {
-        private Stack<InstructionNode> remainingInstructions;
+        private Stack<InstructionBlockNode> remainingInstructions;
         private ControlFlowGraph graph;
         private bool[] visitedInstructions;
         private MethodInfo analyzedMethod;
+
+        private const int EndPointOffset = -1;
 
         public ControlFlowGraph AnalyzeMethod(MethodInfo method)
         {
@@ -22,169 +24,166 @@ namespace CodeModel.FlowAnalysis
             var instructions = method.GetInstructions();
 
             var entryPoint = instructions[0];
-            var exitPoint = instructions.Last();
 
-            this.graph = new ControlFlowGraph(entryPoint, exitPoint);
+            this.graph = new ControlFlowGraph(entryPoint);
+
+            var nodes = new InstructionBlockNode[instructions.Last().Offset + 1];
 
             foreach (var instruction in instructions)
             {
-                graph.AddNode(new InstructionNode(instruction));
+                nodes[instruction.Offset] = (InstructionBlockNode)this.graph.AddNode(new InstructionBlockNode(instruction));
             }
 
-            this.visitedInstructions = new bool[instructions.Last().Offset + 1];
-
-            this.remainingInstructions = new Stack<InstructionNode>();
-
-            this.remainingInstructions.Push(graph.EntryPoint);
-
-            while (this.remainingInstructions.Any())
+            foreach (var node in this.graph.Nodes.OfType<InstructionBlockNode>())
             {
-                var instruction = this.remainingInstructions.Pop();
-
-                if (this.visitedInstructions[instruction.Instruction.Offset])
+                foreach (var transition in GetTransitions(node.First))
                 {
-                    continue;
+                    if (transition == EndPointOffset)
+                    {
+                        this.graph.AddLink(node, this.graph.ExitPoint, new ControlTransition(TransitionKind.Forward));
+                    }
+                    else
+                    {
+                        this.graph.AddLink(node, nodes[transition], new ControlTransition(TransitionKindForBranch(node.First.Offset, transition)));
+                    }
                 }
-
-                this.visitedInstructions[instruction.Instruction.Offset] = true;
-
-                switch (instruction.Instruction.OpCode.FlowControl)
-                {
-                    case FlowControl.Next:
-                    case FlowControl.Call:
-                        NextInstruction(instruction);
-                        break;
-                    case FlowControl.Return:
-                        Return(instruction);
-                        break;
-                    case FlowControl.Cond_Branch:
-                        ConditionalBranch(instruction);
-                        break;
-                    case FlowControl.Branch:
-                        UnconditionalBranch(instruction);
-                        break;
-                    case FlowControl.Throw:
-                        Throw(instruction);
-                        break;
-                    case FlowControl.Meta:
-                        Meta(instruction);
-                        break;
-                    default:
-                        throw new InvalidOperationException(string.Format("Unrecognized flow control {0} on instruction {1}", instruction.Instruction.OpCode.FlowControl, instruction.Instruction));
-                }
-
             }
+
+            var unreachable = this.graph.Nodes.Except(this.graph.EntryPoint, this.graph.ExitPoint).Where(x => !x.InboundLinks.Any()).ToList();
+
+            foreach (var unreachableNode in unreachable)
+            {
+                this.graph.RemoveNode(unreachableNode);
+            }
+
+            this.graph.ReduceBlocks();
 
             return graph;
         }
 
-        private void Meta(InstructionNode instruction)
+        private void ReduceBlocks()
         {
-            NextInstruction(instruction);
+            var remaining = new HashSet<InstructionBlockNode>(this.graph.Nodes.OfType<InstructionBlockNode>().Where(IsBlockBegin));
+
+            while (remaining.Count > 0)
+            {
+                var start = remaining.First();
+                remaining.Remove(start);
+                
+                var block = GetBlockStartingAt(start).ToList();
+
+                var toRemove = block.Except(block.First());
+
+                start.Instructions.AddRange(block.Skip(1).SelectMany(x => x.Instructions));
+
+                this.graph.MoveOutboundLinks(block.Last(), start);                    
+
+                foreach (var instructionBlockNode in toRemove)
+                {
+                    this.graph.RemoveNode(instructionBlockNode);
+                }                
+            }
         }
 
-        private void Return(InstructionNode instruction)
+        public IEnumerable<InstructionBlockNode> GetBlockStartingAt(InstructionBlockNode node)
         {
-            if (instruction.Instruction.OpCode == OpCodes.Ret)
+            do
             {
-                this.graph.AddLink(instruction, this.graph.ExitPoint, new ControlTransition(TransitionKind.Forward));
-                return;
+                yield return node;
+
+                node = (InstructionBlockNode) node.OutboundLinks.OfType<ControlTransition>().First().Target;
+            } 
+            while (IsBlockMiddle(node));
+        }
+
+        public bool IsBlockBegin(InstructionBlockNode instruction)
+        {
+            return instruction.InboundLinks.Count() <= 1; // entry point has 0 inbound links
+        }
+
+        public bool IsBlockEnd(InstructionBlockNode instruction)
+        {
+            return instruction.OutboundLinks.Count() > 1
+                   || instruction.OutboundLinks.First().Target.Equals(this.graph.ExitPoint);
+        }
+
+        public bool IsBlockMiddle(InstructionBlockNode instruction)
+        {
+            return instruction.InboundLinks.Count() == 1
+                   && instruction.OutboundLinks.Count() == 1;
+        }
+
+        private IEnumerable<int> Return(Instruction instruction)
+        {
+            if (instruction.OpCode == OpCodes.Ret)
+            {
+                return new[] { EndPointOffset };
             }
 
-            if (instruction.Instruction.OpCode == OpCodes.Endfinally)
+            if (instruction.OpCode == OpCodes.Endfinally)
             {
-                var nextNode = this.graph.NodeForInstruction(instruction.Instruction.Next);
-                this.graph.AddLink(instruction, nextNode, new ControlTransition(TransitionKind.Forward));
-                this.remainingInstructions.Push(nextNode);
-
-                LinkToThrowTarget(instruction);
+                return new[] { instruction.Next.Offset }.Union(LinkToThrowTarget(instruction));
             }
+
+            throw new InvalidOperationException("Unrecognized Return opcode " + instruction);
         }
 
-        private void Throw(InstructionNode instruction)
+        private IEnumerable<int> Throw(Instruction instruction)
         {
-            LinkToThrowTarget(instruction);
+            return LinkToThrowTarget(instruction);
         }
 
-        private void LinkToThrowTarget(InstructionNode instruction)
+        private IEnumerable<int> LinkToThrowTarget(Instruction instruction)
         {
             var body = this.analyzedMethod.GetMethodBody();
 
-            var possibleExceptionHandlerBlocks = body.ExceptionHandlingClauses.Where(x => x.TryOffset <= instruction.Instruction.Offset && instruction.Instruction.Offset <= x.TryOffset + x.TryLength);
+            var possibleExceptionHandlerBlocks = body.ExceptionHandlingClauses.Where(x => x.TryOffset <= instruction.Offset && instruction.Offset <= x.TryOffset + x.TryLength);
 
             foreach (var handlerBlock in possibleExceptionHandlerBlocks)
             {
-                var handlerStartNode = this.graph.Nodes.OfType<InstructionNode>().Single(x => x.Instruction.Offset == handlerBlock.HandlerOffset);
-                this.graph.AddLink(instruction, handlerStartNode, new ControlTransition(TransitionKind.Forward));
-                this.remainingInstructions.Push(handlerStartNode);
+                yield return handlerBlock.HandlerOffset;
             }
 
-            this.graph.AddLink(instruction, this.graph.ExitPoint, new ControlTransition(TransitionKind.Forward));
+            yield return EndPointOffset;
         }
 
-        private void UnconditionalBranch(InstructionNode instruction)
+        private IEnumerable<int> UnconditionalBranch(Instruction instruction)
         {
             var body = analyzedMethod.GetMethodBody();
 
-            var handlingClause = body.ExceptionHandlingClauses.OrderBy(x => x.HandlerOffset).FirstOrDefault(x => instruction.Instruction.Next.Offset == x.TryOffset + x.TryLength);
+            var handlingClause = body.ExceptionHandlingClauses.OrderBy(x => x.HandlerOffset).FirstOrDefault(x => instruction.Next.Offset == x.TryOffset + x.TryLength);
 
             if (handlingClause != null && handlingClause.Flags.HasFlag(ExceptionHandlingClauseOptions.Finally))
             {
-                var finallyClauseStart = this.graph.Nodes.OfType<InstructionNode>().Single(x => x.Instruction.Offset == handlingClause.HandlerOffset);
-                this.graph.AddLink(instruction, finallyClauseStart, new ControlTransition(TransitionKind.Forward));
-
-                this.remainingInstructions.Push(finallyClauseStart);
-
-                return;
+                return new[] {handlingClause.HandlerOffset};
             }
-
-            var target = this.graph.NodeForInstruction((Instruction)instruction.Instruction.Operand);
-
-            graph.AddLink(instruction, target, new ControlTransition(TransitionKindForBranch(instruction, target)));
-
-            this.remainingInstructions.Push(target);
+            else
+            {
+                return new[] {((Instruction)instruction.Operand).Offset};   
+            }            
         }
 
-        private void ConditionalBranch(InstructionNode instruction)
+        private IEnumerable<int> ConditionalBranch(Instruction instruction)
         {
-            switch (instruction.Instruction.OpCode.OperandType)
+            switch (instruction.OpCode.OperandType)
             {
                 case OperandType.InlineSwitch:
-                    JumpTable(instruction);
-                    break;
+                    return JumpTable(instruction);
                 default:
-                    var branchTarget = graph.NodeForInstruction((Instruction)instruction.Instruction.Operand);
-                    graph.AddLink(instruction, branchTarget, new ControlTransition(TransitionKindForBranch(instruction, branchTarget)));
-
-                    this.remainingInstructions.Push(branchTarget);
-
-                    var next = graph.NodeForInstruction(instruction.Instruction.Next);
-                    graph.AddLink(instruction, next, new ControlTransition(TransitionKind.Forward));
-
-                    this.remainingInstructions.Push(next);
-                    break;
+                    return new[] { ((Instruction)instruction.Operand).Offset, instruction.Next.Offset };
             }
         }
 
-        private void JumpTable(InstructionNode instruction)
+        private IEnumerable<int> JumpTable(Instruction instruction)
         {
-            var targets = ((Instruction[]) instruction.Instruction.Operand).Select(x => this.graph.NodeForInstruction(x));
+            var targets = ((Instruction[])instruction.Operand);//.Select(x => this.graph.NodeForInstruction(x));
 
-            foreach (var target in targets)
-            {
-                graph.AddLink(instruction, target, new ControlTransition(TransitionKind.Forward));
-                this.remainingInstructions.Push(target);
-            }
-
-            //var next = this.graph.NodeForInstruction(instruction.Instruction.Next);
-            //this.graph.AddLink(instruction, next, new ControlTransition(TransitionKind.Forward));
-
-            //this.remainingInstructions.Push(next);
+            return targets.Select(x => x.Offset);
         }
 
-        private static TransitionKind TransitionKindForBranch(InstructionNode @from, InstructionNode to)
+        private static TransitionKind TransitionKindForBranch(int fromOffset, int toOffset)
         {
-            if (to.Instruction.Offset > @from.Instruction.Offset)
+            if (toOffset > fromOffset)
             {
                 return TransitionKind.Forward;
             }
@@ -194,11 +193,25 @@ namespace CodeModel.FlowAnalysis
             }
         }
 
-        private void NextInstruction(InstructionNode instruction)
+        private IEnumerable<int> GetTransitions(Instruction instruction)
         {
-            var next = this.graph.NodeForInstruction(instruction.Instruction.Next);
-            this.graph.AddLink(instruction, next, new ControlTransition(TransitionKind.Forward));
-            this.remainingInstructions.Push(next);
+            switch (instruction.OpCode.FlowControl)
+            {
+                case FlowControl.Next:
+                case FlowControl.Meta:
+                case FlowControl.Call:
+                    return new[] { instruction.Next.Offset };
+                case FlowControl.Return:
+                    return Return(instruction);
+                case FlowControl.Cond_Branch:
+                    return ConditionalBranch(instruction);
+                case FlowControl.Branch:
+                    return UnconditionalBranch(instruction);
+                case FlowControl.Throw:
+                    return Throw(instruction);
+                default:
+                    throw new InvalidOperationException(string.Format("Unrecognized flow control {0} on instruction {1}", instruction.OpCode.FlowControl, instruction));
+            }
         }
     }
 }

@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Reflection.Emit;
 using System.Text;
 using System.Threading.Tasks;
+using CodeModel.Extensions.DgmlExport;
 using CodeModel.FlowAnalysis;
 using NUnit.Framework;
 using Tests.Constraints;
@@ -48,7 +50,7 @@ namespace Tests.FlowAnalysisTests
             // act
             this.Result = flowAnalyzer.AnalyzeMethod(method);
 
-            // assert          
+            // assert                                  
             var paths = this.Result.FindPaths().ToList();
             Assert.That(paths, Has.Count.EqualTo(2));
         }
@@ -97,8 +99,8 @@ namespace Tests.FlowAnalysisTests
             var paths = this.Result.FindPaths().ToList();
 
             Assert.That(this.Result, Graph.Has
-                .Nodes<InstructionNode>(exactly: 1, matches: x => x.OutboundLinks.Count() == 2)
-                .Nodes<InstructionNode>(exactly: 1, matches: x => x.InboundLinks.Count() == 2)
+                .Nodes<InstructionBlockNode>(exactly: 1, matches: x => x.OutboundLinks.Count() == 2)
+                .Nodes<InstructionBlockNode>(exactly: 1, matches: x => x.InboundLinks.Count() == 2)
                 );
         }
 
@@ -113,7 +115,7 @@ namespace Tests.FlowAnalysisTests
             this.Result = flowAnalyzer.AnalyzeMethod(method);
 
             // assert          
-            var throwNode = this.Result.Nodes.OfType<InstructionNode>().Single(x => x.Instruction.OpCode == OpCodes.Throw);
+            var throwNode = this.Result.Nodes.OfType<InstructionBlockNode>().Single(x => x.Instructions.Any(y => y.OpCode == OpCodes.Throw));
 
             Assert.That(throwNode.OutboundLinks, Has.Exactly(1)
                 .Matches<ControlTransition>(x => x.Target.Equals(this.Result.ExitPoint)));
@@ -130,10 +132,10 @@ namespace Tests.FlowAnalysisTests
             this.Result = flowAnalyzer.AnalyzeMethod(method);
 
             // assert
-            var marker2Call = FindMethodCallInstruction(x => ControlFlowAnalysisTarget.Marker2());
-           
-            var marker3Call = FindMethodCallInstruction(x => ControlFlowAnalysisTarget.Marker3());
-          
+            var marker2Call = FindMethodCallInstructionBlock(x => ControlFlowAnalysisTarget.Marker2());
+
+            var marker3Call = FindMethodCallInstructionBlock(x => ControlFlowAnalysisTarget.Marker3());
+
             var paths = this.Result.FindPaths().ToList();
             Assert.That(paths, Has.Count.EqualTo(2)
                 .And.Exactly(1).Contains(marker3Call)
@@ -151,7 +153,7 @@ namespace Tests.FlowAnalysisTests
             this.Result = flowAnalyzer.AnalyzeMethod(method);
 
             // assert   
-            var marker1Call = FindMethodCallInstruction(x => ControlFlowAnalysisTarget.Marker1());
+            var marker1Call = FindMethodCallInstructionBlock(x => ControlFlowAnalysisTarget.Marker1());
 
             var paths = this.Result.FindPaths().ToList();
             Assert.That(paths, Has.Count.EqualTo(2)
@@ -172,19 +174,19 @@ namespace Tests.FlowAnalysisTests
             var paths = this.Result.FindPaths().ToList();
             Assert.That(paths, Has.Count.EqualTo(4));
 
-            var marker1Call = FindMethodCallInstruction(x => ControlFlowAnalysisTarget.Marker1());
+            var marker1Call = FindMethodCallInstructionBlock(x => ControlFlowAnalysisTarget.Marker1());
 
             Assert.That(marker1Call.InboundLinks, Has.Count.EqualTo(1), "Catch block not reached");
 
-            var marker2Call = FindMethodCallInstruction(x => ControlFlowAnalysisTarget.Marker2());
+            var marker2Call = FindMethodCallInstructionBlock(x => ControlFlowAnalysisTarget.Marker2());
 
             Assert.That(marker2Call.InboundLinks, Has.Count.EqualTo(1), "Catch block not reached");
 
-            var marker3Call = FindMethodCallInstruction(x => ControlFlowAnalysisTarget.Marker3());
+            var marker3Call = FindMethodCallInstructionBlock(x => ControlFlowAnalysisTarget.Marker3());
 
             Assert.That(marker3Call.InboundLinks, Has.Count.EqualTo(1), "Catch block not reached");
 
-            var marker4Call = FindMethodCallInstruction(x => ControlFlowAnalysisTarget.Marker4());
+            var marker4Call = FindMethodCallInstructionBlock(x => ControlFlowAnalysisTarget.Marker4());
 
             Assert.That(marker4Call.InboundLinks, Has.Count.AtLeast(1), "Block after try-catch not reached");
 
@@ -206,11 +208,11 @@ namespace Tests.FlowAnalysisTests
             Assert.That(paths, Has.Count.EqualTo(4));
         }
 
-        private InstructionNode FindMethodCallInstruction(Expression<Action<ControlFlowAnalysisTarget>> target)
+        private InstructionBlockNode FindMethodCallInstructionBlock(Expression<Action<ControlFlowAnalysisTarget>> target)
         {
             var method = Get.MethodOf(target);
 
-            return this.Result.Nodes.OfType<InstructionNode>().Single(x => x.Instruction.OpCode == OpCodes.Call && method == (MethodInfo)x.Instruction.Operand);
+            return this.Result.Nodes.OfType<InstructionBlockNode>().Single(x => x.Instructions.Any(y => y.OpCode == OpCodes.Call && method == (MethodInfo) y.Operand));
         }
 
         //TODO: test for nested trys

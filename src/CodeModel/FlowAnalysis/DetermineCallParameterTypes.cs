@@ -316,7 +316,7 @@ namespace CodeModel.FlowAnalysis
             }
         }
 
-        public override void Walk(MethodInfo method, IEnumerable<InstructionNode> instructions)
+        public override void Walk(MethodInfo method, IEnumerable<InstructionBlockNode> instructions)
         {
             this.stack = new Stack<PotentialType>();
             this.variableTypes = method.GetMethodBody().LocalVariables.ToDictionary(x => x.LocalIndex, x => PotentialType.FromType(x.LocalType));

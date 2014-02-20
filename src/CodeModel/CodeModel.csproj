@@ -57,7 +57,7 @@
     <Compile Include="FlowAnalysis\DetermineCallParameterTypes.cs" />
     <Compile Include="FlowAnalysis\FindAllControlFlowPaths.cs" />
     <Compile Include="FlowAnalysis\InstructionExtensions.cs" />
-    <Compile Include="FlowAnalysis\InstructionNode.cs" />
+    <Compile Include="FlowAnalysis\InstructionBlockNode.cs" />
     <Compile Include="FlowAnalysis\PotentialType.cs" />
     <Compile Include="FlowAnalysis\StackWalker.cs" />
     <Compile Include="FlowAnalysis\StackWalker.partial.cs">

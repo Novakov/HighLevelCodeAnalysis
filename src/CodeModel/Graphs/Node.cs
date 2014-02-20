@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace CodeModel.Graphs
 {
@@ -46,7 +47,13 @@ namespace CodeModel.Graphs
         public override string ToString()
         {
             return this.Id;
-        }       
+        }
+
+        public bool HasLinkTo(Node target)
+        {
+            return this.outbound.Any(x => x.Target.Equals(target));
+        }
+
 
         internal void AddOutboundLink(Link link)
         {

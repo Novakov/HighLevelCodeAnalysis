@@ -38,47 +38,30 @@ namespace CodeModel.FlowAnalysis
 
         public void ReduceBlocks()
         {
-            var possibleBlockStarts = this.Blocks.Where(IsBlockBegin).ToList();
+            //var possibleBlockStarts = 
 
-            foreach (var possibleBlockStart in possibleBlockStarts)
-            {
-                ReduceBlock(possibleBlockStart);   
-            }            
+            ReduceBlock(this.Blocks.First());
         }
 
         private void ReduceBlock(InstructionBlockNode blockStart)
         {
-            if (blockStart.IsBranch)
-            {
-                return;
-            }
-
             var next = blockStart.OutboundLinks.OfType<ControlTransition>().First().Target;
 
-            var nextBlock = next as InstructionBlockNode;
-
-            while (nextBlock != null && nextBlock.IsPassthrough)
+            while (IsBlockMiddle(next))
             {
                 blockStart.Instructions.AddRange(((InstructionBlockNode) next).Instructions);
                 MoveOutboundLinks(next, blockStart);
                 RemoveNode(next);
 
                 next = blockStart.OutboundLinks.OfType<ControlTransition>().First().Target;
-                nextBlock = next as InstructionBlockNode;
             }
+        }
 
-            if (nextBlock != null && nextBlock.IsBranch && !nextBlock.IsJoin)
-            {
-                blockStart.Instructions.AddRange(((InstructionBlockNode)next).Instructions);
-                MoveOutboundLinks(next, blockStart);
-                RemoveNode(next);
-            }
-        }       
-
-        public bool IsBlockBegin(InstructionBlockNode instruction)
+        public bool IsBlockMiddle(Node instruction)
         {
-            return instruction.IsJoin
-                   || instruction.TransitedFrom.First().IsBranch;
+            return !instruction.Equals(this.ExitPoint)
+                   && instruction.InboundLinks.Count() == 1
+                   && instruction.OutboundLinks.Count() == 1;
         }
 
         private class DummyExitPoint : Node

@@ -11,12 +11,12 @@ namespace CodeModel.Graphs
     {
         private readonly Node endNode;
         public List<IEnumerable<Node>> Paths { get; private set; }
-        private readonly Stack<Node> currentPath;
+        private readonly List<Node> currentPath;
 
         protected FindAllPaths(Node endNode)
         {
             this.endNode = endNode;
-            this.currentPath = new Stack<Node>();
+            this.currentPath = new List<Node>();
             this.Paths = new List<IEnumerable<Node>>();            
         }
 
@@ -31,17 +31,17 @@ namespace CodeModel.Graphs
 
         protected override void EnterNode(Node node, IEnumerable<Link> availableThrough)
         {
-            this.currentPath.Push(node);
+            this.currentPath.Add(node);
 
             if (node.Equals(this.endNode))
             {
-                this.Paths.Add(new List<Node>(this.currentPath.Reverse()));
+                this.Paths.Add(new List<Node>(this.currentPath));
             }
         }
 
         protected override void LeaveNode(Node node, IEnumerable<Link> availableThrough)
         {
-            this.currentPath.Pop();
+            this.currentPath.RemoveAt(this.currentPath.Count - 1);
         }
     }
 }

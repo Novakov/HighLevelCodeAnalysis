@@ -28,12 +28,12 @@ namespace Tests.FlowAnalysisTests
 
                 foreach (var branch in branches)
                 {
-                    var stackLength = branch.Aggregate(0, (a, i) => a + i.Instruction.PushedValuesCount(method) - i.Instruction.PopedValuesCount(method));
+                    var stackLength = branch.SelectMany(x => x.Instructions).Aggregate(0, (a, i) => a + i.PushedValuesCount(method) - i.PopedValuesCount(method));
 
                     Assert.That(stackLength, Is.EqualTo(0));
                 }
             }
-        }        
+        }       
 
         [Test, Explicit]
         [TestCaseSource(typeof(AllMscorlibTypes), "AllTypes")]
@@ -49,7 +49,7 @@ namespace Tests.FlowAnalysisTests
 
                 foreach (var branch in branches)
                 {
-                    var stackLength = branch.Aggregate(0, (a, i) => a + i.Instruction.PushedValuesCount(method) - i.Instruction.PopedValuesCount(method));
+                    var stackLength = branch.SelectMany(x => x.Instructions).Aggregate(0, (a, i) => a + i.PushedValuesCount(method) - i.PopedValuesCount(method));
 
                     Assert.That(stackLength, Is.EqualTo(0), string.Format("Type: {0} Method:{1}", method, method.DeclaringType));
                 }
@@ -61,7 +61,10 @@ namespace Tests.FlowAnalysisTests
     {
         public IEnumerable<Type> AllTypes()
         {
-            return typeof (string).Assembly.GetTypes().Where(x => x.IsPublic).Where(x => x != typeof (StringBuilder)).OrderBy(x => x.FullName);
+            return typeof (string).Assembly.GetTypes()
+                .Where(x => x.IsPublic && !x.IsInterface)
+                .Where(x => x != typeof (StringBuilder))
+                .OrderBy(x => x.FullName);
         }
     }
 }

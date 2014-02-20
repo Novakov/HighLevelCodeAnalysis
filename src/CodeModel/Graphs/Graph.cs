@@ -101,5 +101,16 @@ namespace CodeModel.Graphs
                 this.links.Add(link);
             }
         }
+
+        public void MoveOutboundLinks(Node from, Node to)
+        {
+            foreach (var link in from.OutboundLinks.ToList())
+            {
+                from.RemoveOutboundLink(link);
+                to.AddOutboundLink(link);
+                
+                link.SetUpConnection(to, link.Target);
+            }
+        }
     }
 }
