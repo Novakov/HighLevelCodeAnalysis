@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
+using System.Threading.Tasks;
 using CodeModel.Builder;
 using CodeModel.FlowAnalysis;
 using CodeModel.Graphs;
@@ -27,13 +28,13 @@ namespace CodeModel.Mutators
 
             var calls = new List<Tuple<Instruction, PotentialType[]> >();
 
-            foreach (var executionPath in executionPaths)
+            Parallel.ForEach(executionPaths, executionPath =>
             {
                 var parameters = new DetermineCallParameterTypes();
-                parameters.Walk(node.Method, executionPath);   
-            
+                parameters.Walk(node.Method, executionPath);
+
                 calls.AddRange(parameters.Calls);
-            }
+            });
 
             foreach (var call in calls.GroupBy(x => (MethodInfo)x.Item1.Operand))
             {

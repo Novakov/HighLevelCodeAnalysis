@@ -123,6 +123,12 @@ namespace CodeModel.FlowAnalysis
             this.HandleCall(instruction);            
         }
 
+        protected override void HandleLdftn(Instruction instruction)
+        {
+            //TODO: test for ldftn
+            this.stack.Push(PotentialType.MethodHandle);
+        }
+
         protected override void HandleInitobj(Instruction instruction)
         {
             this.stack.PopMany(instruction.PopedValuesCount(this.AnalyzedMethod));            

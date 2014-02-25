@@ -54,7 +54,7 @@ namespace Tests.FlowAnalysisTests
                     Assert.That(stackLength, Is.EqualTo(0), string.Format("Type: {0} Method:{1}", method, method.DeclaringType));
                 }
             }
-        }        
+        }      
     }
 
     internal class AllMscorlibTypes

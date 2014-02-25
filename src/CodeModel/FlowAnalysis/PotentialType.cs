@@ -12,6 +12,7 @@ namespace CodeModel.FlowAnalysis
 
         public static readonly PotentialType Numeric = new NumericPotentialType();
         public static readonly PotentialType Token = new TokenPotentialType();
+        public static readonly PotentialType MethodHandle = new MethodHandlePotentialType();
 
         public Type Type { get; private set; }        
 
@@ -85,6 +86,14 @@ namespace CodeModel.FlowAnalysis
             {
                 return "Token";
             }           
+        }
+
+        private class MethodHandlePotentialType : PotentialType
+        {
+            public override string ToString()
+            {
+                return "MethodHandle";
+            }
         }
         
     }
