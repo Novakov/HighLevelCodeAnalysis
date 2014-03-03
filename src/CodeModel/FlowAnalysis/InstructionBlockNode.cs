@@ -5,18 +5,8 @@ using Mono.Reflection;
 
 namespace CodeModel.FlowAnalysis
 {
-    public class InstructionBlockNode : Node
+    public abstract class BlockNode : Node
     {
-        public List<Instruction> Instructions { get; private set; }
-
-        public Instruction First { get { return this.Instructions[0]; } }
-        public Instruction Last { get { return this.Instructions.Last(); } }
-
-        public IEnumerable<InstructionBlockNode> TransitedFrom
-        {
-            get { return this.InboundLinks.OfType<ControlTransition>().Select(x => (InstructionBlockNode) x.Source); }
-        }
-
         public bool IsBranch
         {
             get { return this.OutboundLinks.Count() != 1; }
@@ -32,10 +22,28 @@ namespace CodeModel.FlowAnalysis
             get { return !this.IsBranch && !this.IsJoin; }
         }
 
-        public InstructionBlockNode(params Instruction[] instructions)
-            : base(instructions.First().ToString())
+        public List<Instruction> Instructions { get; private set; }
+
+        public IEnumerable<BlockNode> TransitedFrom
+        {
+            get { return this.InboundLinks.OfType<ControlTransition>().Select(x => (BlockNode)x.Source); }
+        }   
+
+        protected BlockNode(string id, params  Instruction[] instructions)
+            : base(id)
         {
             this.Instructions = new List<Instruction>(instructions);
+        }       
+    }
+
+    public class InstructionBlockNode : BlockNode
+    {        
+        public Instruction First { get { return this.Instructions[0]; } }
+        public Instruction Last { get { return this.Instructions.Last(); } }        
+
+        public InstructionBlockNode(params Instruction[] instructions)
+            : base(instructions.First().ToString(), instructions)
+        {            
         }
 
         public override string ToString()
@@ -46,6 +54,15 @@ namespace CodeModel.FlowAnalysis
         public override string DisplayLabel
         {
             get { return this.ToString(); }
+        }
+    }
+
+    public class MethodExitNode : BlockNode
+    {
+        public MethodExitNode()
+            : base("exit-point")
+        {
+            
         }
     }
 }

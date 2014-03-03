@@ -15,7 +15,7 @@ namespace CodeModel.FlowAnalysis
 
         protected MethodInfo AnalyzedMethod { get; private set; }
 
-        public virtual void Walk(MethodInfo method, IEnumerable<InstructionBlockNode> instructions)
+        public virtual void Walk(MethodInfo method, IEnumerable<BlockNode> instructions)
         {
             this.handlers = new Dictionary<OpCode, Action<Instruction>>();
 

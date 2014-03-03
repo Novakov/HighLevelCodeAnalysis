@@ -8,26 +8,26 @@ namespace CodeModel.FlowAnalysis
 {
     public class ControlFlowGraph : Graph
     {
-        public Node ExitPoint { get; private set; }
+        public BlockNode ExitPoint { get; private set; }
         public InstructionBlockNode EntryPoint { get; private set; }
 
-        public IEnumerable<InstructionBlockNode> Blocks { get { return base.Nodes.OfType<InstructionBlockNode>(); } }
+        public IEnumerable<BlockNode> Blocks { get { return base.Nodes.OfType<InstructionBlockNode>(); } }
 
         public ControlFlowGraph(Instruction entrypoint)
         {
             this.EntryPoint = new InstructionBlockNode(entrypoint);
             this.AddNode(this.EntryPoint);
 
-            this.ExitPoint = new DummyExitPoint();
+            this.ExitPoint = new MethodExitNode();
             this.AddNode(this.ExitPoint);
         }
 
-        public InstructionBlockNode NodeForInstruction(Instruction instruction)
+        public BlockNode NodeForInstruction(Instruction instruction)
         {
             return this.Blocks.FirstOrDefault(x => x.Instructions.Contains(instruction));
         }
 
-        public IEnumerable<IEnumerable<InstructionBlockNode>> FindPaths()
+        public IEnumerable<IEnumerable<BlockNode>> FindPaths()
         {
             var paths = new FindAllControlFlowPaths(this.ExitPoint);
 
@@ -46,7 +46,7 @@ namespace CodeModel.FlowAnalysis
             }            
         }
 
-        private void ReduceBlock(InstructionBlockNode blockStart)
+        private void ReduceBlock(BlockNode blockStart)
         {
             if (blockStart.IsBranch)
             {
@@ -55,11 +55,11 @@ namespace CodeModel.FlowAnalysis
 
             var next = blockStart.OutboundLinks.OfType<ControlTransition>().First().Target;
 
-            var nextBlock = next as InstructionBlockNode;
+            var nextBlock = next as BlockNode;
 
             while (nextBlock != null && nextBlock.IsPassthrough)
             {
-                blockStart.Instructions.AddRange(((InstructionBlockNode) next).Instructions);
+                blockStart.Instructions.AddRange(((BlockNode)next).Instructions);
                 MoveOutboundLinks(next, blockStart);
                 RemoveNode(next);
 
@@ -69,24 +69,25 @@ namespace CodeModel.FlowAnalysis
 
             if (nextBlock != null && nextBlock.IsBranch && !nextBlock.IsJoin)
             {
-                blockStart.Instructions.AddRange(((InstructionBlockNode)next).Instructions);
+                blockStart.Instructions.AddRange(((BlockNode)next).Instructions);
                 MoveOutboundLinks(next, blockStart);
                 RemoveNode(next);
             }
-        }       
+        }
 
-        public bool IsBlockBegin(InstructionBlockNode instruction)
+        private bool IsBlockBegin(BlockNode instruction)
         {
             return instruction.IsJoin
                    || instruction.TransitedFrom.First().IsBranch;
         }
-
-        private class DummyExitPoint : Node
+       
+        public void RemoveUnreachableBlocks()
         {
-            public DummyExitPoint()
-                : base("exit-point")
-            {
+            var unreachable = Nodes.Except(EntryPoint, ExitPoint).Where(x => !x.InboundLinks.Any()).ToList();
 
+            foreach (var unreachableNode in unreachable)
+            {
+                RemoveNode(unreachableNode);
             }
         }
     }

@@ -11,9 +11,7 @@ namespace CodeModel.FlowAnalysis
 {
     public class ControlFlow
     {
-        private Stack<InstructionBlockNode> remainingInstructions;
         private ControlFlowGraph graph;
-        private bool[] visitedInstructions;
         private MethodInfo analyzedMethod;
 
         private const int EndPointOffset = -1;
@@ -34,9 +32,20 @@ namespace CodeModel.FlowAnalysis
                 nodes[instruction.Offset] = (InstructionBlockNode)this.graph.AddNode(new InstructionBlockNode(instruction));
             }
 
-            foreach (var node in this.graph.Nodes.OfType<InstructionBlockNode>())
+            LinkBlockTransitions(nodes);
+
+            this.graph.RemoveUnreachableBlocks();
+
+            this.graph.ReduceBlocks();
+
+            return graph;
+        }
+
+        private void LinkBlockTransitions(IList<InstructionBlockNode> nodes)
+        {
+            foreach (var node in this.graph.Blocks)
             {
-                foreach (var transition in GetTransitions(node.First))
+                foreach (var transition in GetTransitions(node.Instructions.FirstOrDefault()))
                 {
                     if (transition == EndPointOffset)
                     {
@@ -44,73 +53,10 @@ namespace CodeModel.FlowAnalysis
                     }
                     else
                     {
-                        this.graph.AddLink(node, nodes[transition], new ControlTransition(TransitionKindForBranch(node.First.Offset, transition)));
+                        this.graph.AddLink(node, nodes[transition], new ControlTransition(TransitionKindForBranch(node.Instructions[0].Offset, transition)));
                     }
                 }
             }
-
-            var unreachable = this.graph.Nodes.Except(this.graph.EntryPoint, this.graph.ExitPoint).Where(x => !x.InboundLinks.Any()).ToList();
-
-            foreach (var unreachableNode in unreachable)
-            {
-                this.graph.RemoveNode(unreachableNode);
-            }
-
-            this.graph.ReduceBlocks();
-
-            return graph;
-        }
-
-        private void ReduceBlocks()
-        {
-            var remaining = new HashSet<InstructionBlockNode>(this.graph.Nodes.OfType<InstructionBlockNode>().Where(IsBlockBegin));
-
-            while (remaining.Count > 0)
-            {
-                var start = remaining.First();
-                remaining.Remove(start);
-                
-                var block = GetBlockStartingAt(start).ToList();
-
-                var toRemove = block.Except(block.First());
-
-                start.Instructions.AddRange(block.Skip(1).SelectMany(x => x.Instructions));
-
-                this.graph.MoveOutboundLinks(block.Last(), start);                    
-
-                foreach (var instructionBlockNode in toRemove)
-                {
-                    this.graph.RemoveNode(instructionBlockNode);
-                }                
-            }
-        }
-
-        public IEnumerable<InstructionBlockNode> GetBlockStartingAt(InstructionBlockNode node)
-        {
-            do
-            {
-                yield return node;
-
-                node = (InstructionBlockNode) node.OutboundLinks.OfType<ControlTransition>().First().Target;
-            } 
-            while (IsBlockMiddle(node));
-        }
-
-        public bool IsBlockBegin(InstructionBlockNode instruction)
-        {
-            return instruction.InboundLinks.Count() <= 1; // entry point has 0 inbound links
-        }
-
-        public bool IsBlockEnd(InstructionBlockNode instruction)
-        {
-            return instruction.OutboundLinks.Count() > 1
-                   || instruction.OutboundLinks.First().Target.Equals(this.graph.ExitPoint);
-        }
-
-        public bool IsBlockMiddle(InstructionBlockNode instruction)
-        {
-            return instruction.InboundLinks.Count() == 1
-                   && instruction.OutboundLinks.Count() == 1;
         }
 
         private IEnumerable<int> Return(Instruction instruction)
