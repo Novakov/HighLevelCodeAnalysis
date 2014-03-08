@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <OutputFile>$(OutputPath)$(AssemblyName).dll</OutputFile>
+  </PropertyGroup>
+
+  <Target Name="CoreCompile">
+    <ItemGroup>
+      <ILFiles Include="@(None)" Condition="'%(Extension)'=='.il'"/>
+    </ItemGroup>
+
+    <GetFrameworkPath>
+      <Output TaskParameter="Path" PropertyName="FrameworkPath"/>
+    </GetFrameworkPath>
+
+    <PropertyGroup>
+      <ILAsm>$(FrameworkPath)\ilasm.exe</ILAsm>
+    </PropertyGroup>
+
+    <Exec Command="&quot;$(ILAsm)&quot; /nologo /dll /out=$(IntermediateOutputPath)$(TargetName).dll @(ILFiles, ' ')"/>
+  </Target>
+
+  <Target Name="_Verify">
+    <GetFrameworkSdkPath>
+      <Output TaskParameter="Path" PropertyName="FrameworkSdkPath" />
+    </GetFrameworkSdkPath>
+
+    <PropertyGroup>
+      <PEVerify Condition="Exists('$(FrameworkSdkPath)\bin\NETFX 4.5.1 Tools\PEVerify.exe')">$(FrameworkSdkPath)\bin\NETFX 4.5.1 Tools\PEVerify.exe</PEVerify>
+      <PEVerify Condition="Exists('$(FrameworkSdkPath)\bin\NETFX 4.0 Tools\PEVerify.exe')">$(FrameworkSdkPath)\bin\NETFX 4.0 Tools\PEVerify.exe</PEVerify>
+    </PropertyGroup>
+    
+    <Exec Command="&quot;$(PEVerify)&quot; $(OutputFile) /nologo /il /md" />
+  </Target>
+
+  <Target Name="AfterBuild" DependsOnTargets="_Verify">
+    
+  </Target>
+
+  <Target Name="CreateManifestResourceNames"/>          
+  
+  <Import Project="$(MSBuildToolsPath)\Microsoft.Common.targets" />
+</Project>

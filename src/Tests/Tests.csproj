@@ -97,6 +97,7 @@
     <Compile Include="NodeTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestSettings.cs" />
+    <Compile Include="X.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CodeModel.Extensions.AspNetMvc\CodeModel.Extensions.AspNetMvc.csproj">
@@ -126,6 +127,10 @@
     <ProjectReference Include="..\TestTarget\TestTarget.csproj">
       <Project>{d8d9e350-334f-4c68-8c6a-4d498f3fc3ed}</Project>
       <Name>TestTarget</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\TestTarget.IL\TestTarget.IL.csproj">
+      <Project>{CFCD8DAA-3C30-451E-BAC5-F81210586356}</Project>
+      <Name>TestTarget.IL</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
