@@ -39,19 +39,21 @@ namespace Tests.FlowAnalysisTests
         [TestCaseSource(typeof(AllMscorlibTypes), "AllTypes")]
         public void CheckStackLength(Type type)
         {
-            IEnumerable<MethodInfo> methods = type.GetMethods().Where(x => x.GetMethodBody() != null).Where(x => x.DeclaringType == type);
+            IEnumerable<MethodInfo> methods = type.GetMethods().Where(x => x.GetMethodBody() != null).Where(x => x.DeclaringType == type);            
 
             foreach (var method in methods)
             {
-                var graph = new ControlFlow().AnalyzeMethod(method);
+                var graph = new ControlFlow().AnalyzeMethod(method);                
 
-                var branches = graph.FindPaths().ToList();
+                var walker = new ComputeStackLength();
 
-                foreach (var branch in branches)
+                try
                 {
-                    var stackLength = branch.SelectMany(x => x.Instructions).Aggregate(0, (a, i) => a + i.PushedValuesCount(method) - i.PopedValuesCount(method));
-
-                    Assert.That(stackLength, Is.EqualTo(0), string.Format("Type: {0} Method:{1}", method, method.DeclaringType));
+                    walker.Walk(method, graph);
+                }
+                catch (Exception e)
+                {
+                    Assert.Fail("Type: {0} Method:{1} {2}", method, method.DeclaringType, e);
                 }
             }
         }      

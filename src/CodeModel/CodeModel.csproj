@@ -52,7 +52,9 @@
     <Compile Include="Convetions\IConvention.cs" />
     <Compile Include="Convetions\IEntityConvention.cs" />
     <Compile Include="EnumerableExtensions.cs" />
+    <Compile Include="FlowAnalysis\ComputeStackLength.cs" />
     <Compile Include="FlowAnalysis\ControlFlowGraph.cs" />
+    <Compile Include="FlowAnalysis\ControlFlowPathsWalker.cs" />
     <Compile Include="FlowAnalysis\ControlTransition.cs" />
     <Compile Include="FlowAnalysis\DetermineCallParameterTypes.cs" />
     <Compile Include="FlowAnalysis\FindAllControlFlowPaths.cs" />
