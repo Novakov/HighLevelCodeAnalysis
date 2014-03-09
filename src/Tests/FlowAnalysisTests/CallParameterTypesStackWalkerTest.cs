@@ -18,11 +18,10 @@ namespace Tests.FlowAnalysisTests
         {
             var method = Get.MethodOf<CallParametersTarget>(x => CallParametersTarget.Get<int>()).GetGenericMethodDefinition();
 
-            var flowGraph = new ControlFlow().AnalyzeMethod(method);
-            var path = flowGraph.FindPaths().Single();
+            var flowGraph = new ControlFlow().AnalyzeMethod(method);            
             
             var types = new DetermineCallParameterTypes();
-            types.Walk(method, path);
+            types.Walk(method, flowGraph);
         }
 
         [Test]
@@ -31,13 +30,12 @@ namespace Tests.FlowAnalysisTests
         {
             // arrange            
             var method = typeof(CallParametersTarget).GetMethod(methodName);
-            var flowGraph = new ControlFlow().AnalyzeMethod(method);
-            var path = flowGraph.FindPaths().Single();
+            var flowGraph = new ControlFlow().AnalyzeMethod(method);            
 
             var walker = new DetermineCallParameterTypes();
 
             // act
-            walker.Walk(method, path);
+            walker.Walk(method, flowGraph);
 
             // assert
             Assert.That(walker.Calls, Has.Count.AtLeast(1));

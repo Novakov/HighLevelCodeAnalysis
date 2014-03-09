@@ -23,6 +23,8 @@ namespace CodeModel.FlowAnalysis
             this.Method = method;
 
             this.visitedBranchLinks = new HashSet<Link>();
+
+            base.Walk(graph.EntryPoint);
         }
 
         protected sealed override void EnterNode(Node node, IEnumerable<Link> availableThrough)

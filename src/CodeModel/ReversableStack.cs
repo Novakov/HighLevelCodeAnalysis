@@ -13,6 +13,8 @@ namespace CodeModel
 
         private readonly Stack<T> innerStack;
 
+        public bool IsEmpty { get { return this.innerStack.Count > 0; } }
+
         public ReversableStack()
         {
             this.innerStack = new Stack<T>();
@@ -42,9 +44,28 @@ namespace CodeModel
             this.PushMany((IEnumerable<T>)values);
         }
 
+        public T[] PopMany(int count)
+        {
+            var result = new T[count];
+
+            for (int i = 0; i < count; i++)
+            {
+                result[count - i - 1] = this.Pop();
+            }
+
+            return result;
+        }
+
         public T Pop()
         {
-            return this.innerStack.Pop();
+            var value = this.innerStack.Pop();
+
+            if (this.currentMark != null)
+            {
+                this.currentMark.AddRevertAction(s => s.Push(value));
+            }
+
+            return value;
         }
 
         public IEnumerator<T> GetEnumerator()
@@ -66,6 +87,12 @@ namespace CodeModel
         public void Revert()
         {
             this.currentMark.Revert(this);
+            this.marks.Pop();
+
+            if (this.marks.Count > 0)
+            {
+                this.currentMark = this.marks.Peek();
+            }
         }
     }
 }

@@ -57,6 +57,7 @@
     <Compile Include="FlowAnalysis\ControlFlowPathsWalker.cs" />
     <Compile Include="FlowAnalysis\ControlTransition.cs" />
     <Compile Include="FlowAnalysis\DetermineCallParameterTypes.cs" />
+    <Compile Include="FlowAnalysis\Dupa.cs" />
     <Compile Include="FlowAnalysis\FindAllControlFlowPaths.cs" />
     <Compile Include="FlowAnalysis\InstructionExtensions.cs" />
     <Compile Include="FlowAnalysis\InstructionBlockNode.cs" />

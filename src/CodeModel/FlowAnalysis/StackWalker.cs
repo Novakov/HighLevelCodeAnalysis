@@ -15,15 +15,18 @@ namespace CodeModel.FlowAnalysis
 
         protected MethodInfo AnalyzedMethod { get; private set; }
 
-        public virtual void Walk(MethodInfo method, IEnumerable<BlockNode> instructions)
+        public virtual void Initialize(MethodInfo method)
         {
             this.handlers = new Dictionary<OpCode, Action<Instruction>>();
 
             this.AnalyzedMethod = method;
 
             this.RegisterHandlers(handlers);
+        }
 
-            foreach (var instruction in instructions.SelectMany(x => x.Instructions))
+        public virtual void Walk(IEnumerable<Instruction> instructions)
+        {                      
+            foreach (var instruction in instructions)
             {
                 this.BeforeInstruction(instruction);
 

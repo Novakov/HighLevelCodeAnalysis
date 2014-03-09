@@ -24,19 +24,13 @@ namespace CodeModel.Mutators
                 return;
             }
 
-            var executionPaths = new ControlFlow().AnalyzeMethod(node.Method).FindPaths();
+            var cfg = new ControlFlow().AnalyzeMethod(node.Method);
 
-            var calls = new List<Tuple<Instruction, PotentialType[]> >();
+            var tmp = new DetermineCallParameterTypes();
 
-            Parallel.ForEach(executionPaths, executionPath =>
-            {
-                var parameters = new DetermineCallParameterTypes();
-                parameters.Walk(node.Method, executionPath);
+            tmp.Walk(node.Method, cfg);
 
-                calls.AddRange(parameters.Calls);
-            });
-
-            foreach (var call in calls.GroupBy(x => (MethodInfo)x.Item1.Operand))
+            foreach (var call in tmp.Calls.GroupBy(x => (MethodInfo)x.Item1.Operand))
             {
                 var link = new MethodCallLink(call.Key.GetGenericArguments(), call.Select(x => x.Item2).Distinct(new ArrayComparer<PotentialType>()).ToArray());
 
