@@ -139,7 +139,7 @@ namespace Tests.GraphTests
         }
 
 
-        private void VerifyGraph(Graph graph)
+        public static void VerifyGraph(Graph graph)
         {
             var nodes = new HashSet<Node>(graph.Nodes, new ReferenceEqualityComparer<Node>());
             var remainingLinks = new HashSet<Link>(graph.Links, new ReferenceEqualityComparer<Link>());

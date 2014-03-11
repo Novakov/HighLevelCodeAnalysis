@@ -58,7 +58,7 @@ namespace CodeModel.Graphs
             this.links.Add(replaceWith);
         }
 
-        public void ReplaceNode(Node old, Node replaceWith)
+        public virtual void ReplaceNode(Node old, Node replaceWith)
         {
             foreach (var inboundLink in old.InboundLinks)
             {

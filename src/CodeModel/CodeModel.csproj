@@ -57,16 +57,16 @@
     <Compile Include="FlowAnalysis\ControlFlowPathsWalker.cs" />
     <Compile Include="FlowAnalysis\ControlTransition.cs" />
     <Compile Include="FlowAnalysis\DetermineCallParameterTypes.cs" />
-    <Compile Include="FlowAnalysis\Dupa.cs" />
+    <Compile Include="FlowAnalysis\CallParameterTypesRecorder.cs" />
     <Compile Include="FlowAnalysis\FindAllControlFlowPaths.cs" />
     <Compile Include="FlowAnalysis\InstructionExtensions.cs" />
     <Compile Include="FlowAnalysis\InstructionBlockNode.cs" />
     <Compile Include="FlowAnalysis\PotentialType.cs" />
-    <Compile Include="FlowAnalysis\StackWalker.cs" />
-    <Compile Include="FlowAnalysis\StackWalker.partial.cs">
+    <Compile Include="FlowAnalysis\InstructionVisitor.cs" />
+    <Compile Include="FlowAnalysis\InstructionVisitor.partial.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>StackWalker.partial.tt</DependentUpon>
+      <DependentUpon>InstructionVisitor.partial.tt</DependentUpon>
     </Compile>
     <Compile Include="FlowAnalysis\TransitionKind.cs" />
     <Compile Include="Graphs\BreadthFirstSearch.cs" />
@@ -109,9 +109,9 @@
     <Compile Include="TinyIoC.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="FlowAnalysis\StackWalker.partial.tt">
+    <None Include="FlowAnalysis\InstructionVisitor.partial.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>StackWalker.partial.cs</LastGenOutput>
+      <LastGenOutput>InstructionVisitor.partial.cs</LastGenOutput>
     </None>
     <None Include="packages.config" />
   </ItemGroup>

@@ -10,7 +10,7 @@ using Mono.Reflection;
 
 namespace CodeModel.FlowAnalysis
 {
-	public partial class StackWalker
+	public partial class InstructionVisitor
 	{
 		<# foreach (var opcode in typeof (OpCodes).GetFields(BindingFlags.Public | BindingFlags.Static)){
 		#>protected virtual void Handle<#=opcode.Name#>(Instruction instruction)

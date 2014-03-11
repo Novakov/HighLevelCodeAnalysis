@@ -9,7 +9,7 @@ using Mono.Reflection;
 
 namespace CodeModel.FlowAnalysis
 {
-    public abstract partial class StackWalker
+    public abstract partial class InstructionVisitor
     {
         private Dictionary<OpCode, Action<Instruction>> handlers;
 
@@ -24,7 +24,7 @@ namespace CodeModel.FlowAnalysis
             this.RegisterHandlers(handlers);
         }
 
-        public virtual void Walk(IEnumerable<Instruction> instructions)
+        public virtual void Visit(IEnumerable<Instruction> instructions)
         {                      
             foreach (var instruction in instructions)
             {
@@ -49,7 +49,7 @@ namespace CodeModel.FlowAnalysis
         }
     }
 
-    public abstract class ResolvingStackWalker : StackWalker
+    public abstract class ResolvingInstructionVisitor : InstructionVisitor
     {
         protected override void RegisterHandlers(Dictionary<OpCode, Action<Instruction>> registry)
         {
@@ -90,8 +90,10 @@ namespace CodeModel.FlowAnalysis
             registry[OpCodes.Ldc_I4_4] = i => HandleLoadInt32(i, 4);
             registry[OpCodes.Ldc_I4_5] = i => HandleLoadInt32(i, 5);
             registry[OpCodes.Ldc_I4_6] = i => HandleLoadInt32(i, 6);
-            registry[OpCodes.Ldc_I4_7] = i => HandleLoadInt32(i, 7);
+            registry[OpCodes.Ldc_I4_7] = i => HandleLoadInt32(i, 7);            
             registry[OpCodes.Ldc_I4_8] = i => HandleLoadInt32(i, 8);
+
+            registry[OpCodes.Ldc_R8] = i => HandleLoadDouble(i, (double) i.Operand);
 
             registry[OpCodes.Add] = i => HandleBinaryOperator(i, BinaryOperator.Add);
             registry[OpCodes.Sub] = i => HandleBinaryOperator(i, BinaryOperator.Subtract);
@@ -115,9 +117,14 @@ namespace CodeModel.FlowAnalysis
             registry[OpCodes.Conv_I4] = i => HandleConversion(i, typeof(int));
         }
 
+        protected virtual void HandleLoadDouble(Instruction instruction, double value)
+        {
+            this.HandleUnrecognized(instruction);
+        }
+
         protected virtual void HandleConversion(Instruction instruction, Type targetType)
         {
-            this.HandleUnaligned(instruction);
+            this.HandleUnrecognized(instruction);
         }
 
         protected virtual void HandleBinaryOperator(Instruction instruction, BinaryOperator @operator)

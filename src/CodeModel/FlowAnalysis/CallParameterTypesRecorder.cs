@@ -8,19 +8,20 @@ using Mono.Reflection;
 
 namespace CodeModel.FlowAnalysis
 {
-    public class Dupa : ResolvingStackWalker
+    public class CallParameterTypesRecorder : ResolvingInstructionVisitor
     {
         public ReversableStack<PotentialType> Stack { get; private set; }
 
         private IDictionary<int, PotentialType> variableTypes;
         private IDictionary<int, PotentialType> parameterTypes;
+        private MethodBody methodBody;
 
         public List<Tuple<Instruction, PotentialType[]>> Calls { get; private set; }
 
         protected override void HandleUnrecognized(Instruction instruction)
         {
-            var popped = instruction.PopedValuesCount(this.AnalyzedMethod);
-            var pushed = instruction.PushedValuesCount(this.AnalyzedMethod);
+            var popped = instruction.PopedValuesCount(this.AnalyzedMethod);            
+            var pushed = instruction.PushedValuesCount(this.AnalyzedMethod, this.methodBody);
 
             if (pushed != 0)
             {
@@ -68,6 +69,11 @@ namespace CodeModel.FlowAnalysis
         }
 
         protected override void HandleLoadInt32(Instruction instruction, int constant)
+        {
+            this.Stack.Push(PotentialType.Numeric);
+        }
+
+        protected override void HandleLoadDouble(Instruction instruction, double value)
         {
             this.Stack.Push(PotentialType.Numeric);
         }
@@ -305,6 +311,28 @@ namespace CodeModel.FlowAnalysis
             this.Stack.Push(PotentialType.Token);
         }
 
+        protected override void HandleLdelema(Instruction instruction)
+        {
+            //TODO: for ldelema
+            var index = this.Stack.Pop();
+            var arrayType = this.Stack.Pop();
+
+            this.Stack.Push(arrayType.GetArrayElement());
+        }
+
+        protected override void HandleDup(Instruction instruction)
+        {
+            var type = this.Stack.Pop();
+            this.Stack.Push(type);
+            this.Stack.Push(type);
+        }
+
+        protected override void HandleCastclass(Instruction instruction)
+        {
+            this.Stack.Pop();
+            this.Stack.Push(PotentialType.FromType((Type) instruction.Operand));
+        }
+
         protected override void HandleConversion(Instruction instruction, Type targetType)
         {
             //TODO: test for conversion
@@ -314,7 +342,7 @@ namespace CodeModel.FlowAnalysis
 
         protected override void BeforeInstruction(Instruction instruction)
         {
-            var clause = this.AnalyzedMethod.GetMethodBody().ExceptionHandlingClauses.SingleOrDefault(x => x.HandlerOffset == instruction.Offset);
+            var clause = this.methodBody.ExceptionHandlingClauses.SingleOrDefault(x => x.HandlerOffset == instruction.Offset);
 
             if (clause != null && clause.Flags != ExceptionHandlingClauseOptions.Finally)
             {
@@ -324,19 +352,16 @@ namespace CodeModel.FlowAnalysis
 
         public override void Initialize(MethodInfo method)
         {
+            base.Initialize(method);
+
             this.Stack = new ReversableStack<PotentialType>();
 
-            this.variableTypes = method.GetMethodBody().LocalVariables.ToDictionary(x => x.LocalIndex, x => PotentialType.FromType(x.LocalType));
+            this.methodBody = method.GetMethodBody();
+
+            this.variableTypes = this.methodBody.LocalVariables.ToDictionary(x => x.LocalIndex, x => PotentialType.FromType(x.LocalType));
             this.parameterTypes = method.GetParameters().ToDictionary(x => x.Position, x => PotentialType.FromType(x.ParameterType));
 
-            this.Calls = new List<Tuple<Instruction, PotentialType[]>>();
-
-            base.Initialize(method);
-        }
-
-        public override void Walk(IEnumerable<Instruction> instructions)
-        {            
-            base.Walk(instructions);                       
+            this.Calls = new List<Tuple<Instruction, PotentialType[]>>();                        
         }
     }
 }

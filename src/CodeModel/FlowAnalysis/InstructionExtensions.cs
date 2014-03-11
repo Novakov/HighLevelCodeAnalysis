@@ -8,11 +8,11 @@ namespace CodeModel.FlowAnalysis
 {
     public static class InstructionExtensions
     {
-        public static int PushedValuesCount(this Instruction instruction, MethodInfo analyzedMethod)
+        public static int PushedValuesCount(this Instruction instruction, MethodInfo analyzedMethod, MethodBody methodBody)
         {
             int pushedCount = instruction.PushedValuesCountByOpCode();
 
-            if (analyzedMethod.GetMethodBody().ExceptionHandlingClauses.Any(x => x.HandlerOffset == instruction.Offset && !x.Flags.HasFlag(ExceptionHandlingClauseOptions.Finally)))
+            if (methodBody.ExceptionHandlingClauses.Any(x => x.HandlerOffset == instruction.Offset && !x.Flags.HasFlag(ExceptionHandlingClauseOptions.Finally)))
             {
                 pushedCount++;
             }

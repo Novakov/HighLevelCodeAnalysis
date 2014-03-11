@@ -35,7 +35,7 @@ namespace Tests.FlowAnalysisTests
             var walker = new DetermineCallParameterTypes();
 
             // act
-            walker.Walk(method, flowGraph);
+            walker.Walk(method, flowGraph);           
 
             // assert
             Assert.That(walker.Calls, Has.Count.AtLeast(1));

@@ -28,7 +28,7 @@ namespace Tests.FlowAnalysisTests
 
                 foreach (var branch in branches)
                 {
-                    var stackLength = branch.SelectMany(x => x.Instructions).Aggregate(0, (a, i) => a + i.PushedValuesCount(method) - i.PopedValuesCount(method));
+                    var stackLength = branch.SelectMany(x => x.Instructions).Aggregate(0, (a, i) => a + i.PushedValuesCount(method, method.GetMethodBody()) - i.PopedValuesCount(method));
 
                     Assert.That(stackLength, Is.EqualTo(0));
                 }

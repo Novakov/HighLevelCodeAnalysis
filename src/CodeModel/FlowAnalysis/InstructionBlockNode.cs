@@ -33,7 +33,9 @@ namespace CodeModel.FlowAnalysis
             : base(id)
         {
             this.Instructions = new List<Instruction>(instructions);
-        }       
+        }
+
+        internal abstract BlockNode Clone();
     }
 
     public class InstructionBlockNode : BlockNode
@@ -55,6 +57,11 @@ namespace CodeModel.FlowAnalysis
         {
             get { return this.ToString(); }
         }
+
+        internal override BlockNode Clone()
+        {
+            return new InstructionBlockNode(this.Instructions.ToArray());
+        }
     }
 
     public class MethodExitNode : BlockNode
@@ -63,6 +70,34 @@ namespace CodeModel.FlowAnalysis
             : base("exit-point")
         {
             
+        }
+
+        internal override BlockNode Clone()
+        {
+            return new MethodExitNode();
+        }
+    }
+
+    internal class EmptyBlock : BlockNode
+    {
+        public EmptyBlock(string id)
+            : base(id)
+        {
+        }
+
+        public override string ToString()
+        {
+            return "Empty block";
+        }
+
+        public override string DisplayLabel
+        {
+            get { return "Empty block"; }
+        }
+
+        internal override BlockNode Clone()
+        {
+            return new EmptyBlock(this.Id);
         }
     }
 }

@@ -45,7 +45,14 @@ namespace CodeModel.FlowAnalysis
         {
             foreach (var node in this.graph.Blocks)
             {
-                foreach (var transition in GetTransitions(node.Instructions.FirstOrDefault()))
+                var instruction = node.Instructions.FirstOrDefault();
+
+                if (instruction == null)
+                {
+                    continue;
+                }
+
+                foreach (var transition in GetTransitions(instruction))
                 {
                     if (transition == EndPointOffset)
                     {
@@ -101,12 +108,12 @@ namespace CodeModel.FlowAnalysis
 
             if (handlingClause != null && handlingClause.Flags.HasFlag(ExceptionHandlingClauseOptions.Finally))
             {
-                return new[] {handlingClause.HandlerOffset};
+                return new[] { handlingClause.HandlerOffset };
             }
             else
             {
-                return new[] {((Instruction)instruction.Operand).Offset};   
-            }            
+                return new[] { ((Instruction)instruction.Operand).Offset };
+            }
         }
 
         private IEnumerable<int> ConditionalBranch(Instruction instruction)

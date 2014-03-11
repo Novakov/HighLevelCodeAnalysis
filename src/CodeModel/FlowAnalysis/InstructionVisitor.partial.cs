@@ -5,7 +5,7 @@ using Mono.Reflection;
 
 namespace CodeModel.FlowAnalysis
 {
-	public partial class StackWalker
+	public partial class InstructionVisitor
 	{
 		protected virtual void HandleNop(Instruction instruction)
 		{

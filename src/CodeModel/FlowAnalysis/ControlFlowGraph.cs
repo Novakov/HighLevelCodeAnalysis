@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection.Emit;
@@ -9,7 +10,7 @@ namespace CodeModel.FlowAnalysis
     public class ControlFlowGraph : Graph
     {
         public BlockNode ExitPoint { get; private set; }
-        public InstructionBlockNode EntryPoint { get; private set; }
+        public BlockNode EntryPoint { get; private set; }
 
         public IEnumerable<BlockNode> Blocks { get { return base.Nodes.OfType<InstructionBlockNode>(); } }
 
@@ -18,6 +19,12 @@ namespace CodeModel.FlowAnalysis
             this.EntryPoint = new InstructionBlockNode(entrypoint);
             this.AddNode(this.EntryPoint);
 
+            this.ExitPoint = new MethodExitNode();
+            this.AddNode(this.ExitPoint);
+        }
+
+        private ControlFlowGraph()
+        {
             this.ExitPoint = new MethodExitNode();
             this.AddNode(this.ExitPoint);
         }
@@ -42,8 +49,8 @@ namespace CodeModel.FlowAnalysis
 
             foreach (var possibleBlockStart in possibleBlockStarts)
             {
-                ReduceBlock(possibleBlockStart);   
-            }            
+                ReduceBlock(possibleBlockStart);
+            }
         }
 
         private void ReduceBlock(BlockNode blockStart)
@@ -80,7 +87,22 @@ namespace CodeModel.FlowAnalysis
             return instruction.IsJoin
                    || instruction.TransitedFrom.First().IsBranch;
         }
-       
+
+        public void RemovePassthroughNode(BlockNode block)
+        {
+            if (!block.IsPassthrough)
+            {
+                throw new InvalidOperationException("Cannot remove non passthrough block");
+            }
+
+            var inboundLink = block.InboundLinks.Single();
+            var outboundLink = block.OutboundLinks.Single();
+
+            this.AddLink(inboundLink.Source, outboundLink.Target, new ControlTransition(TransitionKind.Forward)); // TODO: not sure if this is correct - calculate proper transition kind
+
+            this.RemoveNode(block);
+        }
+
         public void RemoveUnreachableBlocks()
         {
             var unreachable = Nodes.Except(EntryPoint, ExitPoint).Where(x => !x.InboundLinks.Any()).ToList();
@@ -89,6 +111,40 @@ namespace CodeModel.FlowAnalysis
             {
                 RemoveNode(unreachableNode);
             }
+        }
+
+        public override void ReplaceNode(Node old, Node replaceWith)
+        {
+            base.ReplaceNode(old, replaceWith);
+
+            if (this.EntryPoint.Equals(old))
+            {
+                this.EntryPoint = (BlockNode)replaceWith;
+            }
+        }
+
+        public ControlFlowGraph Clone()
+        {
+            var copy = new ControlFlowGraph();
+            //copy.EntryPoint = this.EntryPoint.Clone();
+
+            var map = new Dictionary<string, Node>();
+
+            foreach (var node in this.Nodes.OfType<BlockNode>().Where(x => !(x is MethodExitNode)))
+            {
+                map[node.Id] = copy.AddNode(node.Clone());
+            }
+
+            map[this.ExitPoint.Id] = copy.ExitPoint;
+
+            copy.EntryPoint = (BlockNode) map[this.EntryPoint.Id];
+
+            foreach (var link in this.Links.OfType<ControlTransition>())
+            {
+                copy.AddLink(copy.Nodes.Single(x => x.Id == link.Source.Id), copy.Nodes.Single(x => x.Id == link.Target.Id), new ControlTransition(link.Kind));
+            }
+
+            return copy;
         }
     }
 }

@@ -19,7 +19,7 @@ namespace CodeModel.FlowAnalysis
         {                    
             this.diffs = new Stack<int>();
 
-            base.Walk(cfg.EntryPoint);
+            base.Walk(method, cfg);
         }      
 
         protected override void EnterNode(BlockNode node, IEnumerable<Link> availableThrough)
@@ -36,6 +36,11 @@ namespace CodeModel.FlowAnalysis
             this.diffs.Push(diff);
 
             this.currentStackLength += diff;
+
+            if (this.currentStackLength < 0)
+            {
+                throw new InvalidOperationException("Stack length below 0");
+            }            
         }
 
         protected override void LeaveNode(BlockNode node, IEnumerable<Link> availableThrough)
@@ -47,7 +52,11 @@ namespace CodeModel.FlowAnalysis
 
         private int CalculateDiff(List<Instruction> instructions)
         {
-            return instructions.Aggregate(0, (a, i) => a + i.PushedValuesCount(this.Method) - i.PopedValuesCount(this.Method));
+            return instructions.Aggregate(0, (a, i) =>
+            {
+                MethodInfo analyzedMethod = this.Method;
+                return a + i.PushedValuesCount(analyzedMethod, analyzedMethod.GetMethodBody()) - i.PopedValuesCount(this.Method);
+            });
         }        
     }
 }
