@@ -40,5 +40,8 @@
     <None Include="helpers.il" />
     <None Include="module.il" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="CallParameterTypesRecorderTarget.il" />
+  </ItemGroup>
   <Import Project="$(MSBuildProjectDirectory)\build.targets" />
 </Project>

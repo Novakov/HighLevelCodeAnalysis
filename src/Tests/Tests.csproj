@@ -86,6 +86,7 @@
     <Compile Include="ExtensionsTests\DgmlExportTest.cs" />
     <Compile Include="ExtensionsTests\EventSourcingTest.cs" />
     <Compile Include="FlowAnalysisTests\Bugs.cs" />
+    <Compile Include="FlowAnalysisTests\CallParameterTypesRecorderTest.cs" />
     <Compile Include="FlowAnalysisTests\CallParameterTypesStackWalkerTest.cs" />
     <Compile Include="FlowAnalysisTests\ControlFlowGraphTest.cs" />
     <Compile Include="FlowAnalysisTests\ControlFlowTest.cs" />

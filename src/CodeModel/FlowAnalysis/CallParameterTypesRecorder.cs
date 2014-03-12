@@ -91,8 +91,7 @@ namespace CodeModel.FlowAnalysis
         }
 
         protected override void HandleNewarr(Instruction instruction)
-        {
-            // TODO: Test for newarr
+        {            
             this.Stack.Pop();
             this.Stack.Push(PotentialType.FromType(((Type)instruction.Operand).MakeArrayType()));
         }
@@ -130,8 +129,7 @@ namespace CodeModel.FlowAnalysis
         }
 
         protected override void HandleLdftn(Instruction instruction)
-        {
-            //TODO: test for ldftn
+        {            
             this.Stack.Push(PotentialType.MethodHandle);
         }
 
@@ -267,8 +265,7 @@ namespace CodeModel.FlowAnalysis
         }
 
         protected override void HandleLdsfld(Instruction instruction)
-        {
-            //TODO: test for accessing static field
+        {            
             var fieldInfo = (FieldInfo)instruction.Operand;
 
             this.Stack.Push(PotentialType.FromType(fieldInfo.FieldType));
@@ -290,15 +287,13 @@ namespace CodeModel.FlowAnalysis
         }
 
         protected override void HandleLdlen(Instruction instruction)
-        {
-            //TODO: test for ldlen
+        {            
             this.Stack.Pop();
             this.Stack.Push(PotentialType.Numeric);                
         }
 
         protected override void HandleLdelem_Ref(Instruction instruction)
-        {
-            //TODO: for ldelem.ref
+        {            
             var index = this.Stack.Pop();
             var arrayType = this.Stack.Pop();
 
@@ -306,14 +301,12 @@ namespace CodeModel.FlowAnalysis
         }
 
         protected override void HandleLdtoken(Instruction instruction)
-        {
-            //TODO: test for ldtoken
+        {            
             this.Stack.Push(PotentialType.Token);
         }
 
         protected override void HandleLdelema(Instruction instruction)
-        {
-            //TODO: for ldelema
+        {            
             var index = this.Stack.Pop();
             var arrayType = this.Stack.Pop();
 

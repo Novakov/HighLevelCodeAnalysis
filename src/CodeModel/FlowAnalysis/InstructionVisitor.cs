@@ -114,7 +114,11 @@ namespace CodeModel.FlowAnalysis
             registry[OpCodes.Shr_Un] = i => HandleBinaryOperator(i, BinaryOperator.ShiftRight);
 
             //conversions            
+            registry[OpCodes.Conv_I] = i => HandleConversion(i, typeof(int));
+            registry[OpCodes.Conv_I1] = i => HandleConversion(i, typeof(int));
+            registry[OpCodes.Conv_I2] = i => HandleConversion(i, typeof(int));
             registry[OpCodes.Conv_I4] = i => HandleConversion(i, typeof(int));
+            registry[OpCodes.Conv_I8] = i => HandleConversion(i, typeof(long));            
         }
 
         protected virtual void HandleLoadDouble(Instruction instruction, double value)

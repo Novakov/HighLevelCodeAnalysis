@@ -8,20 +8,20 @@
 {
 	.method public static void Kopytko() cil managed
 	{
-		newobj void TestTarget.IL.Derived1::.ctor()
+		newobj instance void TestTarget.IL.Derived1::.ctor()
 
 		ldc.i4.2
 		ldc.i4.3
 		bgt greater
 		
-		newobj void TestTarget.IL.Derived2::.ctor()
+		newobj instance void TestTarget.IL.Derived2::.ctor()
 		br end
 
 		greater:
-		newobj void TestTarget.IL.Derived3::.ctor()
+		newobj instance void TestTarget.IL.Derived3::.ctor()
 		end:
 
-		newobj void TestTarget.IL.Derived4::.ctor()
+		newobj instance void TestTarget.IL.Derived4::.ctor()
 
 		call void TestTarget.IL.Test::AcceptBases(class TestTarget.IL.Base, class TestTarget.IL.Base, class TestTarget.IL.Base)		
 		ret

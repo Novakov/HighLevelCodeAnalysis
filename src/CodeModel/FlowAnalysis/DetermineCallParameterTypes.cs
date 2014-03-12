@@ -108,7 +108,7 @@ namespace CodeModel.FlowAnalysis
                     return true;
                 }
 
-                if (instruction.OpCode == OpCodes.Stloc || instruction.OpCode == OpCodes.Starg || instruction.OpCode == OpCodes.Call || instruction.OpCode == OpCodes.Callvirt)
+                if (instruction.OpCode.IsStoreVariable() || instruction.OpCode == OpCodes.Starg || instruction.OpCode == OpCodes.Call || instruction.OpCode == OpCodes.Callvirt)
                 {
                     return true;
                 }

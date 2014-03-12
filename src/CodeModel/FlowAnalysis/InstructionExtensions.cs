@@ -8,6 +8,8 @@ namespace CodeModel.FlowAnalysis
 {
     public static class InstructionExtensions
     {
+        private static readonly OpCode[] StoreVariableOpCodes = {OpCodes.Stloc, OpCodes.Stloc_0, OpCodes.Stloc_1, OpCodes.Stloc_2, OpCodes.Stloc_3, OpCodes.Stloc_S};
+
         public static int PushedValuesCount(this Instruction instruction, MethodInfo analyzedMethod, MethodBody methodBody)
         {
             int pushedCount = instruction.PushedValuesCountByOpCode();
@@ -118,6 +120,11 @@ namespace CodeModel.FlowAnalysis
                 default:
                     throw new InvalidOperationException("(Pop: " + instruction.OpCode.StackBehaviourPop + ") Not implemented " + instruction.ToString());
             }
+        }
+
+        public static bool IsStoreVariable(this OpCode opCode)
+        {
+            return StoreVariableOpCodes.Contains(opCode);
         }
     }
 }
