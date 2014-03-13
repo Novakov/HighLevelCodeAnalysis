@@ -38,6 +38,7 @@ namespace CodeModel.Builder
         public void RunMutator<TMutator>(TMutator mutator)
             where TMutator : class, IMutator
         {
+            RunMutator<ICompositeMutator>(mutator, m => m.Mutate(this));
             RunMutator<IGraphMutator>(mutator, m => m.Mutate(this.Model));
             RunMutator<INodeMutator>(mutator, MutateNodes);
         }

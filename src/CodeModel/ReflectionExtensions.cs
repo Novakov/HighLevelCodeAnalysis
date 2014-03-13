@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace CodeModel
 {
-    static class ReflectionExtensions
+    public static class ReflectionExtensions
     {
         public static IEnumerable<Type> GetGenericImplementationsOfInterface(this Type @this, Type openGenericInterface)
         {
@@ -29,6 +29,20 @@ namespace CodeModel
         public static bool IsInherited(this MemberInfo @this)
         {
             return @this.DeclaringType != @this.ReflectedType;
+        }
+
+        public static MethodInfo GetImplementedMethod(this MethodInfo @this, Type interfaceType)
+        {
+            var map = @this.DeclaringType.GetInterfaceMap(interfaceType);
+            for (int i = 0; i < map.TargetMethods.Length; i++)
+            {
+                if (map.TargetMethods[i] == @this)
+                {
+                    return map.InterfaceMethods[i];
+                }
+            }
+
+            return null;
         }
     }
 }

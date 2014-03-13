@@ -98,8 +98,8 @@ namespace CodeModel.FlowAnalysis
 
         protected override void HandleCall(Instruction instruction)
         {
-            var calledMethod = (MethodInfo)instruction.Operand;
-
+            var calledMethod = (MethodBase) instruction.Operand;
+           
             var poppedCount = instruction.PopedValuesCount(this.AnalyzedMethod);
 
             if (!calledMethod.IsStatic)
@@ -116,9 +116,11 @@ namespace CodeModel.FlowAnalysis
 
             this.Calls.Add(Tuple.Create(instruction, types));
 
-            if (calledMethod.ReturnType != typeof(void))
+            var methodInfo = calledMethod as MethodInfo;
+
+            if (methodInfo != null && methodInfo.ReturnType != typeof(void))
             {
-                this.Stack.Push(PotentialType.FromType(calledMethod.ReturnType));                
+                this.Stack.Push(PotentialType.FromType(methodInfo.ReturnType));                
             }            
         }
 
@@ -324,6 +326,40 @@ namespace CodeModel.FlowAnalysis
         {
             this.Stack.Pop();
             this.Stack.Push(PotentialType.FromType((Type) instruction.Operand));
+        }
+
+        protected override void HandleLdobj(Instruction instruction)
+        {
+            //TODO: test for ldobj
+            this.Stack.Pop();
+            this.Stack.Push(PotentialType.FromType((Type)instruction.Operand));
+        }
+
+        protected override void HandleIsinst(Instruction instruction)
+        {
+            //TODO: test for isinst
+            //TODO: need better logic
+            this.Stack.Pop();
+            this.Stack.Push(PotentialType.FromType((Type)instruction.Operand));
+        }
+
+        protected override void HandleLdflda(Instruction instruction)
+        {
+            //TODO: test for ldflda
+
+            this.Stack.Pop();
+
+            var field = (FieldInfo) instruction.Operand;
+
+            this.Stack.Push(PotentialType.FromType(field.FieldType));
+        }
+
+        protected override void HandleUnbox_Any(Instruction instruction)
+        {
+            //TODO: test for unbox.any
+
+            this.Stack.Pop();
+            this.Stack.Push(PotentialType.FromType((Type)instruction.Operand));
         }
 
         protected override void HandleConversion(Instruction instruction, Type targetType)

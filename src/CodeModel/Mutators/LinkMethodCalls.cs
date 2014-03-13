@@ -30,11 +30,16 @@ namespace CodeModel.Mutators
 
             tmp.Walk(node.Method, cfg);
 
-            foreach (var call in tmp.Calls.GroupBy(x => (MethodInfo)x.Item1.Operand))
+            foreach (var call in tmp.Calls.GroupBy(x => (MethodBase)x.Item1.Operand))
             {
+                if (!(call.Key is MethodInfo))
+                {
+                    continue;                    
+                }
+
                 var link = new MethodCallLink(call.Key.GetGenericArguments(), call.Select(x => x.Item2).Distinct(new ArrayComparer<PotentialType>()).ToArray());
 
-                LinkToMethod(node, context, call.Key, link);
+                LinkToMethod(node, context, (MethodInfo) call.Key, link);
             }
         }
 

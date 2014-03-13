@@ -44,6 +44,7 @@
   <ItemGroup>
     <Compile Include="ArrayComparer.cs" />
     <Compile Include="Builder\CodeModelBuilder.cs" />
+    <Compile Include="Builder\ICompositeMutator.cs" />
     <Compile Include="Builder\IGraphMutator.cs" />
     <Compile Include="Builder\IMutateContext.cs" />
     <Compile Include="Builder\IMutator.cs" />
@@ -51,6 +52,7 @@
     <Compile Include="Builder\MutateContext.cs" />
     <Compile Include="Convetions\IConvention.cs" />
     <Compile Include="Convetions\IEntityConvention.cs" />
+    <Compile Include="Convetions\IImplementingConvention.cs" />
     <Compile Include="EnumerableExtensions.cs" />
     <Compile Include="FlowAnalysis\ComputeStackLength.cs" />
     <Compile Include="FlowAnalysis\ControlFlowGraph.cs" />
@@ -79,6 +81,7 @@
     <Compile Include="Links\ContainedInLink.cs" />
     <Compile Include="Links\GetFieldLink.cs" />
     <Compile Include="Links\GetPropertyLink.cs" />
+    <Compile Include="Links\ImplementsLink.cs" />
     <Compile Include="Links\MethodCallLink.cs" />
     <Compile Include="Links\SetFieldLink.cs" />
     <Compile Include="Links\SetPropertyLink.cs" />
@@ -99,7 +102,10 @@
     <Compile Include="Mutators\LinkMethodCalls.cs" />
     <Compile Include="Mutators\LinkPropertyAccess.cs" />
     <Compile Include="Mutators\LinkToContainer.cs" />
+    <Compile Include="Mutators\LinkTypesToImplementedInterfaces.cs" />
+    <Compile Include="Mutators\RemoveLink.cs" />
     <Compile Include="Mutators\RemoveNode.cs" />
+    <Compile Include="Mutators\ReplaceInterfaceWithImplementation.cs" />
     <Compile Include="NodeExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ReflectionExtensions.cs" />

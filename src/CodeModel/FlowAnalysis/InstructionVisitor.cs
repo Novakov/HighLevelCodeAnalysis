@@ -119,6 +119,11 @@ namespace CodeModel.FlowAnalysis
             registry[OpCodes.Conv_I2] = i => HandleConversion(i, typeof(int));
             registry[OpCodes.Conv_I4] = i => HandleConversion(i, typeof(int));
             registry[OpCodes.Conv_I8] = i => HandleConversion(i, typeof(long));            
+            registry[OpCodes.Conv_Ovf_I] = i => HandleConversion(i, typeof(int));
+            registry[OpCodes.Conv_Ovf_I1] = i => HandleConversion(i, typeof(int));
+            registry[OpCodes.Conv_Ovf_I2] = i => HandleConversion(i, typeof(int));
+            registry[OpCodes.Conv_Ovf_I4] = i => HandleConversion(i, typeof(int));            
+            registry[OpCodes.Conv_Ovf_I8] = i => HandleConversion(i, typeof(long));            
         }
 
         protected virtual void HandleLoadDouble(Instruction instruction, double value)
