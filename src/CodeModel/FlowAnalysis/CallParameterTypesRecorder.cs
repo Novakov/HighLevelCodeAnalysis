@@ -135,6 +135,12 @@ namespace CodeModel.FlowAnalysis
             this.Stack.Push(PotentialType.MethodHandle);
         }
 
+        protected override void HandleLdvirtftn(Instruction instruction)
+        {
+            //TODO: test for ldvirtftn
+            this.Stack.Push(PotentialType.MethodHandle);
+        }
+
         protected override void HandleInitobj(Instruction instruction)
         {
             this.Stack.PopMany(instruction.PopedValuesCount(this.AnalyzedMethod));            
@@ -302,6 +308,14 @@ namespace CodeModel.FlowAnalysis
             this.Stack.Push(arrayType.GetArrayElement());
         }
 
+        protected override void HandleLdelem_I4(Instruction instruction)
+        {
+            var index = this.Stack.Pop();
+            var arrayType = this.Stack.Pop();
+
+            this.Stack.Push(arrayType.GetArrayElement());
+        }
+
         protected override void HandleLdtoken(Instruction instruction)
         {            
             this.Stack.Push(PotentialType.Token);
@@ -360,6 +374,23 @@ namespace CodeModel.FlowAnalysis
 
             this.Stack.Pop();
             this.Stack.Push(PotentialType.FromType((Type)instruction.Operand));
+        }
+
+        protected override void HandleUnbox(Instruction instruction)
+        {
+            //TODO: test for unbox
+
+            this.Stack.Pop();
+            this.Stack.Push(PotentialType.FromType((Type)instruction.Operand));
+        }
+
+        protected override void HandleLdind_Ref(Instruction instruction)
+        {
+            //TODO: test for ldind.ref
+
+            var tip = this.Stack.Pop();
+
+            this.Stack.Push(tip.Type.GetElementType());
         }
 
         protected override void HandleConversion(Instruction instruction, Type targetType)

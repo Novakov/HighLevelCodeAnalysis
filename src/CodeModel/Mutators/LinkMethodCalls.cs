@@ -52,7 +52,7 @@ namespace CodeModel.Mutators
                 targetMethod = calledMethod.GetGenericMethodDefinition();
             }
 
-            var targetNode = context.FindNodes<MethodNode>(x => x.Method == targetMethod).SingleOrDefault();
+            var targetNode = context.FindNodes<MethodNode>(x => x.Method == targetMethod).FirstOrDefault();
 
             if (targetNode != null)
             {

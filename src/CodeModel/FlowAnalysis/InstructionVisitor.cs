@@ -163,15 +163,15 @@ namespace CodeModel.FlowAnalysis
 
         protected override void HandleLdarg(Instruction instruction)
         {
-            var paramIndex = (int)instruction.Operand;
+            var param = (ParameterInfo) instruction.Operand;            
 
-            if (paramIndex == 0 && !this.AnalyzedMethod.IsStatic)
+            if (param.Position == 0 && !this.AnalyzedMethod.IsStatic)
             {
                 this.HandleLoadThis(instruction);
             }
             else
             {
-                this.HandleLoadArgument(instruction, this.AnalyzedMethod.GetParameters()[paramIndex]);
+                this.HandleLoadArgument(instruction, param);
             }
         }
 
