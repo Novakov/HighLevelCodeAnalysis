@@ -96,6 +96,7 @@
     <Compile Include="GraphTests\AllPathsTest.cs" />
     <Compile Include="GraphTests\GraphMergeTest.cs" />
     <Compile Include="GraphTests\GraphTest.cs" />
+    <Compile Include="GraphTests\GraphViewTest.cs" />
     <Compile Include="NodeTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ReflectionExtensionsTest.cs" />

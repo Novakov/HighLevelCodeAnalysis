@@ -77,6 +77,7 @@
     <Compile Include="Graphs\DepthFirstSearch.cs" />
     <Compile Include="Graphs\FindAllPaths.cs" />
     <Compile Include="Graphs\Graph.cs" />
+    <Compile Include="Graphs\GraphView.cs" />
     <Compile Include="Graphs\Link.cs" />
     <Compile Include="Graphs\Node.cs" />
     <Compile Include="Links\ContainedInLink.cs" />

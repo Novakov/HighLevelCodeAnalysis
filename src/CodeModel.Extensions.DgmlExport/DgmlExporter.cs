@@ -24,6 +24,13 @@ namespace CodeModel.Extensions.DgmlExport
         }
 
         public void Export(Graph model, Stream output)
+        {
+            var view = model.PrepareView(x => true, x => true);
+
+            Export(view, output);
+        }
+
+        public void Export(GraphView model, Stream output)
         {            
             using (this.writer = XmlWriter.Create(output, new XmlWriterSettings() { Indent = true }))
             {
@@ -81,7 +88,7 @@ namespace CodeModel.Extensions.DgmlExport
             }
         }
 
-        private void WriteLinks(Graph model)
+        private void WriteLinks(GraphView model)
         {
             this.writer.WriteStartElement("Links", Namespace);
 
@@ -105,16 +112,16 @@ namespace CodeModel.Extensions.DgmlExport
             this.writer.WriteEndElement();
         }
 
-        private void WriteNodes(Graph model)
+        private void WriteNodes(GraphView model)
         {
             this.writer.WriteStartElement("Nodes", Namespace);
             foreach (var modelNode in model.Nodes)
             {
                 this.writer.WriteStartElement("Node");
 
-                this.writer.WriteAttributeString("Id", modelNode.Id);
-                this.writer.WriteAttributeString("Category", modelNode.GetType().FullName);
-                this.writer.WriteAttributeString("Label", modelNode.DisplayLabel);
+                this.writer.WriteAttributeString("Id", modelNode.Node.Id);
+                this.writer.WriteAttributeString("Category", modelNode.Node.GetType().FullName);
+                this.writer.WriteAttributeString("Label", modelNode.Node.DisplayLabel);
 
                 var exportableProperties = modelNode.GetType().GetProperties().Where(x => x.GetCustomAttribute<ExportableAttribute>() != null);
 

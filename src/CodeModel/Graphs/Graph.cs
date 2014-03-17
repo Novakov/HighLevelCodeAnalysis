@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace CodeModel.Graphs
@@ -132,6 +133,11 @@ namespace CodeModel.Graphs
             {
                 return null;
             }
+        }
+
+        public GraphView PrepareView(Func<Node, bool> nodesPredicate, Func<Link, bool> linksPredicate)
+        {
+            return new GraphView(this, nodesPredicate, linksPredicate);
         }
     }
 }
