@@ -125,8 +125,7 @@ namespace CodeModel.FlowAnalysis
 
         public ControlFlowGraph Clone()
         {
-            var copy = new ControlFlowGraph();
-            //copy.EntryPoint = this.EntryPoint.Clone();
+            var copy = new ControlFlowGraph();            
 
             var map = new Dictionary<string, Node>();
 
@@ -145,6 +144,31 @@ namespace CodeModel.FlowAnalysis
             }
 
             return copy;
+        }
+
+        public void Reduce(params Action<ControlFlowGraph>[] reductors)
+        {
+            var nodesCount = this.Nodes.Count();
+            var linksCount = this.Links.Count();
+
+            while (true)
+            {
+                foreach (var reductor in reductors)
+                {
+                    reductor(this);
+                }
+
+                var newNodesCount = this.Nodes.Count();
+                var newLinksCount = this.Links.Count();
+
+                if (newNodesCount == nodesCount && newLinksCount == linksCount)
+                {
+                    break;
+                }
+
+                nodesCount = newNodesCount;
+                linksCount = newLinksCount;
+            }
         }
     }
 }

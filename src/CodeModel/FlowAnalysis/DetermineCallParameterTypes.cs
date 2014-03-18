@@ -28,35 +28,32 @@ namespace CodeModel.FlowAnalysis
 
         public static void Reduce(MethodInfo method, ControlFlowGraph controlFlowGraph)
         {
-            var nodesCount = controlFlowGraph.Nodes.Count();
-            var linksCount = controlFlowGraph.Links.Count();
-
-            while (true)
+            foreach (var blockNode in controlFlowGraph.Blocks.OfType<InstructionBlockNode>())
             {
-                ReduceNotImpactingBlocks(controlFlowGraph, method);
-                ReduceEmptyPassthroughBlocks(controlFlowGraph);
-
-                var multipleLinks = controlFlowGraph.Links.OfType<ControlTransition>()
-                .GroupBy(x => new { x.Source, x.Target })
-                .SelectMany(x => x.Skip(1));
-
-                foreach (var controlTransition in multipleLinks)
-                {
-                    controlFlowGraph.RemoveLink(controlTransition);
-                }
-
-                var newNodesCount = controlFlowGraph.Nodes.Count();
-                var newLinksCount = controlFlowGraph.Links.Count();
-
-                if (newNodesCount == nodesCount && newLinksCount == linksCount)
-                {
-                    break;
-                }
-
-                nodesCount = newNodesCount;
-                linksCount = newLinksCount;
+                blockNode.CalculateStackProperties(method);
             }
 
+            var reductors = new Action<ControlFlowGraph>[]
+            {
+                cfg => ReduceNotImpactingBlocks(cfg, method),
+                ReduceEmptyPassthroughBlocks,
+                RemoveDuplicatedLinks,
+                cfg => ReduceBranchesWithNoImpact(cfg, method)
+            };
+
+            controlFlowGraph.Reduce(reductors);           
+        }
+
+        private static void RemoveDuplicatedLinks(ControlFlowGraph controlFlowGraph)
+        {
+            var multipleLinks = controlFlowGraph.Links.OfType<ControlTransition>()
+                .GroupBy(x => new {x.Source, x.Target})
+                .SelectMany(x => x.Skip(1));
+
+            foreach (var controlTransition in multipleLinks)
+            {
+                controlFlowGraph.RemoveLink(controlTransition);
+            }
         }
 
         private static void ReduceEmptyPassthroughBlocks(ControlFlowGraph cfg)
@@ -94,6 +91,31 @@ namespace CodeModel.FlowAnalysis
             }
         }
 
+        private static void ReduceBranchesWithNoImpact(ControlFlowGraph controlFlowGraph, MethodInfo containingMethod)
+        {           
+            foreach (var block in controlFlowGraph.Blocks.OfType<InstructionBlockNode>())
+            {
+                if (!block.IsPassthrough)
+                {
+                    continue;
+                }
+
+                if (block.GoesBelowInitialStack || block.SetsLocalVariable)
+                {
+                    continue;
+                }
+
+                var branchBlock = block.TransitedFrom.Single();
+                var joinBlock = block.TransitTo.Single();
+
+                var bypassingTransition = branchBlock.OutboundLinks.Where(x => x.Target.Equals(joinBlock));
+
+                if (bypassingTransition.Count() == 1)
+                {
+                    controlFlowGraph.RemoveLink(bypassingTransition.Single());
+                }
+            }
+        }
 
         private static bool HasImpact(BlockNode block, MethodInfo method, MethodBody methodBody)
         {

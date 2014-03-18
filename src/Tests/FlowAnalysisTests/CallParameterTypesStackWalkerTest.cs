@@ -5,14 +5,17 @@ using System.Linq.Expressions;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using CodeModel.FlowAnalysis;
+using CodeModel.Graphs;
 using NUnit.Framework;
 using TestTarget;
 
 namespace Tests.FlowAnalysisTests
 {
     [TestFixture]
-    public class CallParameterTypesStackWalkerTest
+    public class CallParameterTypesStackWalkerTest : IHaveGraph
     {
+        public Graph Result { get; private set; }
+
         [Test]
         public void CheckMethodWithOpcodeInitobj()
         {
@@ -68,6 +71,66 @@ namespace Tests.FlowAnalysisTests
         private static TestCaseData TestCase(Expression<Action<CallParametersTarget>> method, params PotentialType[] types)
         {
             return new TestCaseData(Get.MethodOf(method).Name, types);
+        }
+
+        [Test, Category("Perf"), Explicit]
+        public void AnalyzeMethodWith27Ifs()
+        {
+            var method = Get.MethodOf<NastyMethods>(x => NastyMethods.MethodWith27Ifs());
+            var cfg = new ControlFlow().AnalyzeMethod(method);
+
+            this.Result = cfg;                        
+
+            new DetermineCallParameterTypes().Walk(method, cfg);
+        }
+    }
+
+    public class Reducer
+    {
+        private readonly MethodInfo method;
+        private readonly ControlFlowGraph cfg;
+
+        public static void Reduce(MethodInfo method,ControlFlowGraph cfg)
+        {
+            Reducer tempQualifier = new Reducer(method, cfg);
+            Reduce(new Reducer(method, cfg).cfg, tempQualifier.method);
+        }
+
+        private Reducer(MethodInfo method, ControlFlowGraph cfg)
+        {
+            this.method = method;
+            this.cfg = cfg;
+        }
+
+        private static void Reduce(ControlFlowGraph controlFlowGraph, MethodInfo containingMethod)
+        {
+            foreach (var blockNode in controlFlowGraph.Blocks.OfType<InstructionBlockNode>())
+            {
+                blockNode.CalculateStackProperties(containingMethod);
+            }
+
+            foreach (var block in controlFlowGraph.Blocks.OfType<InstructionBlockNode>())
+            {
+                if (!block.IsPassthrough)
+                {
+                    continue;                    
+                }
+
+                if (block.GoesBelowInitialStack || block.SetsLocalVariable)
+                {
+                    continue;                    
+                }
+
+                var branchBlock = block.TransitedFrom.Single();
+                var joinBlock = block.TransitTo.Single();
+
+                var bypassingTransition = branchBlock.OutboundLinks.Where(x => x.Target.Equals(joinBlock));
+
+                if (bypassingTransition.Count() == 1)
+                {
+                    controlFlowGraph.RemoveLink(bypassingTransition.Single());
+                }
+            }
         }
     }
 }
