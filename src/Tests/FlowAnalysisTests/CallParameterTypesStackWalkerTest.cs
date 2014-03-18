@@ -39,7 +39,7 @@ namespace Tests.FlowAnalysisTests
 
             // assert
             Assert.That(walker.Calls, Has.Count.AtLeast(1));
-            Assert.That(walker.Calls.Last().Item2, Is.EqualTo(expected));
+            Assert.That(walker.Calls.Last().Value.Single(), Is.EqualTo(expected));
         }
 
         public IEnumerable<TestCaseData> GetTestCases()

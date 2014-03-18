@@ -23,6 +23,7 @@ namespace Tests.BuilderTests
         public void SetUp()
         {
             this.Builder = new CodeModelBuilder();            
+            this.Builder.RegisterConventionsFrom(typeof(TestTarget.Conventions.Marker).Assembly);
         }
 
         [Test]

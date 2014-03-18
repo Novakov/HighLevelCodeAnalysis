@@ -27,7 +27,7 @@ namespace CodeModel.FlowAnalysis
 
             var nodes = new InstructionBlockNode[instructions.Last().Offset + 1];
 
-            foreach (var instruction in instructions)
+            foreach (var instruction in instructions.Skip(1))
             {
                 nodes[instruction.Offset] = (InstructionBlockNode)this.graph.AddNode(new InstructionBlockNode(instruction));
             }

@@ -10,7 +10,7 @@ namespace CodeModel.FlowAnalysis
 {
     public class DetermineCallParameterTypes : ControlFlowPathsWalker
     {
-        public List<Tuple<Instruction, PotentialType[]>> Calls { get { return this.recorder.Calls; } }
+        public IDictionary<MethodBase, HashSet<PotentialType[]>> Calls { get { return this.recorder.Calls; } }
 
         private CallParameterTypesRecorder recorder;
 

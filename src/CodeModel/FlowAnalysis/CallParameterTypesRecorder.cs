@@ -16,7 +16,7 @@ namespace CodeModel.FlowAnalysis
         private IDictionary<int, PotentialType> parameterTypes;
         private MethodBody methodBody;
 
-        public List<Tuple<Instruction, PotentialType[]>> Calls { get; private set; }
+        public IDictionary<MethodBase, HashSet<PotentialType[]>> Calls { get; private set; }
 
         protected override void HandleUnrecognized(Instruction instruction)
         {
@@ -114,7 +114,12 @@ namespace CodeModel.FlowAnalysis
                 this.Stack.Pop();
             }
 
-            this.Calls.Add(Tuple.Create(instruction, types));
+            if (!this.Calls.ContainsKey(calledMethod))
+            {
+                this.Calls[calledMethod] = new HashSet<PotentialType[]>(new ArrayComparer<PotentialType>());
+            }
+
+            this.Calls[calledMethod].Add(types);
 
             var methodInfo = calledMethod as MethodInfo;
 
@@ -421,7 +426,7 @@ namespace CodeModel.FlowAnalysis
             this.variableTypes = this.methodBody.LocalVariables.ToDictionary(x => x.LocalIndex, x => PotentialType.FromType(x.LocalType));
             this.parameterTypes = method.GetParameters().ToDictionary(x => x.Position, x => PotentialType.FromType(x.ParameterType));
 
-            this.Calls = new List<Tuple<Instruction, PotentialType[]>>();                        
+            this.Calls = new Dictionary<MethodBase, HashSet<PotentialType[]>>();               
         }
     }
 }

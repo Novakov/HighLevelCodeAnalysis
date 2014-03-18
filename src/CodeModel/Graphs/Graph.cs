@@ -5,21 +5,21 @@ namespace CodeModel.Graphs
 {
     public class Graph
     {
-        private readonly ISet<Node> nodes; 
+        private readonly IDictionary<string, Node> nodes; 
         private readonly ISet<Link> links; 
 
-        public IEnumerable<Node> Nodes { get { return this.nodes; } }
+        public IEnumerable<Node> Nodes { get { return this.nodes.Values; } }
         public IEnumerable<Link> Links { get { return this.links; } }
 
         public Graph()
         {
-            this.nodes = new HashSet<Node>();
+            this.nodes = new Dictionary<string, Node>();
             this.links = new HashSet<Link>();
         }
 
         public Node AddNode(Node node)
         {
-            this.nodes.Add(node);
+            this.nodes.Add(node.Id, node);
             
             return node;
         }
@@ -72,8 +72,8 @@ namespace CodeModel.Graphs
                 replaceWith.AddOutboundLink(outboundLink);
             }
 
-            this.nodes.Remove(old);
-            this.nodes.Add(replaceWith);
+            this.nodes.Remove(old.Id);
+            this.nodes[replaceWith.Id] = replaceWith;
         }
 
         public void RemoveNode(Node node)
@@ -83,16 +83,23 @@ namespace CodeModel.Graphs
                 this.RemoveLink(link);
             }
 
-            this.nodes.Remove(node);
+            this.nodes.Remove(node.Id);
         }
 
         public void Merge(Graph otherGraph)
         {
-            this.nodes.UnionWith(otherGraph.nodes);
+            foreach (var node in otherGraph.Nodes)
+            {
+                if (!this.nodes.ContainsKey(node.Id))
+                {
+                    this.nodes[node.Id] = node;
+                }
+            }            
+
             foreach (var link in otherGraph.links)
             {
-                var source = this.nodes.First(x => x.Id == link.Source.Id);
-                var target = this.nodes.First(x => x.Id == link.Target.Id);
+                var source = this.LookupNode<Node>(link.Source.Id);
+                var target = this.LookupNode<Node>(link.Target.Id);
 
                 link.SetUpConnection(source, target);
                 source.AddOutboundLink(link);
@@ -110,6 +117,20 @@ namespace CodeModel.Graphs
                 to.AddOutboundLink(link);
                 
                 link.SetUpConnection(to, link.Target);
+            }
+        }
+
+        public TNode LookupNode<TNode>(string id)
+            where TNode : Node
+        {
+            Node node;
+            if (this.nodes.TryGetValue(id, out node))
+            {
+                return node as TNode;
+            }
+            else
+            {
+                return null;
             }
         }
     }

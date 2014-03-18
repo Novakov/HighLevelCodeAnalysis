@@ -9,6 +9,6 @@ namespace CodeModel.Convetions
 {
     public interface IImplementingConvention : IConvention
     {
-        bool ShouldInlineImplementationsFor(TypeNode interfaceNod);
+        bool ShouldInlineImplementationsFor(TypeNode interfaceNode);
     }
 }

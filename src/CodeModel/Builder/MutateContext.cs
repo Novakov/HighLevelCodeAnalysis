@@ -76,5 +76,11 @@ namespace CodeModel.Builder
         {
             this.model.RemoveLink(link);
         }
+
+        public TNode LookupNode<TNode>(string id)
+            where TNode : Node
+        {
+            return this.model.LookupNode<TNode>(id);
+        }
     }
 }

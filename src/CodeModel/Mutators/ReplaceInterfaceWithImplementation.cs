@@ -41,7 +41,7 @@ namespace CodeModel.Mutators
 
                     if (interfaceMethod != null)
                     {
-                        var interfaceMethodNode = context.FindNodes<MethodNode>(x => x.Method == interfaceMethod).FirstOrDefault();
+                        var interfaceMethodNode = context.LookupNode<MethodNode>(MethodNode.IdFor(interfaceMethod));
 
                         if (interfaceMethodNode != null)
                         {

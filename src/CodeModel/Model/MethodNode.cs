@@ -13,9 +13,14 @@ namespace CodeModel.Model
         }
 
         public MethodNode(MethodInfo method) 
-            : base(method.DeclaringType.AssemblyQualifiedName + "_" + method.MetadataToken)
+            : base(IdFor(method))
         {
             this.Method = method;
+        }
+
+        public static string IdFor(MethodInfo method)
+        {
+            return method.DeclaringType.AssemblyQualifiedName + "_" + method.MetadataToken;
         }
     }
 }

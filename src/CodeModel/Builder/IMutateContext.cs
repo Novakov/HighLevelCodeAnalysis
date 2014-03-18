@@ -24,5 +24,8 @@ namespace CodeModel.Builder
         void ReplaceLink(Link old, Link replaceWith);
 
         void RemoveLink(Link link);
+
+        TNode LookupNode<TNode>(string id)
+            where TNode : Node;
     }
 }

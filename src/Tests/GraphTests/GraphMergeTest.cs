@@ -71,7 +71,7 @@ namespace Tests.GraphTests
             var graph2 = new Graph();
             var node3 = graph2.AddNode(new SimpleNode("3"));
             var node4 = graph2.AddNode(new SimpleNode("4"));
-            var shared2 = graph1.AddNode(new SimpleNode("Shared"));
+            var shared2 = graph2.AddNode(new SimpleNode("Shared"));
 
             // act
             graph1.Merge(graph2);

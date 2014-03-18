@@ -42,6 +42,7 @@
     <Compile Include="CqrsConvention.cs" />
     <Compile Include="EntityConvention.cs" />
     <Compile Include="EventSourcingConvention.cs" />
+    <Compile Include="ImplementingConvention.cs" />
     <Compile Include="Marker.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
