@@ -1,3 +1,4 @@
+using System;
 using System.Reflection;
 using CodeModel.Graphs;
 
@@ -17,6 +18,9 @@ namespace CodeModel.Model
         {
             this.Method = method;
         }
+
+        [Exportable]
+        public Type DeclaringType { get { return this.Method.DeclaringType; } }
 
         public static string IdFor(MethodInfo method)
         {

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Reflection;
 using System.Xml;
 using CodeModel.FlowAnalysis;
 using CodeModel.Graphs;
@@ -113,6 +115,13 @@ namespace CodeModel.Extensions.DgmlExport
                 this.writer.WriteAttributeString("Id", modelNode.Id);
                 this.writer.WriteAttributeString("Category", modelNode.GetType().FullName);
                 this.writer.WriteAttributeString("Label", modelNode.DisplayLabel);
+
+                var exportableProperties = modelNode.GetType().GetProperties().Where(x => x.GetCustomAttribute<ExportableAttribute>() != null);
+
+                foreach (var property in exportableProperties)
+                {
+                    this.writer.WriteAttributeString(property.Name, property.GetValue(modelNode).ToString());
+                }
 
                 this.writer.WriteEndElement();
             }
