@@ -123,7 +123,23 @@ namespace CodeModel.FlowAnalysis
             registry[OpCodes.Conv_Ovf_I1] = i => HandleConversion(i, typeof(int));
             registry[OpCodes.Conv_Ovf_I2] = i => HandleConversion(i, typeof(int));
             registry[OpCodes.Conv_Ovf_I4] = i => HandleConversion(i, typeof(int));            
-            registry[OpCodes.Conv_Ovf_I8] = i => HandleConversion(i, typeof(long));            
+            registry[OpCodes.Conv_Ovf_I8] = i => HandleConversion(i, typeof(long));
+
+            registry[OpCodes.Ldelem_I] = i => HandleLoadNumericArrayElement(i, typeof (int));
+            registry[OpCodes.Ldelem_I1] = i => HandleLoadNumericArrayElement(i, typeof (int));
+            registry[OpCodes.Ldelem_I2] = i => HandleLoadNumericArrayElement(i, typeof (int));
+            registry[OpCodes.Ldelem_I4] = i => HandleLoadNumericArrayElement(i, typeof (int));
+            registry[OpCodes.Ldelem_I8] = i => HandleLoadNumericArrayElement(i, typeof (long));
+            registry[OpCodes.Ldelem_U1] = i => HandleLoadNumericArrayElement(i, typeof (uint));
+            registry[OpCodes.Ldelem_U2] = i => HandleLoadNumericArrayElement(i, typeof (uint));
+            registry[OpCodes.Ldelem_U4] = i => HandleLoadNumericArrayElement(i, typeof (uint));            
+            registry[OpCodes.Ldelem_R4] = i => HandleLoadNumericArrayElement(i, typeof (float));
+            registry[OpCodes.Ldelem_R8] = i => HandleLoadNumericArrayElement(i, typeof (double));
+        }
+
+        protected virtual void HandleLoadNumericArrayElement(Instruction instruction, Type type)
+        {
+            this.HandleUnrecognized(instruction);
         }
 
         protected virtual void HandleLoadDouble(Instruction instruction, double value)

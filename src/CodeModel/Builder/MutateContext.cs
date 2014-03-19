@@ -11,21 +11,21 @@ namespace CodeModel.Builder
     public class MutateContext : IMutateContext
     {
         private readonly Graph model;
-        private readonly ISet<Node> nodesToProcess;
+        private readonly List<Node> nodesToProcess;
 
         public MutateContext(Graph model)
         {
             this.model = model;
 
-            this.nodesToProcess = new HashSet<Node>(model.Nodes);
+            this.nodesToProcess = new List<Node>(model.Nodes);
         }
 
         public IEnumerable<Node> NodesToProcess()
         {
             while (this.nodesToProcess.Count > 0)
             {
-                var node = this.nodesToProcess.First();
-                this.nodesToProcess.Remove(node);
+                var node = this.nodesToProcess[0];
+                this.nodesToProcess.RemoveAt(0);
 
                 yield return node;
             }

@@ -196,6 +196,16 @@ namespace CodeModel.FlowAnalysis
             }
         }
 
+        protected override void HandleNeg(Instruction instruction)
+        {
+            //TODO: test for neg   
+        }
+
+        protected override void HandleNot(Instruction instruction)
+        {
+            //TODO: test for not   
+        }
+
         protected override void HandleConv_R8(Instruction instruction)
         {
             this.Stack.Pop();
@@ -313,12 +323,12 @@ namespace CodeModel.FlowAnalysis
             this.Stack.Push(arrayType.GetArrayElement());
         }
 
-        protected override void HandleLdelem_I4(Instruction instruction)
+        protected override void HandleLoadNumericArrayElement(Instruction instruction, Type type)
         {
             var index = this.Stack.Pop();
             var arrayType = this.Stack.Pop();
 
-            this.Stack.Push(arrayType.GetArrayElement());
+            this.Stack.Push(PotentialType.Numeric);
         }
 
         protected override void HandleLdtoken(Instruction instruction)
@@ -396,6 +406,15 @@ namespace CodeModel.FlowAnalysis
             var tip = this.Stack.Pop();
 
             this.Stack.Push(tip.Type.GetElementType());
+        }
+
+        protected override void HandleLdind_I4(Instruction instruction)
+        {
+            //TODO: test for ldind.i4
+
+            var tip = this.Stack.Pop();
+
+            this.Stack.Push(PotentialType.Numeric);
         }
 
         protected override void HandleConversion(Instruction instruction, Type targetType)
