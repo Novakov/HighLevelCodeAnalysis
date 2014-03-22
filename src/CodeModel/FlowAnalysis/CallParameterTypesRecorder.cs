@@ -142,7 +142,7 @@ namespace CodeModel.FlowAnalysis
 
         protected override void HandleLdvirtftn(Instruction instruction)
         {
-            //TODO: test for ldvirtftn
+            this.Stack.Pop();
             this.Stack.Push(PotentialType.MethodHandle);
         }
 
@@ -197,13 +197,11 @@ namespace CodeModel.FlowAnalysis
         }
 
         protected override void HandleNeg(Instruction instruction)
-        {
-            //TODO: test for neg   
+        {             
         }
 
         protected override void HandleNot(Instruction instruction)
-        {
-            //TODO: test for not   
+        {            
         }
 
         protected override void HandleConv_R8(Instruction instruction)
@@ -365,17 +363,14 @@ namespace CodeModel.FlowAnalysis
         }
 
         protected override void HandleIsinst(Instruction instruction)
-        {
-            //TODO: test for isinst
+        {            
             //TODO: need better logic
             this.Stack.Pop();
             this.Stack.Push(PotentialType.FromType((Type)instruction.Operand));
         }
 
         protected override void HandleLdflda(Instruction instruction)
-        {
-            //TODO: test for ldflda
-
+        {            
             this.Stack.Pop();
 
             var field = (FieldInfo) instruction.Operand;
@@ -384,17 +379,13 @@ namespace CodeModel.FlowAnalysis
         }
 
         protected override void HandleUnbox_Any(Instruction instruction)
-        {
-            //TODO: test for unbox.any
-
+        {            
             this.Stack.Pop();
             this.Stack.Push(PotentialType.FromType((Type)instruction.Operand));
         }
 
         protected override void HandleUnbox(Instruction instruction)
-        {
-            //TODO: test for unbox
-
+        {            
             this.Stack.Pop();
             this.Stack.Push(PotentialType.FromType((Type)instruction.Operand));
         }

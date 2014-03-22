@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Reflection;
 using System.Runtime.CompilerServices;
 using CodeModel.FlowAnalysis;
 using CodeModel.Graphs;
@@ -82,55 +81,6 @@ namespace Tests.FlowAnalysisTests
             this.Result = cfg;                        
 
             new DetermineCallParameterTypes().Walk(method, cfg);
-        }
-    }
-
-    public class Reducer
-    {
-        private readonly MethodInfo method;
-        private readonly ControlFlowGraph cfg;
-
-        public static void Reduce(MethodInfo method,ControlFlowGraph cfg)
-        {
-            Reducer tempQualifier = new Reducer(method, cfg);
-            Reduce(new Reducer(method, cfg).cfg, tempQualifier.method);
-        }
-
-        private Reducer(MethodInfo method, ControlFlowGraph cfg)
-        {
-            this.method = method;
-            this.cfg = cfg;
-        }
-
-        private static void Reduce(ControlFlowGraph controlFlowGraph, MethodInfo containingMethod)
-        {
-            foreach (var blockNode in controlFlowGraph.Blocks.OfType<InstructionBlockNode>())
-            {
-                blockNode.CalculateStackProperties(containingMethod);
-            }
-
-            foreach (var block in controlFlowGraph.Blocks.OfType<InstructionBlockNode>())
-            {
-                if (!block.IsPassthrough)
-                {
-                    continue;                    
-                }
-
-                if (block.GoesBelowInitialStack || block.SetsLocalVariable)
-                {
-                    continue;                    
-                }
-
-                var branchBlock = block.TransitedFrom.Single();
-                var joinBlock = block.TransitTo.Single();
-
-                var bypassingTransition = branchBlock.OutboundLinks.Where(x => x.Target.Equals(joinBlock));
-
-                if (bypassingTransition.Count() == 1)
-                {
-                    controlFlowGraph.RemoveLink(bypassingTransition.Single());
-                }
-            }
         }
     }
 }

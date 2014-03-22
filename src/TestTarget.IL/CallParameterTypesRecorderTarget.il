@@ -7,6 +7,12 @@
 .class public TestTarget.IL.CallParameterTypesRecorderTarget
 {
 	.field private static class [mscorlib]System.String staticField;
+	.field private class [mscorlib]System.String instanceField;
+
+	.method public newslot virtual instance void VirtualMeth() cil managed
+	{
+		ret
+	}
 
 	.method public static void Ldtoken()
 	{
@@ -144,12 +150,94 @@
 
 	.method public static void Ldsfld()
 	{
-		ldsfld class [mscorlib]System.String TestTarget.IL.CallParameterTypesRecorderTarget::staticField;
+		ldsfld class [mscorlib]System.String TestTarget.IL.CallParameterTypesRecorderTarget::staticField
 		
 		nop
 
 		pop
 
+		ret
+	}
+
+	.method public void Ldvirtftn()
+	{
+		ldarg.0
+		ldvirtftn instance void TestTarget.IL.CallParameterTypesRecorderTarget::VirtualMeth()
+
+		nop
+
+		pop
+
+		ret
+	}		
+
+	.method public static void Neg()
+	{
+		ldc.i4 17
+		neg
+
+		nop
+
+		pop
+
+		ret
+	}
+
+	.method public static void Not()
+	{
+		ldc.i4.1
+		not
+
+		nop
+
+		pop
+
+		ret
+	}
+
+	.method public static void Isinst()
+	{
+		ldstr "aaa"
+		isinst [mscorlib]System.Object
+
+		nop
+
+		pop
+		ret
+	}
+
+	.method public void Ldflda()
+	{
+		ldarg.0
+		ldflda class [mscorlib]System.String TestTarget.IL.CallParameterTypesRecorderTarget::instanceField
+
+		nop
+
+		pop
+		ret
+	}
+
+	.method public static void UnboxAny()
+	{
+		ldc.i4.5
+		box [mscorlib]System.Int32
+		unbox.any [mscorlib]System.Int32
+
+		nop
+
+		pop
+		ret
+	}
+
+	.method public static void Unbox()
+	{
+		ldc.i4.5
+		box [mscorlib]System.Int32
+		unbox [mscorlib]System.Int32
+
+		nop
+
+		pop
 		ret
 	}
 }

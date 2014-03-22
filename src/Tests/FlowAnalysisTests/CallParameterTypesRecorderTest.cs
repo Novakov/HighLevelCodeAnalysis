@@ -38,10 +38,17 @@ namespace Tests.FlowAnalysisTests
             yield return new object[] {"Ldelema", PotentialType.FromType(typeof(object))};
             yield return new object[] {"ConvI", PotentialType.Numeric};
             yield return new object[] {"ConvI1", PotentialType.Numeric};
-            yield return new object[] {"ConvI2", PotentialType.Numeric};
+            yield return new object[] {"ConvI2", PotentialType.Numeric};            
             yield return new object[] {"ConvI4", PotentialType.Numeric};
             yield return new object[] {"ConvI8", PotentialType.Numeric};
             yield return new object[] {"Ldsfld", PotentialType.String};
-        }
+            yield return new object[] {"Ldvirtftn", PotentialType.MethodHandle};
+            yield return new object[] {"Neg", PotentialType.Numeric};
+            yield return new object[] {"Not", PotentialType.Numeric};
+            yield return new object[] {"Isinst", PotentialType.FromType(typeof(object))};
+            yield return new object[] {"Ldflda", PotentialType.FromType(typeof(string))};
+            yield return new object[] {"UnboxAny", PotentialType.FromType(typeof(int))};
+            yield return new object[] {"Unbox", PotentialType.FromType(typeof(int))};
+        }        
     }
 }
