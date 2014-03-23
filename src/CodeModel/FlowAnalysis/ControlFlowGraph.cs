@@ -12,6 +12,9 @@ namespace CodeModel.FlowAnalysis
         public BlockNode ExitPoint { get; private set; }
         public BlockNode EntryPoint { get; private set; }
 
+        public static readonly Action<ControlFlowGraph> RemoveUnreachableBlocksReductor = cfg => cfg.RemoveUnreachableBlocks();
+        public static readonly Action<ControlFlowGraph> MergePassthroughBlocksReductor = cfg => cfg.MergePassthroughBlocks(); 
+
         public IEnumerable<BlockNode> Blocks { get { return base.Nodes.OfType<InstructionBlockNode>(); } }
 
         public ControlFlowGraph(Instruction entrypoint)
@@ -43,49 +46,33 @@ namespace CodeModel.FlowAnalysis
             return paths.Paths.Select(x => x.OfType<InstructionBlockNode>());
         }
 
-        public void ReduceBlocks()
+        public void MergePassthroughBlocks()
         {
-            var possibleBlockStarts = this.Blocks.Where(IsBlockBegin).ToList();
+            var possibleBlockStarts = this.Blocks.Where(x => x.IsBlockBegin() && !x.IsBranch).ToList();
 
             foreach (var possibleBlockStart in possibleBlockStarts)
-            {
-                ReduceBlock(possibleBlockStart);
+            {                                
+                var next = possibleBlockStart.OutboundLinks.OfType<ControlTransition>().First().Target;
+
+                var nextBlock = next as BlockNode;
+
+                while (nextBlock != null && nextBlock.IsPassthrough)
+                {
+                    possibleBlockStart.Instructions.AddRange(((BlockNode) next).Instructions);
+                    MoveOutboundLinks(next, possibleBlockStart);
+                    RemoveNode(next);
+
+                    next = possibleBlockStart.OutboundLinks.OfType<ControlTransition>().First().Target;
+                    nextBlock = next as InstructionBlockNode;
+                }
+
+                if (nextBlock != null && nextBlock.IsBranch && !nextBlock.IsJoin)
+                {
+                    possibleBlockStart.Instructions.AddRange(((BlockNode) next).Instructions);
+                    MoveOutboundLinks(next, possibleBlockStart);
+                    RemoveNode(next);
+                }
             }
-        }
-
-        private void ReduceBlock(BlockNode blockStart)
-        {
-            if (blockStart.IsBranch)
-            {
-                return;
-            }
-
-            var next = blockStart.OutboundLinks.OfType<ControlTransition>().First().Target;
-
-            var nextBlock = next as BlockNode;
-
-            while (nextBlock != null && nextBlock.IsPassthrough)
-            {
-                blockStart.Instructions.AddRange(((BlockNode)next).Instructions);
-                MoveOutboundLinks(next, blockStart);
-                RemoveNode(next);
-
-                next = blockStart.OutboundLinks.OfType<ControlTransition>().First().Target;
-                nextBlock = next as InstructionBlockNode;
-            }
-
-            if (nextBlock != null && nextBlock.IsBranch && !nextBlock.IsJoin)
-            {
-                blockStart.Instructions.AddRange(((BlockNode)next).Instructions);
-                MoveOutboundLinks(next, blockStart);
-                RemoveNode(next);
-            }
-        }
-
-        private bool IsBlockBegin(BlockNode instruction)
-        {
-            return instruction.IsJoin
-                   || instruction.TransitedFrom.First().IsBranch;
         }
 
         public void RemovePassthroughNode(BlockNode block)

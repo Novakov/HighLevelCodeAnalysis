@@ -20,7 +20,7 @@ namespace Tests.FlowAnalysisTests
         {
             var method = Get.MethodOf<CallParametersTarget>(x => CallParametersTarget.Get<int>()).GetGenericMethodDefinition();
 
-            var flowGraph = new ControlFlow().AnalyzeMethod(method);            
+            var flowGraph = ControlFlowGraphFactory.BuildForMethod(method);            
             
             var types = new DetermineCallParameterTypes();
             types.Walk(method, flowGraph);
@@ -32,7 +32,7 @@ namespace Tests.FlowAnalysisTests
         {
             // arrange            
             var method = typeof(CallParametersTarget).GetMethod(methodName);
-            var flowGraph = new ControlFlow().AnalyzeMethod(method);            
+            var flowGraph = ControlFlowGraphFactory.BuildForMethod(method);            
 
             var walker = new DetermineCallParameterTypes();
 
@@ -76,9 +76,12 @@ namespace Tests.FlowAnalysisTests
         public void AnalyzeMethodWith27Ifs()
         {
             var method = Get.MethodOf<NastyMethods>(x => NastyMethods.MethodWith27Ifs());
-            var cfg = new ControlFlow().AnalyzeMethod(method);
+            var cfg = ControlFlowGraphFactory.BuildForMethod(method);
+            
+            var reduced = cfg.Clone();
+            DetermineCallParameterTypes.Reduce(method, reduced);
 
-            this.Result = cfg;                        
+            this.Result = reduced;                                    
 
             new DetermineCallParameterTypes().Walk(method, cfg);
         }

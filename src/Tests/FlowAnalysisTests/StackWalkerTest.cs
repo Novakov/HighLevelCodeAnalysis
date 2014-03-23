@@ -22,7 +22,7 @@ namespace Tests.FlowAnalysisTests
 
             foreach (var method in methods)
             {
-                var graph = new ControlFlow().AnalyzeMethod(method);
+                var graph = ControlFlowGraphFactory.BuildForMethod(method);
 
                 var branches = graph.FindPaths().ToList();
 
@@ -43,7 +43,7 @@ namespace Tests.FlowAnalysisTests
 
             foreach (var method in methods)
             {
-                var graph = new ControlFlow().AnalyzeMethod(method);                
+                var graph = ControlFlowGraphFactory.BuildForMethod(method);                
 
                 var walker = new ComputeStackLength();
 

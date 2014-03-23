@@ -38,7 +38,8 @@ namespace CodeModel.FlowAnalysis
                 cfg => ReduceNotImpactingBlocks(cfg, method),
                 ReduceEmptyPassthroughBlocks,
                 RemoveDuplicatedLinks,
-                cfg => ReduceBranchesWithNoImpact(cfg, method)
+                cfg => ReduceBranchesWithNoImpact(cfg, method),
+                ControlFlowGraph.MergePassthroughBlocksReductor,
             };
 
             controlFlowGraph.Reduce(reductors);           

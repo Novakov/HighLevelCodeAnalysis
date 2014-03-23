@@ -35,15 +35,9 @@ namespace Tests.FlowAnalysisTests
             graph.AddLink(i3, graph.ExitPoint, new ControlTransition(TransitionKind.Forward));
 
             // act
-            graph.ReduceBlocks();
+            graph.MergePassthroughBlocks();
 
-            // assert   
-            var exp = new DgmlExporter();
-
-            using (var fs = File.Create(@"d:\dupa.dgml"))
-            {
-                exp.Export(graph, fs);
-            }
+            // assert               
             Assert.That(graph.Nodes.ToList(), Has.Count.EqualTo(2));              
         }
 
@@ -88,7 +82,7 @@ namespace Tests.FlowAnalysisTests
             graph.AddLink(i12, graph.ExitPoint, new ControlTransition(TransitionKind.Forward));            
 
             // act
-            graph.ReduceBlocks();
+            graph.MergePassthroughBlocks();
 
             // assert           
             Assert.That(graph.Blocks.ToList(), Has.Count.EqualTo(4));

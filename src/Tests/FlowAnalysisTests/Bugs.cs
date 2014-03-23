@@ -21,7 +21,7 @@ namespace Tests.FlowAnalysisTests
             ControlFlowGraph g = null;
             try
             {
-                g = new ControlFlow().AnalyzeMethod(method);                
+                g = ControlFlowGraphFactory.BuildForMethod(method);                
             }
             finally
             {

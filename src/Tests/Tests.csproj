@@ -101,7 +101,6 @@
     <Compile Include="ReflectionExtensionsTest.cs" />
     <Compile Include="ReversableStackTest.cs" />
     <Compile Include="TestSettings.cs" />
-    <Compile Include="X.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CodeModel.Extensions.AspNetMvc\CodeModel.Extensions.AspNetMvc.csproj">

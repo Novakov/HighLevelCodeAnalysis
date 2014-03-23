@@ -24,7 +24,7 @@ namespace CodeModel.Mutators
                 return;
             }
 
-            var cfg = new ControlFlow().AnalyzeMethod(node.Method);
+            var cfg = ControlFlowGraphFactory.BuildForMethod(node.Method);
 
             var tmp = new DetermineCallParameterTypes();
 

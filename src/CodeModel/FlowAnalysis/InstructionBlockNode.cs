@@ -45,6 +45,11 @@ namespace CodeModel.FlowAnalysis
             this.Instructions = new List<Instruction>(instructions);
         }
 
+        public bool IsBlockBegin()
+        {
+            return this.IsJoin|| this.TransitedFrom.First().IsBranch;
+        }
+
         internal abstract BlockNode Clone();
     }
 

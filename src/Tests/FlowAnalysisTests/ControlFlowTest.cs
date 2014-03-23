@@ -29,11 +29,10 @@ namespace Tests.FlowAnalysisTests
         public void MethodWithOneBranch()
         {
             // arrage
-            var flowAnalyzer = new ControlFlow();
             var method = Get.MethodOf<ControlFlowAnalysisTarget>(x => x.MethodWithOneBranch());
 
             // act
-            this.Result = flowAnalyzer.AnalyzeMethod(method);
+            this.Result = ControlFlowGraphFactory.BuildForMethod(method);
 
             // assert           
             var paths = this.Result.FindPaths().ToList();
@@ -44,11 +43,10 @@ namespace Tests.FlowAnalysisTests
         public void MethodWithOneIf()
         {
             // arrage
-            var flowAnalyzer = new ControlFlow();
             var method = Get.MethodOf<ControlFlowAnalysisTarget>(x => x.MethodWithOneIf());
 
             // act
-            this.Result = flowAnalyzer.AnalyzeMethod(method);
+            this.Result = ControlFlowGraphFactory.BuildForMethod(method);
 
             // assert                                  
             var paths = this.Result.FindPaths().ToList();
@@ -59,11 +57,10 @@ namespace Tests.FlowAnalysisTests
         public void MethodWithTwoIfs()
         {
             // arrage
-            var flowAnalyzer = new ControlFlow();
             var method = Get.MethodOf<ControlFlowAnalysisTarget>(x => x.MethodWithTwoIfs());
 
             // act
-            this.Result = flowAnalyzer.AnalyzeMethod(method);
+            this.Result = ControlFlowGraphFactory.BuildForMethod(method);
 
             // assert    
             var paths = this.Result.FindPaths().ToList();
@@ -73,12 +70,11 @@ namespace Tests.FlowAnalysisTests
         [Test]
         public void MethodWithOneIfAndElse()
         {
-            // arrage
-            var flowAnalyzer = new ControlFlow();
+            // arrage            
             var method = Get.MethodOf<ControlFlowAnalysisTarget>(x => x.MethodWithOneIfAndElse());
 
             // act
-            this.Result = flowAnalyzer.AnalyzeMethod(method);
+            this.Result = ControlFlowGraphFactory.BuildForMethod(method);
 
             // assert          
             var paths = this.Result.FindPaths().ToList();
@@ -89,11 +85,10 @@ namespace Tests.FlowAnalysisTests
         public void MethodWithWhile()
         {
             // arrage
-            var flowAnalyzer = new ControlFlow();
             var method = Get.MethodOf<ControlFlowAnalysisTarget>(x => x.MethodWithWhile());
 
             // act
-            this.Result = flowAnalyzer.AnalyzeMethod(method);
+            this.Result = ControlFlowGraphFactory.BuildForMethod(method);
 
             // assert          
             var paths = this.Result.FindPaths().ToList();
@@ -108,11 +103,10 @@ namespace Tests.FlowAnalysisTests
         public void MethodWithThrow()
         {
             // arrage
-            var flowAnalyzer = new ControlFlow();
             var method = Get.MethodOf<ControlFlowAnalysisTarget>(x => x.MethodWithThrow());
 
             // act
-            this.Result = flowAnalyzer.AnalyzeMethod(method);
+            this.Result = ControlFlowGraphFactory.BuildForMethod(method);
 
             // assert          
             var throwNode = this.Result.Nodes.OfType<InstructionBlockNode>().Single(x => x.Instructions.Any(y => y.OpCode == OpCodes.Throw));
@@ -125,11 +119,10 @@ namespace Tests.FlowAnalysisTests
         public void MethodWithFinally()
         {
             // arrage
-            var flowAnalyzer = new ControlFlow();
             var method = Get.MethodOf<ControlFlowAnalysisTarget>(x => x.MethodWithFinally());
 
             // act
-            this.Result = flowAnalyzer.AnalyzeMethod(method);
+            this.Result = ControlFlowGraphFactory.BuildForMethod(method);
 
             // assert
             var marker2Call = FindMethodCallInstructionBlock(x => ControlFlowAnalysisTarget.Marker2());
@@ -146,11 +139,10 @@ namespace Tests.FlowAnalysisTests
         public void MethodWithThrowAndSingleCatchClause()
         {
             // arrage
-            var flowAnalyzer = new ControlFlow();
             var method = Get.MethodOf<ControlFlowAnalysisTarget>(x => x.MethodWithThrowAndSingleCatchClause());
 
             // act
-            this.Result = flowAnalyzer.AnalyzeMethod(method);
+            this.Result = ControlFlowGraphFactory.BuildForMethod(method);
 
             // assert   
             var marker1Call = FindMethodCallInstructionBlock(x => ControlFlowAnalysisTarget.Marker1());
@@ -164,11 +156,10 @@ namespace Tests.FlowAnalysisTests
         public void MethodWithThrowAndMultipleCatchClause()
         {
             // arrage
-            var flowAnalyzer = new ControlFlow();
             var method = Get.MethodOf<ControlFlowAnalysisTarget>(x => x.MethodWithThrowAndMultipleCatchClauses());
 
             // act
-            this.Result = flowAnalyzer.AnalyzeMethod(method);
+            this.Result = ControlFlowGraphFactory.BuildForMethod(method);
 
             // assert
             var paths = this.Result.FindPaths().ToList();
@@ -197,11 +188,10 @@ namespace Tests.FlowAnalysisTests
         public void MethodWithSwitch()
         {
             // arrage
-            var flowAnalyzer = new ControlFlow();
             var method = Get.MethodOf<ControlFlowAnalysisTarget>(x => x.MethodWithSwitch());
 
             // act
-            this.Result = flowAnalyzer.AnalyzeMethod(method);
+            this.Result = ControlFlowGraphFactory.BuildForMethod(method);
 
             // assert
             var paths = this.Result.FindPaths().ToList();
