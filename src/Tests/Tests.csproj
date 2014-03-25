@@ -74,6 +74,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AnnotableObjectTest.cs" />
     <Compile Include="BuilderTests\BuilderTest.cs" />
     <Compile Include="BuilderTests\ImplementingInterfacesTest.cs" />
     <Compile Include="BuilderTests\LinkCallsTests.cs" />

@@ -80,6 +80,7 @@
     <Compile Include="Graphs\GraphView.cs" />
     <Compile Include="Graphs\Link.cs" />
     <Compile Include="Graphs\Node.cs" />
+    <Compile Include="IAnnotable.cs" />
     <Compile Include="Links\ApplicationEntryCall.cs" />
     <Compile Include="Links\ContainedInLink.cs" />
     <Compile Include="Links\GetFieldLink.cs" />

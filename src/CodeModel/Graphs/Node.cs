@@ -4,10 +4,11 @@ using System.Linq;
 
 namespace CodeModel.Graphs
 {
-    public abstract class Node : IEquatable<Node>
+    public abstract class Node : IEquatable<Node>, IAnnotable
     {
         private readonly ISet<Link> inbound;
         private readonly ISet<Link> outbound;
+        private List<object> annotations;
 
         public string Id { get; private set; }
 
@@ -19,12 +20,16 @@ namespace CodeModel.Graphs
             get { return this.Id; }
         }
 
+        public IEnumerable<object> Annotations { get { return this.annotations; } }
+
         protected Node(string nodeId)
         {
             this.Id = nodeId;
 
             this.inbound = new HashSet<Link>();
             this.outbound = new HashSet<Link>();
+
+            this.annotations = new List<object>();            
         }
 
         public bool Equals(Node other)
@@ -36,7 +41,7 @@ namespace CodeModel.Graphs
         {
             return this.Id.GetHashCode();
         }
-       
+
         public override bool Equals(object obj)
         {
             var node = obj as Node;
@@ -73,6 +78,21 @@ namespace CodeModel.Graphs
         internal void RemoveInboundLink(Link link)
         {
             this.inbound.Remove(link);
+        }
+
+        public void Annonate(object annotation)
+        {
+            this.annotations.Add(annotation);
+        }
+
+        public void RemoveAnnotation(object annotation)
+        {
+            this.annotations.Remove(annotation);
+        }
+
+        public TAnnotation Annotation<TAnnotation>()
+        {
+            return this.annotations.OfType<TAnnotation>().SingleOrDefault();
         }
     }
 }
