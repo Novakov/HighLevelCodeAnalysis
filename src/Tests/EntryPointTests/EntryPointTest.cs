@@ -1,8 +1,11 @@
-﻿using CodeModel.Builder;
+﻿using System.Linq;
+using CodeModel.Builder;
+using CodeModel.Graphs;
+using CodeModel.Links;
 using CodeModel.Model;
 using CodeModel.Mutators;
 using NUnit.Framework;
-using Tests.Constraints;
+using Graph = Tests.Constraints.Graph;
 
 namespace Tests.EntryPointTests
 {
@@ -14,7 +17,7 @@ namespace Tests.EntryPointTests
         [SetUp]
         public void Setup()
         {
-            this.Builder = new CodeModelBuilder();           
+            this.Builder = new CodeModelBuilder();
         }
 
         [Test]
@@ -27,7 +30,38 @@ namespace Tests.EntryPointTests
 
             // assert
             Assert.That(this.Builder.Model, Graph.Has
-                .Nodes<ApplicationEntryPoint>(exactly:1));
+                .Nodes<ApplicationEntryPoint>(exactly: 1));
+        }
+
+        [Test]
+        public void ShouldLinkEntryPointToMatchingNodes()
+        {
+            // arrange
+            this.Builder.RunMutator<AddApplicationEntryPoint>();
+            var nodeA1 = this.Builder.Model.AddNode(new SampleNode("A1"));
+            var nodeA2 = this.Builder.Model.AddNode(new SampleNode("A2"));
+            var nodeB1 = this.Builder.Model.AddNode(new SampleNode("B1"));
+
+            // act
+            this.Builder.RunMutator(new LinkApplicationEntryPointTo<SampleNode>(node => nodeA1.Equals(node) || nodeA2.Equals(node)));
+
+            // assert
+            var entryPoint = this.Builder.Model.Nodes.OfType<ApplicationEntryPoint>().Single();
+
+            Assert.That(this.Builder.Model, Graph.Has
+                .Links<ApplicationEntryCall>(exactly:1, from:entryPoint, to:nodeA1)
+                .Links<ApplicationEntryCall>(exactly:1, from:entryPoint, to:nodeA2)
+                .Links<ApplicationEntryCall>(exactly:0, from:entryPoint, to:nodeB1)
+                );
+        }
+
+        public class SampleNode : Node
+        {
+            public SampleNode(string id)
+                : base(id)
+            {
+
+            }
         }
     }
 }
