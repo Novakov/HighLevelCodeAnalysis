@@ -81,6 +81,7 @@
     <Compile Include="Constraints\GraphConstraint.cs" />
     <Compile Include="Constraints\Graph.cs" />
     <Compile Include="Constraints\NodeForTypeConstraint.cs" />
+    <Compile Include="EntryPointTests\EntryPointTest.cs" />
     <Compile Include="ExportFinalGraphAttribute.cs" />
     <Compile Include="ExtensionsTests\AspNetMvcTest.cs" />
     <Compile Include="ExtensionsTests\CqrsTest.cs" />
