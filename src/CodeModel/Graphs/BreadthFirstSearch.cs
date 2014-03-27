@@ -8,7 +8,7 @@ namespace CodeModel.Graphs
 {
     public abstract class BreadthFirstSearch
     {
-        public void Walk(Graph graph, Node startNode)
+        protected void WalkCore(Graph graph, Node startNode)
         {
             var remaining = new Queue<Node>();
 
