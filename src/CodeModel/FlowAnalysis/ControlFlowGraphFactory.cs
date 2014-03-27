@@ -36,6 +36,8 @@ namespace CodeModel.FlowAnalysis
 
             var nodes = new InstructionBlockNode[instructions.Last().Offset + 1];
 
+            nodes[0] = (InstructionBlockNode) this.graph.EntryPoint;
+
             foreach (var instruction in instructions.Skip(1))
             {
                 nodes[instruction.Offset] = (InstructionBlockNode) graph.AddNode(new InstructionBlockNode(instruction));
