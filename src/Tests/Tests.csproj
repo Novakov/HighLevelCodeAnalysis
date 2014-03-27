@@ -78,6 +78,7 @@
     <Compile Include="BuilderTests\BuilderTest.cs" />
     <Compile Include="BuilderTests\ImplementingInterfacesTest.cs" />
     <Compile Include="BuilderTests\LinkCallsTests.cs" />
+    <Compile Include="BuilderTests\WalkAndAnnotateTest.cs" />
     <Compile Include="Constraints\ExpressionConstraint.cs" />
     <Compile Include="Constraints\GraphConstraint.cs" />
     <Compile Include="Constraints\Graph.cs" />

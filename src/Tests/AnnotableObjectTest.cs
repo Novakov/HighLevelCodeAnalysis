@@ -68,7 +68,7 @@ namespace Tests
 
             // assert
             Assert.That(actual, Is.Null);
-        }
+        }        
     }
 
     internal class AnnotableTestSampleNode : Node

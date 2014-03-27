@@ -42,6 +42,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AnnotableExtensions.cs" />
     <Compile Include="ArrayComparer.cs" />
     <Compile Include="Builder\CodeModelBuilder.cs" />
     <Compile Include="Builder\ICompositeMutator.cs" />
@@ -121,6 +122,7 @@
     <Compile Include="StackExtensions.cs" />
     <Compile Include="StackMark.cs" />
     <Compile Include="TinyIoC.cs" />
+    <Compile Include="WalkAndAnnotate.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="FlowAnalysis\InstructionVisitor.partial.tt">

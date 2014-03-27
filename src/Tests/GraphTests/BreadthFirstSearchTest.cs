@@ -1,4 +1,5 @@
-﻿using CodeModel.Graphs;
+﻿using System.Collections.Generic;
+using CodeModel.Graphs;
 using NUnit.Framework;
 
 namespace Tests.GraphTests
@@ -90,7 +91,7 @@ namespace Tests.GraphTests
                 base.WalkCore(graph, startNode);
             }
 
-            protected override void HandleNode(Node node)
+            protected override void HandleNode(Node node, IEnumerable<Link> availableThrough)
             {
                 this.Path += node.Id;
             }
