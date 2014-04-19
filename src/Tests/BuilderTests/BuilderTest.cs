@@ -200,6 +200,25 @@ namespace Tests.BuilderTests
         }
 
         [Test]
+        public void ShouldLinkToPublicPropertyWithPrivateSetter()
+        {
+            // arrange
+            Builder.RunMutator(new AddAssemblies(TargetAssembly));
+            Builder.RunMutator<AddTypes>();
+            Builder.RunMutator<AddMethods>();
+            Builder.RunMutator<AddProperties>();
+
+            // act
+            Builder.RunMutator<LinkPropertyAccess>();
+
+            // assert
+            var propertyNode = Builder.Model.GetNodeForProperty(Get.PropertyOf<MemberAccess>(x => x.PublicPropertyWithPrivateSetter));
+            Assert.That(Builder.Model, Graph.Has
+                .Links<SetPropertyLink>(to: propertyNode)                
+                );
+        }
+
+        [Test]
         public void ShouldLinkMemberToTypeAndTypeToAssembly()
         {
             // arrange

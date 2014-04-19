@@ -27,7 +27,7 @@ namespace CodeModel.Mutators
             {
                 var method = (MethodInfo)instruction.Operand;
 
-                var property = method.ReflectedType.GetProperties(method.GetBindingFlags()).FirstOrDefault(x => (x.CanRead && x.GetMethod == method) || (x.CanWrite && x.SetMethod == method));
+                var property = method.ReflectedType.GetProperties(method.GetBindingFlags() | BindingFlags.Public).FirstOrDefault(x => (x.CanRead && x.GetMethod == method) || (x.CanWrite && x.SetMethod == method));
 
                 if (property != null)
                 {

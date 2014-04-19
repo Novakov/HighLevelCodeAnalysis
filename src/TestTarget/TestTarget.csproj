@@ -90,6 +90,7 @@
     <Compile Include="MemberAccess.cs" />
     <Compile Include="NastyMethods.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Rules\Immutability\Targets.cs" />
     <Compile Include="ToBeRemovedFromGraph.cs" />
   </ItemGroup>
   <ItemGroup>

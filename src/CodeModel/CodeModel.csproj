@@ -119,6 +119,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ReflectionExtensions.cs" />
     <Compile Include="ReversableStack.cs" />
+    <Compile Include="Rules\TypeIsImmutable.cs" />
+    <Compile Include="Rules\VerificationContext.cs" />
+    <Compile Include="Rules\Violation.cs" />
     <Compile Include="StackExtensions.cs" />
     <Compile Include="StackMark.cs" />
     <Compile Include="TinyIoC.cs" />

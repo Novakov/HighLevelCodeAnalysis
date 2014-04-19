@@ -8,7 +8,7 @@ namespace CodeModel.Graphs
     {
         private readonly ISet<Link> inbound;
         private readonly ISet<Link> outbound;
-        private List<object> annotations;
+        private readonly List<object> annotations;
 
         public string Id { get; private set; }
 

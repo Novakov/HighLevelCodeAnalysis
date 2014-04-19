@@ -13,6 +13,8 @@ namespace TestTarget
 
         public string ThisField;
 
+        public string PublicPropertyWithPrivateSetter { get; private set; }
+
         public void Access()
         {
             this.ThisField = "aaaa";
@@ -28,6 +30,8 @@ namespace TestTarget
             {
                 throw new Exception("aaaaa");
             }
+
+            this.PublicPropertyWithPrivateSetter = "4";
         }
     }
 }
