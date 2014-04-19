@@ -35,7 +35,7 @@ namespace Tests.FlowAnalysisTests
             }
         }       
 
-        [Test, Explicit]
+        [Test]
         [TestCaseSource(typeof(AllMscorlibTypes), "AllTypes")]
         public void CheckStackLength(Type type)
         {
