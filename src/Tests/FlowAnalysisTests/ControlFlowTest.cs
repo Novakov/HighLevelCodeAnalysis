@@ -198,13 +198,58 @@ namespace Tests.FlowAnalysisTests
             Assert.That(paths, Has.Count.EqualTo(4));
         }
 
+        [Test]
+        public void MethodWithNestedTryAndNoThrow()
+        {
+            // arrage
+            var method = Get.MethodOf<ControlFlowAnalysisTarget>(x => x.MethodWithNestedTryAndNoThrow());
+
+            // act
+            this.Result = ControlFlowGraphFactory.BuildForMethod(method);
+
+            // assert
+            var paths = this.Result.FindPaths().ToList();
+            Assert.That(paths, Has.Count.EqualTo(1));
+        }
+
+        [Test]
+        public void MethodWithNestedTryAndThrow()
+        {
+            // arrage
+            var method = Get.MethodOf<ControlFlowAnalysisTarget>(x => x.MethodWithNestedTryAndThrow());
+
+            // act
+            this.Result = ControlFlowGraphFactory.BuildForMethod(method);
+
+            // assert
+            var block2 = FindMethodCallInstructionBlock(x => ControlFlowAnalysisTarget.Marker2());
+            var block3 = FindMethodCallInstructionBlock(x => ControlFlowAnalysisTarget.Marker3());
+            var block4 = FindMethodCallInstructionBlock(x => ControlFlowAnalysisTarget.Marker4());
+            var block5 = FindMethodCallInstructionBlock(x => ControlFlowAnalysisTarget.Marker5());
+            var block6 = FindMethodCallInstructionBlock(x => ControlFlowAnalysisTarget.Marker6());
+            var block7 = FindMethodCallInstructionBlock(x => ControlFlowAnalysisTarget.Marker7());
+
+            Assert.That(this.Result, Graph.Has
+                .Links<ControlTransition>(from: block2, to: block3));
+
+            Assert.That(this.Result, Graph.Has
+                .Links<ControlTransition>(from: block2, to: block4));
+
+            Assert.That(this.Result, Graph.Has
+                .Links<ControlTransition>(from: block2, to: block5));
+
+            Assert.That(this.Result, Graph.Has
+                .Links<ControlTransition>(from: block2, to: block6));
+
+            Assert.That(this.Result, Graph.Has
+                .Links<ControlTransition>(from: block2, to: block7));
+        }
+
         private InstructionBlockNode FindMethodCallInstructionBlock(Expression<Action<ControlFlowAnalysisTarget>> target)
         {
             var method = Get.MethodOf(target);
 
             return this.Result.Nodes.OfType<InstructionBlockNode>().Single(x => x.Instructions.Any(y => y.OpCode == OpCodes.Call && method == (MethodInfo) y.Operand));
-        }
-
-        //TODO: test for nested trys
+        }        
     }
 }

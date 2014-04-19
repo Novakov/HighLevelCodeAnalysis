@@ -112,7 +112,7 @@ namespace TestTarget
             catch (ArgumentException)
             {
                 Marker1();
-            }           
+            }
         }
 
 
@@ -139,6 +139,60 @@ namespace TestTarget
             Marker4();
         }
 
+        public void MethodWithNestedTryAndNoThrow()
+        {
+            Nop();
+            try
+            {
+                Marker1();
+                try
+                {
+                    Marker2();
+                }
+                catch (Exception)
+                {
+                    Marker3();
+                }
+                Marker4();
+            }
+            catch (Exception)
+            {
+                Marker5();
+            }
+        }
+
+        public void MethodWithNestedTryAndThrow()
+        {
+            Nop();
+            try
+            {
+                Marker1();
+                try
+                {
+                    Marker2();
+                    throw new Exception();
+                }
+                catch (ArgumentException e)
+                {
+                    Marker3();
+                }
+                catch (NullReferenceException e)
+                {
+                    Marker4();
+                }
+
+                Marker5();
+            }
+            catch (ArrayTypeMismatchException e)
+            {
+                Marker6();
+            }
+            catch (Exception)
+            {
+                Marker7();
+            }
+        }
+
         private static T Keep<T>(T value)
         {
             return value;
@@ -153,6 +207,8 @@ namespace TestTarget
         public static void Marker3() { }
         public static void Marker4() { }
         public static void Marker5() { }
+        public static void Marker6() { }
+        public static void Marker7() { }
 
         public void MethodWithSwitch()
         {
@@ -166,7 +222,7 @@ namespace TestTarget
                     break;
                 case 3:
                     Marker3();
-                    break;                    
+                    break;
             }
 
             Marker4();
