@@ -5,7 +5,7 @@ using CodeModel.Model;
 
 namespace CodeModel.Rules
 {
-    public class TypeIsImmutable
+    public class TypeIsImmutable : INodeRule
     {
         public const string NonPrivatePropertySetter = "NonPrivatePropertySetter";
         public const string SettingPropertyOutsideOfConstructor = "SetPropertyOutsideOfCtor";
@@ -14,7 +14,7 @@ namespace CodeModel.Rules
 
         public void Verify(VerificationContext context, Node node)
         {
-            var typeNode = (TypeNode) node;
+            var typeNode = (TypeNode)node;
 
             VerifyNotSettingField(context, typeNode);
             VerifyNotSettingProperty(context, typeNode);
@@ -22,11 +22,16 @@ namespace CodeModel.Rules
             VerifyNoWritableFields(context, typeNode);
         }
 
+        public bool IsApplicableTo(Node node)
+        {
+            return node is TypeNode;//TODO: check if immutable (convention/annotation?)
+        }
+
         private void VerifyNoWritableFields(VerificationContext context, TypeNode typeNode)
         {
             var violatingFields = from field in typeNode.InboundFrom<FieldNode, ContainedInLink>()
-                where !field.Field.IsInitOnly
-                select field;
+                                  where !field.Field.IsInitOnly
+                                  select field;
 
             foreach (var field in violatingFields)
             {
@@ -37,8 +42,8 @@ namespace CodeModel.Rules
         private void VerifyNoNotPrivatePropertySetters(VerificationContext context, TypeNode typeNode)
         {
             var violatingProperties = from property in typeNode.InboundFrom<PropertyNode, ContainedInLink>()
-                where property.Property.CanWrite && !property.Property.SetMethod.IsPrivate
-                select property;
+                                      where property.Property.CanWrite && !property.Property.SetMethod.IsPrivate
+                                      select property;
 
             foreach (var property in violatingProperties)
             {
@@ -61,8 +66,8 @@ namespace CodeModel.Rules
         private void VerifyNotSettingField(VerificationContext context, TypeNode typeNode)
         {
             var violatingMethods = from method in typeNode.InboundFrom<MethodNode, ContainedInLink>()
-                where method.OutboundLinks.OfType<SetFieldLink>().Any()
-                select method;
+                                   where method.OutboundLinks.OfType<SetFieldLink>().Any()
+                                   select method;
 
             foreach (var method in violatingMethods)
             {

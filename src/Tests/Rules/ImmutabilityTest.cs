@@ -35,13 +35,11 @@ namespace Tests.Rules
             builder.RunMutator<LinkFieldAccess>();
             builder.RunMutator<LinkMethodCalls>();
             builder.RunMutator<LinkPropertyAccess>();
-
-            var rule = new TypeIsImmutable();
-
+            
             var ctx = new VerificationContext();
 
-            // act
-            rule.Verify(ctx, typeNode);
+            // act            
+            builder.Verify<TypeIsImmutable>(ctx);
 
             // assert
             Assert.That(ctx.Violations, Has
@@ -64,13 +62,11 @@ namespace Tests.Rules
             builder.RunMutator<AddFields>();
             builder.RunMutator<LinkToContainer>();
             builder.RunMutator<LinkFieldAccess>();
-
-            var rule = new TypeIsImmutable();
-
+            
             var ctx = new VerificationContext();
 
             // act
-            rule.Verify(ctx, typeNode);
+            builder.Verify<TypeIsImmutable>(ctx);
 
             // assert
             Assert.That(ctx.Violations, Is.Empty);

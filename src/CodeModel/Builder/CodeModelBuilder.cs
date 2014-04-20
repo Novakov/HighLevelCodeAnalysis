@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using CodeModel.Convetions;
 using CodeModel.Graphs;
+using CodeModel.Rules;
 using TinyIoC;
 
 namespace CodeModel.Builder
@@ -17,17 +19,17 @@ namespace CodeModel.Builder
         {
             this.Model = new Graph();
 
-            this.container = new TinyIoCContainer();            
+            this.container = new TinyIoCContainer();
         }
 
         public void RegisterConventionsFrom(params Assembly[] assemblies)
         {
             var toRegister = from assembly in assemblies
-                from type in assembly.GetTypes()
-                where typeof (IConvention).IsAssignableFrom(type)
-                from @interface in type.GetInterfaces()
-                where typeof (IConvention).IsAssignableFrom(@interface)
-                select new {Interface = @interface, Implementation = type};
+                             from type in assembly.GetTypes()
+                             where typeof(IConvention).IsAssignableFrom(type)
+                             from @interface in type.GetInterfaces()
+                             where typeof(IConvention).IsAssignableFrom(@interface)
+                             select new { Interface = @interface, Implementation = type };
 
             foreach (var item in toRegister)
             {
@@ -47,6 +49,24 @@ namespace CodeModel.Builder
             where TMutator : class, IMutator
         {
             RunMutator(this.container.Resolve<TMutator>());
+        }
+
+        public void Verify<TRule>(VerificationContext context)
+            where TRule : class, IRule
+        {
+            var rule = this.container.Resolve<TRule>();
+
+            var nodeRule = rule as INodeRule;
+            if (nodeRule != null)
+            {
+                foreach (var node in this.Model.Nodes)
+                {
+                    if (nodeRule.IsApplicableTo(node))
+                    {
+                        nodeRule.Verify(context, node);
+                    }
+                }
+            }
         }
 
         private void MutateNodes(INodeMutator mutator)
