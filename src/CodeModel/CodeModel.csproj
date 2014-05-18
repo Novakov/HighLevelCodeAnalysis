@@ -127,6 +127,7 @@
     <Compile Include="StackExtensions.cs" />
     <Compile Include="StackMark.cs" />
     <Compile Include="TinyIoC.cs" />
+    <Compile Include="Verificator.cs" />
     <Compile Include="WalkAndAnnotate.cs" />
   </ItemGroup>
   <ItemGroup>

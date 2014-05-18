@@ -1,10 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
-using CodeModel;
 using CodeModel.Builder;
 using CodeModel.Model;
 using CodeModel.Mutators;
@@ -15,7 +10,7 @@ using TestTarget.Rules.Immutability;
 namespace Tests.Rules
 {
     [TestFixture]
-    public class ImmutabilityTest
+    public class ImmutabilityTest : BaseRuleTest<TypeIsImmutable>
     {
         [Test]
         [TestCase(typeof(SetFieldOutsideOfCtor), TypeIsImmutable.SettingFieldOutsideOfConstructor)]
@@ -25,24 +20,13 @@ namespace Tests.Rules
         public void ShouldViolate(Type type, string category)
         {
             // arrange
-            var builder = new CodeModelBuilder();
-            var typeNode = builder.Model.AddNode(new TypeNode(type));
-
-            builder.RunMutator(new AddMethods(AddMethods.DefaultFlags | BindingFlags.NonPublic));
-            builder.RunMutator<AddFields>();
-            builder.RunMutator<AddProperties>();
-            builder.RunMutator<LinkToContainer>();
-            builder.RunMutator<LinkFieldAccess>();
-            builder.RunMutator<LinkMethodCalls>();
-            builder.RunMutator<LinkPropertyAccess>();
-            
-            var ctx = new VerificationContext();
+            var builder = BuildCodeModel(type);
 
             // act            
-            builder.Verify<TypeIsImmutable>(ctx);
+            Verify(builder);
 
             // assert
-            Assert.That(ctx.Violations, Has
+            Assert.That(this.VerificationContext.Violations, Has
                 .Exactly(1)
                 .Property("Category").EqualTo(category)                
                 );
@@ -55,21 +39,30 @@ namespace Tests.Rules
         public void ShouldNotViolate(Type type)
         {
             // arrange
-            var builder = new CodeModelBuilder();
-            var typeNode = builder.Model.AddNode(new TypeNode(type));
-
-            builder.RunMutator<AddMethods>();
-            builder.RunMutator<AddFields>();
-            builder.RunMutator<LinkToContainer>();
-            builder.RunMutator<LinkFieldAccess>();
-            
-            var ctx = new VerificationContext();
-
+            var builder = BuildCodeModel(type);
+                        
             // act
-            builder.Verify<TypeIsImmutable>(ctx);
+            this.Verify(builder);
 
             // assert
-            Assert.That(ctx.Violations, Is.Empty);
+            Assert.That(this.VerificationContext.Violations, Is.Empty);
+        }
+
+        private CodeModelBuilder BuildCodeModel(Type type)
+        {
+            var builder = new CodeModelBuilder();
+
+            builder.Model.AddNode(new TypeNode(type));
+
+            builder.RunMutator(new AddMethods(AddMethods.DefaultFlags | BindingFlags.NonPublic));
+            builder.RunMutator<AddFields>();
+            builder.RunMutator<AddProperties>();
+            builder.RunMutator<LinkToContainer>();
+            builder.RunMutator<LinkFieldAccess>();
+            builder.RunMutator<LinkMethodCalls>();
+            builder.RunMutator<LinkPropertyAccess>();
+
+            return builder;
         }
     }
 }

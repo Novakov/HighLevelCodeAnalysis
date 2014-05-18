@@ -51,24 +51,6 @@ namespace CodeModel.Builder
             RunMutator(this.container.Resolve<TMutator>());
         }
 
-        public void Verify<TRule>(VerificationContext context)
-            where TRule : class, IRule
-        {
-            var rule = this.container.Resolve<TRule>();
-
-            var nodeRule = rule as INodeRule;
-            if (nodeRule != null)
-            {
-                foreach (var node in this.Model.Nodes)
-                {
-                    if (nodeRule.IsApplicableTo(node))
-                    {
-                        nodeRule.Verify(context, node);
-                    }
-                }
-            }
-        }
-
         private void MutateNodes(INodeMutator mutator)
         {
             var implementedInterfaces = mutator.GetType().GetGenericImplementationsOfInterface(typeof(INodeMutator<>));
