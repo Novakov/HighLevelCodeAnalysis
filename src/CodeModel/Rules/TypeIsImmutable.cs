@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using CodeModel.Annotations;
 using CodeModel.Graphs;
 using CodeModel.Links;
 using CodeModel.Model;
@@ -24,7 +25,7 @@ namespace CodeModel.Rules
 
         public bool IsApplicableTo(Node node)
         {
-            return node is TypeNode;//TODO: check if immutable (convention/annotation?)
+            return node.HasAnnotation<Immutable>();
         }
 
         private void VerifyNoWritableFields(VerificationContext context, TypeNode typeNode)

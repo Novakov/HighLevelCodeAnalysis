@@ -52,6 +52,8 @@ namespace Tests.Rules
         {
             var builder = new CodeModelBuilder();
 
+            builder.RegisterConventionsFrom(TestTarget.Conventions.Marker.Assembly);
+
             builder.Model.AddNode(new TypeNode(type));
 
             builder.RunMutator(new AddMethods(AddMethods.DefaultFlags | BindingFlags.NonPublic));
@@ -61,6 +63,7 @@ namespace Tests.Rules
             builder.RunMutator<LinkFieldAccess>();
             builder.RunMutator<LinkMethodCalls>();
             builder.RunMutator<LinkPropertyAccess>();
+            builder.RunMutator<AnnonateImmutableTypes>();
 
             return builder;
         }

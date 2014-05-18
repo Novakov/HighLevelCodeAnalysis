@@ -83,6 +83,7 @@
     <Compile Include="EventSourcing\EntityBase.cs" />
     <Compile Include="EventSourcing\Person.cs" />
     <Compile Include="EventSourcing\SurnameChanged.cs" />
+    <Compile Include="ImmutableAttribute.cs" />
     <Compile Include="Implementing\CallSource.cs" />
     <Compile Include="Implementing\ImplementingType.cs" />
     <Compile Include="LinkCalls.cs" />

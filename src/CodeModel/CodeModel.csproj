@@ -43,6 +43,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AnnotableExtensions.cs" />
+    <Compile Include="Annotations\Immutable.cs" />
     <Compile Include="ArrayComparer.cs" />
     <Compile Include="Builder\CodeModelBuilder.cs" />
     <Compile Include="Builder\ICompositeMutator.cs" />
@@ -53,6 +54,7 @@
     <Compile Include="Builder\MutateContext.cs" />
     <Compile Include="Convetions\IConvention.cs" />
     <Compile Include="Convetions\IEntityConvention.cs" />
+    <Compile Include="Convetions\IImmutablityConvention.cs" />
     <Compile Include="Convetions\IImplementingConvention.cs" />
     <Compile Include="EnumerableExtensions.cs" />
     <Compile Include="ExportableAttribute.cs" />
@@ -104,6 +106,7 @@
     <Compile Include="Mutators\AddMethods.cs" />
     <Compile Include="Mutators\AddProperties.cs" />
     <Compile Include="Mutators\AddTypes.cs" />
+    <Compile Include="Mutators\AnnonateImmutableTypes.cs" />
     <Compile Include="Mutators\DetectEntities.cs" />
     <Compile Include="Mutators\LinkApplicationEntryPointTo.cs" />
     <Compile Include="Mutators\LinkFieldAccess.cs" />
