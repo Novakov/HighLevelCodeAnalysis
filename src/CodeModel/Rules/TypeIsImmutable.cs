@@ -35,7 +35,7 @@ namespace CodeModel.Rules
 
             foreach (var field in violatingFields)
             {
-                context.RecordViolation(this, field, WritableField);
+                context.RecordViolation(this, field, WritableField, null);
             }
         }
 
@@ -47,7 +47,7 @@ namespace CodeModel.Rules
 
             foreach (var property in violatingProperties)
             {
-                context.RecordViolation(this, property, NonPrivatePropertySetter);
+                context.RecordViolation(this, property, NonPrivatePropertySetter, null);
             }
         }
 
@@ -59,7 +59,7 @@ namespace CodeModel.Rules
 
             foreach (var method in violatingMethods)
             {
-                context.RecordViolation(this, method, SettingPropertyOutsideOfConstructor);
+                context.RecordViolation(this, method, SettingPropertyOutsideOfConstructor, null);
             }
         }
 
@@ -71,7 +71,7 @@ namespace CodeModel.Rules
 
             foreach (var method in violatingMethods)
             {
-                context.RecordViolation(this, method, SettingFieldOutsideOfConstructor);
+                context.RecordViolation(this, method, SettingFieldOutsideOfConstructor, null);
             }
         }
     }

@@ -7,6 +7,7 @@ using CodeModel.Builder;
 using CodeModel.Model;
 using CodeModel.Rules;
 using NUnit.Framework;
+using NUnit.Framework.Constraints;
 using TestTarget.Rules.DateTimeNow;
 
 namespace Tests.Rules
@@ -31,6 +32,27 @@ namespace Tests.Rules
 			// assert
 			Assert.That(this.VerificationContext.Violations, Has
                 .Exactly(1).Property("Category").EqualTo(DoNotUseDateTimeNow.UsesDateTimeNow));
+	    }
+
+		[Test]
+	    public void ShouldRecordSourceLocation()
+	    {
+            // arrange
+            var builder = new CodeModelBuilder();
+            builder.Model.AddNode(new MethodNode(typeof(Targets).GetMethod("UseDateTimeNow")));
+
+            // act
+            this.Verify(builder);
+
+            // assert
+		    var violation = this.VerificationContext.Violations.First();
+
+            Assert.That(violation.SourceLocation, Is.Not.Null);
+			Assert.That(violation.SourceLocation.Value.FileName, Is.StringEnding(@"TestTarget\Rules\DateTimeNow\Targets.cs"));
+			Assert.That(violation.SourceLocation.Value.StartLine, Is.EqualTo(13), "Start line mismatch");
+			Assert.That(violation.SourceLocation.Value.EndLine, Is.EqualTo(13), "End line mismatch");
+            Assert.That(violation.SourceLocation.Value.StartColumn, Is.EqualTo(13), "Start column mismatch");
+            Assert.That(violation.SourceLocation.Value.EndColumn, Is.EqualTo(45), "End column mismatch");
 	    }
 
 
