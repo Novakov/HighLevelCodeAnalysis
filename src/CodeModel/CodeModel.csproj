@@ -140,12 +140,15 @@
     <Compile Include="Rules\DoNotUseDateTimeNow.cs" />
     <Compile Include="Rules\INodeRule.cs" />
     <Compile Include="Rules\IRule.cs" />
+    <Compile Include="Rules\SymbolService.cs" />
     <Compile Include="Rules\TypeIsImmutable.cs" />
     <Compile Include="Rules\VerificationContext.cs" />
     <Compile Include="Rules\Violation.cs" />
-    <Compile Include="SourceLocation.cs" />
     <Compile Include="StackExtensions.cs" />
     <Compile Include="StackMark.cs" />
+    <Compile Include="Symbols\Extensions.cs" />
+    <Compile Include="Symbols\SequencePoint.cs" />
+    <Compile Include="Symbols\SourceLocation.cs" />
     <Compile Include="TinyIoC.cs" />
     <Compile Include="Verificator.cs" />
     <Compile Include="WalkAndAnnotate.cs" />

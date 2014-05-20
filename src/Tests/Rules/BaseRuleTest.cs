@@ -6,7 +6,7 @@ using NUnit.Framework;
 namespace Tests.Rules
 {
     public abstract class BaseRuleTest<TRule> 
-        where TRule : class, IRule, new()
+        where TRule : class, IRule
     {
         protected Verificator Verificator { get; private set; }
 

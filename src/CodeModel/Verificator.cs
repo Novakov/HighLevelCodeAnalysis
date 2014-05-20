@@ -1,22 +1,25 @@
 ﻿using System.Collections.Generic;
 using CodeModel.Builder;
 using CodeModel.Rules;
+using TinyIoC;
 
 namespace CodeModel
 {
     public class Verificator
     {
         private readonly List<IRule> rules;
+        private readonly TinyIoCContainer container;
 
         public Verificator()
         {
             this.rules = new List<IRule>();
+            this.container = new TinyIoCContainer();
         }
 
         public Verificator AddRule<TRule>()
-            where TRule: class, IRule, new()
+            where TRule: class, IRule
         {
-            rules.Add(new TRule());
+            rules.Add(container.Resolve<TRule>());
 
             return this;
         }

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using CodeModel.Graphs;
+using CodeModel.Symbols;
 
 namespace CodeModel.Rules
 {

@@ -1,4 +1,4 @@
-namespace CodeModel
+namespace CodeModel.Symbols
 {
     public struct SourceLocation
     {
@@ -7,6 +7,7 @@ namespace CodeModel
         private readonly int startColumn;
         private readonly int endLine;
         private readonly int endColumn;
+        public static readonly SourceLocation NotFound = new SourceLocation("<NOT FOUND>", 0, 0, 0, 0);
 
         public SourceLocation(string fileName, int startLine, int startColumn, int endLine, int endColumn)
         {
