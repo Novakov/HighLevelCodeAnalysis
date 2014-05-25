@@ -23,14 +23,18 @@ namespace CodeModel.Extensions.DgmlExport
             this.CategoryStyles = new List<CategoryStyle>();
         }
 
-        public void Export(Graph model, Stream output)
+        public void Export<TNode, TLink>(Graph<TNode, TLink> model, Stream output) 
+            where TNode : Node 
+            where TLink : Link
         {
             var view = model.PrepareView(x => true, x => true);
 
             Export(view, output);
         }
 
-        public void Export(GraphView model, Stream output)
+        public void Export<TNode, TLink>(GraphView<TNode, TLink> model, Stream output)
+            where TNode : Node
+            where TLink : Link
         {            
             using (this.writer = XmlWriter.Create(output, new XmlWriterSettings() { Indent = true }))
             {
@@ -88,7 +92,9 @@ namespace CodeModel.Extensions.DgmlExport
             }
         }
 
-        private void WriteLinks(GraphView model)
+        private void WriteLinks<TNode, TLink>(GraphView<TNode, TLink> model) 
+            where TNode : Node 
+            where TLink : Link
         {
             this.writer.WriteStartElement("Links", Namespace);
 
@@ -112,7 +118,9 @@ namespace CodeModel.Extensions.DgmlExport
             this.writer.WriteEndElement();
         }
 
-        private void WriteNodes(GraphView model)
+        private void WriteNodes<TNode, TLink>(GraphView<TNode, TLink> model) 
+            where TNode : Node 
+            where TLink : Link
         {
             this.writer.WriteStartElement("Nodes", Namespace);
             foreach (var modelNode in model.Nodes)

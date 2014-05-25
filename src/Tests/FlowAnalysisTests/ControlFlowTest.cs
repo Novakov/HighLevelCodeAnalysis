@@ -16,11 +16,11 @@ using TestTarget;
 namespace Tests.FlowAnalysisTests
 {
     [TestFixture]
-    public class ControlFlowTest : IHaveGraph
+    public class ControlFlowTest : IHaveGraph<BlockNode, ControlTransition>
     {
         public ControlFlowGraph Result { get; private set; }
 
-        CodeModel.Graphs.Graph IHaveGraph.Result
+        CodeModel.Graphs.Graph<BlockNode, ControlTransition> IHaveGraph<BlockNode, ControlTransition>.Result
         {
             get { return this.Result; }
         }

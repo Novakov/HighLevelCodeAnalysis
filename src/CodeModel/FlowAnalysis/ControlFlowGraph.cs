@@ -7,13 +7,13 @@ using Mono.Reflection;
 
 namespace CodeModel.FlowAnalysis
 {
-    public class ControlFlowGraph : Graph
+    public class ControlFlowGraph : Graph<BlockNode, ControlTransition>
     {
         public BlockNode ExitPoint { get; private set; }
         public BlockNode EntryPoint { get; private set; }
 
         public static readonly Action<ControlFlowGraph> RemoveUnreachableBlocksReductor = cfg => cfg.RemoveUnreachableBlocks();
-        public static readonly Action<ControlFlowGraph> MergePassthroughBlocksReductor = cfg => cfg.MergePassthroughBlocks(); 
+        public static readonly Action<ControlFlowGraph> MergePassthroughBlocksReductor = cfg => cfg.MergePassthroughBlocks();
 
         public IEnumerable<BlockNode> Blocks { get { return base.Nodes.OfType<InstructionBlockNode>(); } }
 
@@ -51,24 +51,24 @@ namespace CodeModel.FlowAnalysis
             var possibleBlockStarts = this.Blocks.Where(x => x.IsBlockBegin() && !x.IsBranch).ToList();
 
             foreach (var possibleBlockStart in possibleBlockStarts)
-            {                                
-                var next = possibleBlockStart.OutboundLinks.OfType<ControlTransition>().First().Target;
+            {
+                var next = (BlockNode)possibleBlockStart.OutboundLinks.OfType<ControlTransition>().First().Target;
 
-                var nextBlock = next as BlockNode;
+                var nextBlock = next;
 
                 while (nextBlock != null && nextBlock.IsPassthrough)
                 {
-                    possibleBlockStart.Instructions.AddRange(((BlockNode) next).Instructions);
+                    possibleBlockStart.Instructions.AddRange(next.Instructions);
                     MoveOutboundLinks(next, possibleBlockStart);
                     RemoveNode(next);
 
-                    next = possibleBlockStart.OutboundLinks.OfType<ControlTransition>().First().Target;
+                    next = (BlockNode)possibleBlockStart.OutboundLinks.OfType<ControlTransition>().First().Target;
                     nextBlock = next as InstructionBlockNode;
                 }
 
                 if (nextBlock != null && nextBlock.IsBranch && !nextBlock.IsJoin)
                 {
-                    possibleBlockStart.Instructions.AddRange(((BlockNode) next).Instructions);
+                    possibleBlockStart.Instructions.AddRange(((BlockNode)next).Instructions);
                     MoveOutboundLinks(next, possibleBlockStart);
                     RemoveNode(next);
                 }
@@ -85,7 +85,7 @@ namespace CodeModel.FlowAnalysis
             var inboundLink = block.InboundLinks.Single();
             var outboundLink = block.OutboundLinks.Single();
 
-            this.AddLink(inboundLink.Source, outboundLink.Target, new ControlTransition(TransitionKind.Forward)); // TODO: not sure if this is correct - calculate proper transition kind
+            this.AddLink((BlockNode)inboundLink.Source, (BlockNode)outboundLink.Target, new ControlTransition(TransitionKind.Forward)); // TODO: not sure if this is correct - calculate proper transition kind
 
             this.RemoveNode(block);
         }
@@ -100,32 +100,32 @@ namespace CodeModel.FlowAnalysis
             }
         }
 
-        public override void ReplaceNode(Node old, Node replaceWith)
+        public override void ReplaceNode(BlockNode old, BlockNode replaceWith)
         {
             base.ReplaceNode(old, replaceWith);
 
             if (this.EntryPoint.Equals(old))
             {
-                this.EntryPoint = (BlockNode)replaceWith;
+                this.EntryPoint = replaceWith;
             }
         }
 
         public ControlFlowGraph Clone()
         {
-            var copy = new ControlFlowGraph();            
+            var copy = new ControlFlowGraph();
 
             var map = new Dictionary<string, Node>();
 
-            foreach (var node in this.Nodes.OfType<BlockNode>().Where(x => !(x is MethodExitNode)))
+            foreach (var node in this.Nodes.Where(x => !(x is MethodExitNode)))
             {
                 map[node.Id] = copy.AddNode(node.Clone());
             }
 
             map[this.ExitPoint.Id] = copy.ExitPoint;
 
-            copy.EntryPoint = (BlockNode) map[this.EntryPoint.Id];
+            copy.EntryPoint = (BlockNode)map[this.EntryPoint.Id];
 
-            foreach (var link in this.Links.OfType<ControlTransition>())
+            foreach (var link in this.Links)
             {
                 copy.AddLink(copy.Nodes.Single(x => x.Id == link.Source.Id), copy.Nodes.Single(x => x.Id == link.Target.Id), new ControlTransition(link.Kind));
             }

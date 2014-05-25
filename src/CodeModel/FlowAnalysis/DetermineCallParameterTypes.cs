@@ -113,7 +113,7 @@ namespace CodeModel.FlowAnalysis
 
                 if (bypassingTransition.Count() == 1)
                 {
-                    controlFlowGraph.RemoveLink(bypassingTransition.Single());
+                    controlFlowGraph.RemoveLink((ControlTransition) bypassingTransition.Single());
                 }
             }
         }

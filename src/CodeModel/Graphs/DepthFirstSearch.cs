@@ -5,8 +5,6 @@ namespace CodeModel.Graphs
 {
     public abstract class DepthFirstSearch
     {
-        private HashSet<Node> visited;
-
         public void Walk(Node startNode)
         {          
             WalkCore(startNode, Enumerable.Empty<Link>());

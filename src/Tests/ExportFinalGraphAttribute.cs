@@ -28,11 +28,16 @@ namespace Tests
             }
 
             var haveGraph = testDetails.Fixture as IHaveGraph;
-            if (haveGraph != null && haveGraph.Result != null)
+
+            if (haveGraph != null)
             {
-                ExportGraph(testDetails, haveGraph.Result);
+                var result = ((dynamic)haveGraph).Result;
+                if (result != null)
+                {
+                    ExportGraph(testDetails, result);
+                }
             }
-        }               
+        }
 
         private static void ExportGraph(TestDetails testDetails, Graph graph)
         {
@@ -54,7 +59,13 @@ namespace Tests
 
     internal interface IHaveGraph
     {
-        Graph Result { get; }
+    }
+
+    internal interface IHaveGraph<TNode, TLink> : IHaveGraph
+        where TNode : Node
+        where TLink : Link
+    {
+        Graph<TNode, TLink> Result { get; }
     }
 
     internal interface IHaveBuilder

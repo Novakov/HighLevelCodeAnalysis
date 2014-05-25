@@ -11,9 +11,9 @@ using TestTarget;
 namespace Tests.FlowAnalysisTests
 {
     [TestFixture]
-    public class CallParameterTypesStackWalkerTest : IHaveGraph
+    public class CallParameterTypesStackWalkerTest : IHaveGraph<BlockNode, ControlTransition>
     {
-        public Graph Result { get; private set; }
+        public Graph<BlockNode, ControlTransition> Result { get; private set; }
 
         [Test]
         public void CheckMethodWithOpcodeInitobj()

@@ -9,6 +9,7 @@ namespace CodeModel.FlowAnalysis
     public static class InstructionExtensions
     {
         private static readonly OpCode[] StoreVariableOpCodes = {OpCodes.Stloc, OpCodes.Stloc_0, OpCodes.Stloc_1, OpCodes.Stloc_2, OpCodes.Stloc_3, OpCodes.Stloc_S};
+        private static readonly OpCode[] CallOpCodes = new[] {OpCodes.Call, OpCodes.Calli, OpCodes.Callvirt};
 
         public static int PushedValuesCount(this Instruction instruction, MethodInfo analyzedMethod, MethodBody methodBody)
         {
@@ -125,6 +126,16 @@ namespace CodeModel.FlowAnalysis
         public static bool IsStoreVariable(this OpCode opCode)
         {
             return StoreVariableOpCodes.Contains(opCode);
+        }
+
+        public static bool IsCall(this Instruction instruction)
+        {
+            return instruction.OpCode.IsCall();
+        }
+
+        public static bool IsCall(this OpCode opCode)
+        {
+            return CallOpCodes.Contains(opCode);
         }
     }
 }

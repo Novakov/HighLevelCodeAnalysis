@@ -4,28 +4,30 @@ using System.Linq;
 
 namespace CodeModel.Graphs
 {
-    public class Graph
+    public class Graph<TBaseNode, TBaseLink>
+        where TBaseNode : Node
+        where TBaseLink : Link
     {
-        private readonly IDictionary<string, Node> nodes; 
-        private readonly ISet<Link> links; 
+        private readonly IDictionary<string, TBaseNode> nodes;
+        private readonly ISet<TBaseLink> links;
 
-        public IEnumerable<Node> Nodes { get { return this.nodes.Values; } }
-        public IEnumerable<Link> Links { get { return this.links; } }
+        public IEnumerable<TBaseNode> Nodes { get { return this.nodes.Values; } }
+        public IEnumerable<TBaseLink> Links { get { return this.links; } }
 
         public Graph()
         {
-            this.nodes = new Dictionary<string, Node>();
-            this.links = new HashSet<Link>();
+            this.nodes = new Dictionary<string, TBaseNode>();
+            this.links = new HashSet<TBaseLink>();
         }
 
-        public Node AddNode(Node node)
+        public TBaseNode AddNode(TBaseNode node)
         {
             this.nodes.Add(node.Id, node);
-            
+
             return node;
         }
 
-        public Link AddLink(Node source, Node target, Link link)
+        public TBaseLink AddLink(TBaseNode source, TBaseNode target, TBaseLink link)
         {
             link.SetUpConnection(source, target);
 
@@ -37,7 +39,7 @@ namespace CodeModel.Graphs
             return link;
         }
 
-        public void RemoveLink(Link link)
+        public void RemoveLink(TBaseLink link)
         {
             link.Source.RemoveOutboundLink(link);
             link.Target.RemoveInboundLink(link);
@@ -45,7 +47,7 @@ namespace CodeModel.Graphs
             this.links.Remove(link);
         }
 
-        public void ReplaceLink(Link old, Link replaceWith)
+        public void ReplaceLink(TBaseLink old, TBaseLink replaceWith)
         {
             replaceWith.SetUpConnection(old.Source, old.Target);
 
@@ -59,7 +61,7 @@ namespace CodeModel.Graphs
             this.links.Add(replaceWith);
         }
 
-        public virtual void ReplaceNode(Node old, Node replaceWith)
+        public virtual void ReplaceNode(TBaseNode old, TBaseNode replaceWith)
         {
             foreach (var inboundLink in old.InboundLinks)
             {
@@ -77,9 +79,9 @@ namespace CodeModel.Graphs
             this.nodes[replaceWith.Id] = replaceWith;
         }
 
-        public void RemoveNode(Node node)
+        public void RemoveNode(TBaseNode node)
         {
-            foreach (var link in node.InboundLinks.Union(node.OutboundLinks).ToList())
+            foreach (TBaseLink link in node.InboundLinks.Union(node.OutboundLinks).ToList())
             {
                 this.RemoveLink(link);
             }
@@ -87,7 +89,7 @@ namespace CodeModel.Graphs
             this.nodes.Remove(node.Id);
         }
 
-        public void Merge(Graph otherGraph)
+        public void Merge(Graph<TBaseNode, TBaseLink> otherGraph)
         {
             foreach (var node in otherGraph.Nodes)
             {
@@ -95,12 +97,12 @@ namespace CodeModel.Graphs
                 {
                     this.nodes[node.Id] = node;
                 }
-            }            
+            }
 
             foreach (var link in otherGraph.links)
             {
-                var source = this.LookupNode<Node>(link.Source.Id);
-                var target = this.LookupNode<Node>(link.Target.Id);
+                var source = this.LookupNode<TBaseNode>(link.Source.Id);
+                var target = this.LookupNode<TBaseNode>(link.Target.Id);
 
                 link.SetUpConnection(source, target);
                 source.AddOutboundLink(link);
@@ -116,15 +118,15 @@ namespace CodeModel.Graphs
             {
                 from.RemoveOutboundLink(link);
                 to.AddOutboundLink(link);
-                
+
                 link.SetUpConnection(to, link.Target);
             }
         }
 
         public TNode LookupNode<TNode>(string id)
-            where TNode : Node
+            where TNode : TBaseNode
         {
-            Node node;
+            TBaseNode node;
             if (this.nodes.TryGetValue(id, out node))
             {
                 return node as TNode;
@@ -135,9 +137,13 @@ namespace CodeModel.Graphs
             }
         }
 
-        public GraphView PrepareView(Func<Node, bool> nodesPredicate, Func<Link, bool> linksPredicate)
+        public GraphView<TBaseNode, TBaseLink> PrepareView(Func<TBaseNode, bool> nodesPredicate, Func<TBaseLink, bool> linksPredicate)
         {
-            return new GraphView(this, nodesPredicate, linksPredicate);
+            return new GraphView<TBaseNode, TBaseLink>(this, nodesPredicate, linksPredicate);
         }
+    }
+
+    public class Graph : Graph<Node, Link>
+    {
     }
 }
