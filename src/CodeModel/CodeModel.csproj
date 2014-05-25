@@ -111,6 +111,7 @@
     <Compile Include="Graphs\GraphView.cs" />
     <Compile Include="Graphs\Link.cs" />
     <Compile Include="Graphs\Node.cs" />
+    <Compile Include="Graphs\TopologySort.cs" />
     <Compile Include="IAnnotable.cs" />
     <Compile Include="LambdaComparer.cs" />
     <Compile Include="Links\ApplicationEntryCall.cs" />

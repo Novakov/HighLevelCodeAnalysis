@@ -34,7 +34,7 @@ namespace Tests
                 var result = ((dynamic)haveGraph).Result;
                 if (result != null)
                 {
-                    ExportGraph(testDetails, result);
+                    ((dynamic) this).ExportGraph(testDetails, result);
                 }
             }
         }
