@@ -64,9 +64,16 @@ namespace CodeModel
                 }
             }
 
-            var sorted = TopologySort.SortGraph(graph);
+            try
+            {
+                var sorted = TopologySort.SortGraph(graph);
 
-            return new RunList<TElement>(sorted.Select(x => x.Element), new string[0]);
+                return new RunList<TElement>(sorted.Select(x => x.Element), new string[0]);
+            }
+            catch (CannotSortGraphException)
+            {
+                return new RunList<TElement>(new [] {"Unable to construct runlist - possible cyclic dependencies"});
+            }
         }
 
         private class ElementNode : Node

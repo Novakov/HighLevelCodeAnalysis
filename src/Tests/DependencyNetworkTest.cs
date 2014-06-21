@@ -75,7 +75,31 @@ namespace Tests
             var runList = this.dependencyManager.CalculateRunList();
 
             // assert
-            Assert.That(runList, new RunlistConstraint().IsNotValid());
+            Assert.That(runList, new RunlistConstraint().IsNotValid()
+                .And.HasMissing("Type"));
+        }
+
+        [Test]
+        public void ShouldCalculateNotValidRunListWhenDependenciesHaveCycleAndOneStartingNode()
+        {
+            // arrange
+            var provideStartup = new Element("Startup", "");
+            var provideAssemblyAndNeedType = new Element("Assembly", "Type,Startup");
+            var provideTypeAndNeedAssembly = new Element("Type", "Assembly,Startup");
+
+            var needTypeAndAssembly = new Element("", "Assembly,Type");
+
+            this.dependencyManager.Add(provideStartup);
+            this.dependencyManager.Add(provideAssemblyAndNeedType);
+            this.dependencyManager.Add(provideTypeAndNeedAssembly);
+            this.dependencyManager.Add(needTypeAndAssembly);
+
+            // act
+            var runList = this.dependencyManager.CalculateRunList();
+
+            // assert
+            Assert.That(runList, new RunlistConstraint()
+                .IsNotValid());
         }
 
         private class Element

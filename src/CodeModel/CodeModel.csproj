@@ -106,6 +106,7 @@
     <Compile Include="FlowAnalysis\TransitionKind.cs" />
     <Compile Include="Graphs\BreadthFirstSearch.cs" />
     <Compile Include="FlowAnalysis\ControlFlowGraphFactory.cs" />
+    <Compile Include="Graphs\CannotSortGraphException.cs" />
     <Compile Include="Graphs\DepthFirstSearch.cs" />
     <Compile Include="Graphs\FindAllPaths.cs" />
     <Compile Include="Graphs\Graph.cs" />

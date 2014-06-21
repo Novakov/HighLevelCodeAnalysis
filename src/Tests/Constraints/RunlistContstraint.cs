@@ -52,6 +52,13 @@ namespace Tests.Constraints
         {
             return this.builder.Resolve();
         }
+
+        public IResolveConstraint HasMissing(string resource)
+        {
+            this.builder.Append(new PropertyConstraint("Missing", new CollectionContainsConstraint(resource)));
+
+            return this;
+        }
     }
 
     public class ElementAfterElementsConstraint : Constraint

@@ -32,6 +32,11 @@ namespace CodeModel.Graphs
                 }
             }
 
+            if (sorted.Count != graph.Nodes.Count())
+            {
+                throw new CannotSortGraphException();
+            }
+
             return sorted;
         }
     }
