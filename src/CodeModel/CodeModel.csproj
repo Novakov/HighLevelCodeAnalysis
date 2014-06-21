@@ -77,6 +77,7 @@
     <Compile Include="Convetions\IEntityConvention.cs" />
     <Compile Include="Convetions\IImmutablityConvention.cs" />
     <Compile Include="Convetions\IImplementingConvention.cs" />
+    <Compile Include="DependencyManager.cs" />
     <Compile Include="EnumerableExtensions.cs" />
     <Compile Include="ExportableAttribute.cs" />
     <Compile Include="FlowAnalysis\BaseCfgWalker.cs" />
@@ -164,6 +165,7 @@
     <Compile Include="Rules\TypeIsImmutable.cs" />
     <Compile Include="Rules\VerificationContext.cs" />
     <Compile Include="Rules\Violation.cs" />
+    <Compile Include="RunList.cs" />
     <Compile Include="StackExtensions.cs" />
     <Compile Include="StackMark.cs" />
     <Compile Include="Symbols\Extensions.cs" />
