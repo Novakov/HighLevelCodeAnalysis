@@ -49,11 +49,18 @@ namespace CodeModel
             {
                 foreach (var neededResource in this.needed(elementNode.Key))
                 {
-                    var provider = this.providers[neededResource];
+                    if (this.providers.ContainsKey(neededResource))
+                    {
+                        var provider = this.providers[neededResource];
 
-                    var node = this.elements[provider];
+                        var node = this.elements[provider];
 
-                    graph.AddLink(node, elementNode.Value, new ProvidesResource());
+                        graph.AddLink(node, elementNode.Value, new ProvidesResource());
+                    }
+                    else
+                    {
+                        return new RunList<TElement>(Enumerable.Empty<TElement>(), new[] {neededResource});
+                    }
                 }
             }
 

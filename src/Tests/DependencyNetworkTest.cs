@@ -61,6 +61,23 @@ namespace Tests
                 );            
         }
 
+        [Test]
+        public void ShouldCalculateNotValidRunListWhenDependenciesCannotBeSatisfied()
+        {
+            // arrange
+            var provideAssembly = new Element("Assembly", "");
+            var needType = new Element("", "Type");
+
+            this.dependencyManager.Add(provideAssembly);
+            this.dependencyManager.Add(needType);
+
+            // act
+            var runList = this.dependencyManager.CalculateRunList();
+
+            // assert
+            Assert.That(runList, new RunlistConstraint().IsNotValid());
+        }
+
         private class Element
         {
             public string[] Provide { get; private set; }
