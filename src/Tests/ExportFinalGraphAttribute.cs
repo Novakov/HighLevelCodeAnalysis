@@ -39,7 +39,9 @@ namespace Tests
             }
         }
 
-        private static void ExportGraph(TestDetails testDetails, Graph graph)
+        private static void ExportGraph<TNode, TLink>(TestDetails testDetails, Graph<TNode, TLink> graph) 
+            where TNode : Node 
+            where TLink : Link
         {
             var exporter = new DgmlExporter();
 
