@@ -39,6 +39,7 @@
     <None Include="Class1.il" />
     <None Include="helpers.il" />
     <None Include="module.il" />
+    <None Include="WalkCfg.il" />
   </ItemGroup>
   <ItemGroup>
     <None Include="CallParameterTypesRecorderTarget.il" />

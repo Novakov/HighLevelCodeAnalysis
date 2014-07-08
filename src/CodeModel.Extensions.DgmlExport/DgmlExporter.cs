@@ -131,11 +131,11 @@ namespace CodeModel.Extensions.DgmlExport
                 this.writer.WriteAttributeString("Category", modelNode.Node.GetType().FullName);
                 this.writer.WriteAttributeString("Label", modelNode.Node.DisplayLabel);
 
-                var exportableProperties = modelNode.GetType().GetProperties().Where(x => x.GetCustomAttribute<ExportableAttribute>() != null);
+                var exportableProperties = modelNode.Node.GetType().GetProperties().Where(x => x.GetCustomAttribute<ExportableAttribute>() != null);
 
                 foreach (var property in exportableProperties)
                 {
-                    this.writer.WriteAttributeString(property.Name, property.GetValue(modelNode).ToString());
+                    this.writer.WriteAttributeString(property.Name, property.GetValue(modelNode.Node).ToString());
                 }
 
                 this.writer.WriteEndElement();

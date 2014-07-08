@@ -23,7 +23,7 @@ namespace Tests.FlowAnalysisTests
         public void ShouldReduceNodesWithSingleTransitionsToOneBlock()
         {
             // arrange
-            var graph = new ControlFlowGraph(NewInstruction(0));
+            var graph = new ControlFlowGraph(new InstructionBlockNode(NewInstruction(0)));
 
             var i1 = graph.AddNode(new InstructionBlockNode(NewInstruction(1)));
             var i2 = graph.AddNode(new InstructionBlockNode(NewInstruction(2)));
@@ -45,7 +45,7 @@ namespace Tests.FlowAnalysisTests
         public void ShouldReduceNodesWithSingleTransitionsToThreeBlocks()
         {
             // arrange
-            var graph = new ControlFlowGraph(NewInstruction(0));
+            var graph = new ControlFlowGraph(new InstructionBlockNode(NewInstruction(0)));
 
             var i1 = graph.AddNode(new InstructionBlockNode(NewInstruction(1)));
             var i2 = graph.AddNode(new InstructionBlockNode(NewInstruction(2)));

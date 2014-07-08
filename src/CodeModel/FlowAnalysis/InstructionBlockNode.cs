@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
@@ -27,6 +28,21 @@ namespace CodeModel.FlowAnalysis
             get { return !this.IsBranch && !this.IsJoin; }
         }
 
+        [Exportable]
+        public int InStackHeight { get; set; }
+
+        [Exportable]
+        public int OutStackHeight { get; set; }
+
+        [Exportable]
+        public int StackDiff { get; protected set; }
+
+        [Exportable]
+        public bool GoesBelowInitialStack { get; protected set; }
+
+        [Exportable]
+        public bool SetsLocalVariable { get; protected set; }       
+
         public List<Instruction> Instructions { get; private set; }
 
         public IEnumerable<BlockNode> TransitedFrom
@@ -51,6 +67,7 @@ namespace CodeModel.FlowAnalysis
         }
 
         internal abstract BlockNode Clone();
+        public abstract void CalculateStackProperties(MethodInfo containingMethod);
     }
 
     public class InstructionBlockNode : BlockNode
@@ -58,15 +75,7 @@ namespace CodeModel.FlowAnalysis
         public Instruction First { get { return this.Instructions[0]; } }
         public Instruction Last { get { return this.Instructions.Last(); } }
 
-        [Exportable]
-        public int StackDiff { get; private set; }
-
-        [Exportable]
-        public bool GoesBelowInitialStack { get; private set; }
-
-        [Exportable]
-        public bool SetsLocalVariable { get; private set; }
-
+        
         public InstructionBlockNode(params Instruction[] instructions)
             : base(instructions.First().ToString(), instructions)
         {            
@@ -82,7 +91,7 @@ namespace CodeModel.FlowAnalysis
             get { return this.ToString(); }
         }
 
-        public void CalculateStackProperties(MethodInfo containingMethod)
+        public override void CalculateStackProperties(MethodInfo containingMethod)
         {
             var methodBody = containingMethod.GetMethodBody();
 
@@ -98,6 +107,9 @@ namespace CodeModel.FlowAnalysis
             }
 
             this.StackDiff = stackValue;
+
+            this.InStackHeight = this.TransitedFrom.Select(x => (int?)x.OutStackHeight).Distinct().SingleOrDefault() ?? 0;
+            this.OutStackHeight = this.InStackHeight + this.StackDiff;            
         }
 
         internal override BlockNode Clone()
@@ -117,6 +129,11 @@ namespace CodeModel.FlowAnalysis
         internal override BlockNode Clone()
         {
             return new MethodExitNode();
+        }
+
+        public override void CalculateStackProperties(MethodInfo containingMethod)
+        {
+            
         }
     }
 
@@ -140,6 +157,11 @@ namespace CodeModel.FlowAnalysis
         internal override BlockNode Clone()
         {
             return new EmptyBlock(this.Id);
+        }
+
+        public override void CalculateStackProperties(MethodInfo containingMethod)
+        {
+            
         }
     }
 }

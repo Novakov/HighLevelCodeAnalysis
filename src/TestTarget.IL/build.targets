@@ -17,7 +17,7 @@
       <ILAsm>$(FrameworkPath)\ilasm.exe</ILAsm>
     </PropertyGroup>
 
-    <Exec Command="&quot;$(ILAsm)&quot; /nologo /dll /out=$(IntermediateOutputPath)$(TargetName).dll @(ILFiles, ' ')"/>
+    <Exec Command="&quot;$(ILAsm)&quot; /nologo /debug=impl /dll /out=$(IntermediateOutputPath)$(TargetName).dll @(ILFiles, ' ')"/>
   </Target>
 
   <Target Name="_Verify">

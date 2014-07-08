@@ -195,7 +195,7 @@ namespace Tests.FlowAnalysisTests
 
             // assert
             var paths = this.Result.FindPaths().ToList();
-            Assert.That(paths, Has.Count.EqualTo(4));
+            Assert.That(paths, Has.Count.EqualTo(5));
         }
 
         [Test]

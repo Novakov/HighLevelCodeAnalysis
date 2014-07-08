@@ -17,10 +17,10 @@ namespace CodeModel.FlowAnalysis
 
         public IEnumerable<BlockNode> Blocks { get { return base.Nodes.OfType<InstructionBlockNode>(); } }
 
-        public ControlFlowGraph(Instruction entrypoint)
+        public ControlFlowGraph(BlockNode entryPoint)
         {
-            this.EntryPoint = new InstructionBlockNode(entrypoint);
-            this.AddNode(this.EntryPoint);
+            this.EntryPoint = entryPoint;
+            this.AddNode(entryPoint);
 
             this.ExitPoint = new MethodExitNode();
             this.AddNode(this.ExitPoint);

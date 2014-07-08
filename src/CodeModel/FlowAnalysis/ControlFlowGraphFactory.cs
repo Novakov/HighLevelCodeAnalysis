@@ -19,7 +19,7 @@ namespace CodeModel.FlowAnalysis
             this.analyzedMethod = analyzedMethod;
         }
 
-        private const int EndPointOffset = -1;
+        internal const int EndPointOffset = -1;
 
         public static ControlFlowGraph BuildForMethod(MethodInfo method)
         {
@@ -28,52 +28,144 @@ namespace CodeModel.FlowAnalysis
 
         private ControlFlowGraph Build()
         {
-            var instructions = analyzedMethod.GetInstructions();
+            var body = this.analyzedMethod.GetMethodBody();
 
-            var entryPoint = instructions[0];
+            var instructions = this.analyzedMethod.GetInstructions();
 
-            graph = new ControlFlowGraph(entryPoint);
+            var previousInstructions = instructions.ToDictionary(x => x.Offset, x => x.Previous);
+            previousInstructions[EndPointOffset] = instructions.Last();
 
-            var nodes = new InstructionBlockNode[instructions.Last().Offset + 1];
+            var byOffset = instructions.ToDictionary(x => x.Offset, x => x);
 
-            nodes[0] = (InstructionBlockNode) this.graph.EntryPoint;
+            var branchPoints = new HashSet<int>();
+            var joinPoints = new HashSet<int>();
 
-            foreach (var instruction in instructions.Skip(1))
+            var transitions = new List<Tuple<int, int>>();
+
+            foreach (var instruction in instructions)
             {
-                nodes[instruction.Offset] = (InstructionBlockNode) graph.AddNode(new InstructionBlockNode(instruction));
+                var transistionsFromInstruction = GetTransitions(instruction).ToArray();
+
+                if (IsBlockBoundary(instruction))
+                {
+                    joinPoints.UnionWith(transistionsFromInstruction);
+                    branchPoints.UnionWith(transistionsFromInstruction.Where(x => x != 0).Select(x => previousInstructions[x].Offset));
+
+                    branchPoints.Add(instruction.Offset);
+                }
+
+                transitions.AddRange(transistionsFromInstruction.Select(x => Tuple.Create(instruction.Offset, x)));
             }
 
-            LinkBlockTransitions(nodes);
-
-            graph.RemoveUnreachableBlocks();
-
-            graph.MergePassthroughBlocks();
-
-            return graph;
-        }
-
-        private void LinkBlockTransitions(IList<InstructionBlockNode> nodes)
-        {
-            foreach (var node in this.graph.Blocks)
+            foreach (var clause in body.ExceptionHandlingClauses)
             {
-                var instruction = node.Instructions.FirstOrDefault();
+                if (clause.Flags.HasFlag(ExceptionHandlingClauseOptions.Finally))
+                {
+                    joinPoints.Add(clause.HandlerOffset);
 
-                if (instruction == null)
+                    var lastInstructionInTry = previousInstructions[clause.TryOffset + clause.TryLength].Offset;
+                    transitions.Add(Tuple.Create(lastInstructionInTry, clause.HandlerOffset));
+                    transitions.Remove(Tuple.Create(lastInstructionInTry, clause.HandlerOffset + clause.HandlerLength));
+                }
+
+                if (clause.Flags.HasFlag(ExceptionHandlingClauseOptions.Clause))
+                {
+                    joinPoints.Add(clause.HandlerOffset);
+                }
+            }
+
+            var blockBoundaries = new List<int>();
+            blockBoundaries.AddRange(joinPoints);
+            blockBoundaries.AddRange(branchPoints);
+
+            blockBoundaries.Remove(EndPointOffset);
+
+            if (!blockBoundaries.Contains(0))
+            {
+                blockBoundaries.Add(0);
+            }
+
+            if (blockBoundaries.Count % 2 == 1)
+            {
+                blockBoundaries.Add(0);
+            }
+
+            blockBoundaries.Sort(new OffsetComparer());
+
+            var blockBoundary = blockBoundaries.GetEnumerator();
+
+            this.graph = null;
+
+            var byBoundary = new Dictionary<int, BlockNode>();
+
+            while (blockBoundary.MoveNext())
+            {
+                var fromOffset = blockBoundary.Current;
+                blockBoundary.MoveNext();
+                var toOffset = blockBoundary.Current;
+
+                if (toOffset == EndPointOffset)
+                {
+                    toOffset = instructions.Last().Offset;
+                }
+
+                var instructionsInBlock = byOffset.Where(x => fromOffset <= x.Key && x.Key <= toOffset).Select(x => x.Value);
+
+                var block = new InstructionBlockNode(instructionsInBlock.ToArray());
+
+                if (this.graph == null)
+                {
+                    this.graph = new ControlFlowGraph(block);
+                }
+                else
+                {
+                    this.graph.AddNode(block);
+                }
+
+                byBoundary[fromOffset] = block;
+                byBoundary[toOffset] = block;
+            }
+
+            byBoundary[EndPointOffset] = this.graph.ExitPoint;
+
+            var transitionsBetweenBlocks = transitions.Where(x => x.Item2 == EndPointOffset || (blockBoundaries.Contains(x.Item1) && blockBoundaries.Contains(x.Item2)));
+
+            foreach (var transition in transitionsBetweenBlocks)
+            {
+                var from = byBoundary[transition.Item1];
+                var to = byBoundary[transition.Item2];
+
+                if (from.Equals(to) && transition.Item1 <= transition.Item2)
                 {
                     continue;
                 }
 
-                foreach (var transition in GetTransitions(instruction))
-                {
-                    if (transition == EndPointOffset)
-                    {
-                        this.graph.AddLink(node, this.graph.ExitPoint, new ControlTransition(TransitionKind.Forward));
-                    }
-                    else
-                    {
-                        this.graph.AddLink(node, nodes[transition], new ControlTransition(TransitionKindForBranch(node.Instructions[0].Offset, transition)));
-                    }
-                }
+                this.graph.AddLink(from, to, new ControlTransition(TransitionKindForBranch(transition.Item1, transition.Item2)));
+            }
+
+            foreach (var block in this.graph.Blocks)
+            {
+                block.CalculateStackProperties(this.analyzedMethod);
+            }
+
+            return this.graph;
+        }
+
+        private static bool IsBlockBoundary(Instruction instruction)
+        {
+            switch (instruction.OpCode.FlowControl)
+            {
+                case FlowControl.Next:
+                case FlowControl.Meta:
+                case FlowControl.Call:
+                    return false;
+                case FlowControl.Return:
+                case FlowControl.Cond_Branch:
+                case FlowControl.Branch:
+                case FlowControl.Throw:
+                    return true;
+                default:
+                    throw new ArgumentOutOfRangeException("instruction", "Cannot determine if instruction " + instruction + " is block boundary");
             }
         }
 
@@ -113,18 +205,7 @@ namespace CodeModel.FlowAnalysis
 
         private IEnumerable<int> UnconditionalBranch(Instruction instruction)
         {
-            var body = analyzedMethod.GetMethodBody();
-
-            var handlingClause = body.ExceptionHandlingClauses.OrderBy(x => x.HandlerOffset).FirstOrDefault(x => instruction.Next.Offset == x.TryOffset + x.TryLength);
-
-            if (handlingClause != null && handlingClause.Flags.HasFlag(ExceptionHandlingClauseOptions.Finally))
-            {
-                return new[] { handlingClause.HandlerOffset };
-            }
-            else
-            {
-                return new[] { ((Instruction)instruction.Operand).Offset };
-            }
+            return new[] { ((Instruction)instruction.Operand).Offset };
         }
 
         private IEnumerable<int> ConditionalBranch(Instruction instruction)
@@ -140,14 +221,14 @@ namespace CodeModel.FlowAnalysis
 
         private IEnumerable<int> JumpTable(Instruction instruction)
         {
-            var targets = ((Instruction[])instruction.Operand);//.Select(x => this.graph.NodeForInstruction(x));
+            var targets = ((Instruction[])instruction.Operand);
 
-            return targets.Select(x => x.Offset);
+            return targets.Select(x => x.Offset).Union(new[] { instruction.Next.Offset });
         }
 
         private static TransitionKind TransitionKindForBranch(int fromOffset, int toOffset)
         {
-            if (toOffset > fromOffset)
+            if (toOffset > fromOffset || toOffset == EndPointOffset)
             {
                 return TransitionKind.Forward;
             }
@@ -176,6 +257,29 @@ namespace CodeModel.FlowAnalysis
                 default:
                     throw new InvalidOperationException(string.Format("Unrecognized flow control {0} on instruction {1}", instruction.OpCode.FlowControl, instruction));
             }
+        }
+    }
+
+    internal class OffsetComparer : IComparer<int>
+    {
+        public int Compare(int x, int y)
+        {
+            if (x == ControlFlowGraphFactory.EndPointOffset && y == ControlFlowGraphFactory.EndPointOffset)
+            {
+                return 0;
+            }
+
+            if (x == ControlFlowGraphFactory.EndPointOffset)
+            {
+                return 1;
+            }
+
+            if (y == ControlFlowGraphFactory.EndPointOffset)
+            {
+                return -1;
+            }
+
+            return Comparer<int>.Default.Compare(x, y);
         }
     }
 }
