@@ -30,9 +30,31 @@ namespace Tests.FlowAnalysisTests
             this.cfg = ControlFlowGraphFactory.BuildForMethod(method);
 
             // assert
-            var block1 = FindMethodCallInstructionBlock("Mark1");
-            Assert.That(block1.InStackHeight, Is.EqualTo(0), "[block1] InStack mismatch");
-            Assert.That(block1.OutStackHeight, Is.EqualTo(1), "[block1] OutStack mismatch");
+            var block0 = FindMethodCallInstructionBlock("Mark1");
+            Assert.That(block0.InStackHeight, Is.EqualTo(0), "[block0] InStack mismatch");
+            Assert.That(block0.OutStackHeight, Is.EqualTo(1), "[block0] OutStack mismatch");
+
+            var block1 = FindMethodCallInstructionBlock("Mark2");
+            Assert.That(block1.InStackHeight, Is.EqualTo(1), "[block1] InStack mismatch");
+            Assert.That(block1.OutStackHeight, Is.EqualTo(2), "[block1] OutStack mismatch");
+
+            var block2 = FindMethodCallInstructionBlock("Mark3");
+            Assert.That(block2.InStackHeight, Is.EqualTo(1), "[block2] InStack mismatch");
+            Assert.That(block2.OutStackHeight, Is.EqualTo(2), "[block2] OutStack mismatch");
+
+            var block3 = FindMethodCallInstructionBlock("Mark4");
+            Assert.That(block3.InStackHeight, Is.EqualTo(2), "[block3] InStack mismatch");
+            Assert.That(block3.OutStackHeight, Is.EqualTo(0), "[block3] OutStack mismatch");
+        }
+
+        [Test]
+        public void ShouldCalculateInAndOutStackHeightsInMethodWhitBlocksExecutedOutOfOrder()
+        {
+            // arrange
+
+            // act
+
+            // assert
         }
 
         private InstructionBlockNode FindMethodCallInstructionBlock(string name)

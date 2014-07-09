@@ -33,7 +33,7 @@
 		pop
 
 		ret
-	}	
+	}		
 
 	.method public static void Mark1()
 	{
