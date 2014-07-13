@@ -25,6 +25,11 @@ namespace Tests
             return ((MethodCallExpression) methodAccess.Body).Method;
         }
 
+        public static MethodInfo Method(Expression<Action> methodAccess)
+        {
+            return ((MethodCallExpression)methodAccess.Body).Method;
+        }
+
         private static TMemberInfo ExtractMemberInfo<TMemberInfo>(Expression body)
             where TMemberInfo : MemberInfo
         {

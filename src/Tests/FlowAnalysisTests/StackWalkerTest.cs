@@ -39,33 +39,57 @@ namespace Tests.FlowAnalysisTests
         [TestCaseSource(typeof(AllMscorlibTypes), "AllTypes")]
         public void CheckStackLength(Type type)
         {
-            IEnumerable<MethodInfo> methods = type.GetMethods().Where(x => x.GetMethodBody() != null).Where(x => x.DeclaringType == type);            
+            IEnumerable<MethodInfo> methods = type.GetMethods()
+                .Where(x => x.GetMethodBody() != null)
+                .Where(x => x.DeclaringType == type);
 
             foreach (var method in methods)
             {
-                var graph = ControlFlowGraphFactory.BuildForMethod(method);                
+                var graph = ControlFlowGraphFactory.BuildForMethod(method);
 
-                var walker = new ComputeStackLength();
+                var walker = new Walker();
 
                 try
                 {
-                    walker.Walk(method, graph);
+                    var result = walker.Walk(graph);
+                    Assert.That(result, Is.EqualTo(0), "Stack not 0 for method" + method);
                 }
                 catch (Exception e)
                 {
                     Assert.Fail("Type: {0} Method:{1} {2}", method, method.DeclaringType, e);
                 }
             }
-        }      
+        }
+
+        private class Walker : BaseCfgWalker<int>
+        {
+            public int Walk(ControlFlowGraph cfg)
+            {
+                var results = base.WalkCore(cfg);
+
+                return results.Single();
+            }
+
+            protected override int VisitBlock(int inputState, BlockNode block)
+            {
+                return inputState + block.StackDiff;
+            }
+
+            protected override int GetInitialState()
+            {
+                return 0;
+            }
+        }
     }
 
     internal class AllMscorlibTypes
     {
         public IEnumerable<Type> AllTypes()
         {
-            return typeof (string).Assembly.GetTypes()
-                .Where(x => x.IsPublic && !x.IsInterface)
-                .Where(x => x != typeof (StringBuilder))
+            return typeof(string).Assembly.GetTypes()
+                //.Where(x => x.IsPublic)
+                .Where(x => !x.IsInterface)
+                //.Where(x => x != typeof (StringBuilder))
                 .OrderBy(x => x.FullName);
         }
     }

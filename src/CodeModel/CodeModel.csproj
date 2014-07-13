@@ -76,6 +76,7 @@
     <Compile Include="Convetions\IImplementingConvention.cs" />
     <Compile Include="EnumerableExtensions.cs" />
     <Compile Include="ExportableAttribute.cs" />
+    <Compile Include="FlowAnalysis\BaseCfgWalker.cs" />
     <Compile Include="FlowAnalysis\ComputeStackLength.cs" />
     <Compile Include="FlowAnalysis\ControlFlowGraph.cs" />
     <Compile Include="FlowAnalysis\ControlFlowPathsWalker.cs" />
