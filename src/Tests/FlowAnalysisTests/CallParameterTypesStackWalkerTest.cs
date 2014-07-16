@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using CodeModel.FlowAnalysis;
 using CodeModel.Graphs;
@@ -20,10 +21,54 @@ namespace Tests.FlowAnalysisTests
         {
             var method = Get.MethodOf<CallParametersTarget>(x => CallParametersTarget.Get<int>()).GetGenericMethodDefinition();
 
-            var flowGraph = ControlFlowGraphFactory.BuildForMethod(method);            
-            
+            var flowGraph = ControlFlowGraphFactory.BuildForMethod(method);
+
             var types = new DetermineCallParameterTypes();
             types.Walk(method, flowGraph);
+        }
+
+        [Test]        
+        public void DifferentVariableTypeInTwoBranches()
+        {
+            // arrange
+            var method = Get.MethodOf<TestTarget.IL.WalkCfg>(x => x.TypeInVariableDependsOnBranch());
+
+            var cfg = ControlFlowGraphFactory.BuildForMethod(method);
+
+            var types = new DetermineCallParameterTypes();
+            this.Result = cfg;
+            // act
+            types.Walk(method, cfg);
+
+            // assert
+            var targetCall = types.Calls.Single(x => x.Key.Name == "Record");
+            Assert.That(targetCall.Value, Has
+                .Count.EqualTo(2)
+                .And.Exactly(1).EqualTo(new[] { PotentialType.String })
+                .And.Exactly(1).EqualTo(new[] { PotentialType.FromType(typeof(Exception)) })
+                );
+        }
+
+        [Test]
+        public void DifferentParameterTypeInTwoBranches()
+        {
+            // arrange
+            var method = Get.MethodOf<TestTarget.IL.WalkCfg>(x => x.TypeInParameterDependsOnBranch(null));
+
+            var cfg = ControlFlowGraphFactory.BuildForMethod(method);
+
+            var types = new DetermineCallParameterTypes();
+            this.Result = cfg;
+            // act
+            types.Walk(method, cfg);
+
+            // assert
+            var targetCall = types.Calls.Single(x => x.Key.Name == "Record");
+            Assert.That(targetCall.Value, Has
+                .Count.EqualTo(2)
+                .And.Exactly(1).EqualTo(new[] { PotentialType.String })
+                .And.Exactly(1).EqualTo(new[] { PotentialType.FromType(typeof(Exception)) })
+                );
         }
 
         [Test]
@@ -32,12 +77,12 @@ namespace Tests.FlowAnalysisTests
         {
             // arrange            
             var method = typeof(CallParametersTarget).GetMethod(methodName);
-            var flowGraph = ControlFlowGraphFactory.BuildForMethod(method);            
+            var flowGraph = ControlFlowGraphFactory.BuildForMethod(method);
 
             var walker = new DetermineCallParameterTypes();
 
             // act
-            walker.Walk(method, flowGraph);           
+            walker.Walk(method, flowGraph);
 
             // assert
             Assert.That(walker.Calls, Has.Count.AtLeast(1));
@@ -76,14 +121,13 @@ namespace Tests.FlowAnalysisTests
         public void AnalyzeMethodWith27Ifs()
         {
             var method = Get.MethodOf<NastyMethods>(x => NastyMethods.MethodWith27Ifs());
-            var cfg = ControlFlowGraphFactory.BuildForMethod(method);
-            
-            var reduced = cfg.Clone();
-            DetermineCallParameterTypes.Reduce(method, reduced);
 
-            this.Result = reduced;                                    
+            var cfg = ControlFlowGraphFactory.BuildForMethod(method);            
 
-            new DetermineCallParameterTypes().Walk(method, cfg);
+            this.Result = cfg;
+
+            var determineCallParameterTypes = new DetermineCallParameterTypes();
+            determineCallParameterTypes.Walk(method, ControlFlowGraphFactory.BuildForMethod(method));
         }
     }
 }

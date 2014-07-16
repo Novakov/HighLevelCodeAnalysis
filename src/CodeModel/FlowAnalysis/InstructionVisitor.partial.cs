@@ -5,1140 +5,1140 @@ using Mono.Reflection;
 
 namespace CodeModel.FlowAnalysis
 {
-	public partial class InstructionVisitor
+	public partial class InstructionVisitor<TState>
 	{
-		protected virtual void HandleNop(Instruction instruction)
+		protected virtual TState HandleNop(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleBreak(Instruction instruction)
+		protected virtual TState HandleBreak(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleLdarg_0(Instruction instruction)
+		protected virtual TState HandleLdarg_0(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleLdarg_1(Instruction instruction)
+		protected virtual TState HandleLdarg_1(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleLdarg_2(Instruction instruction)
+		protected virtual TState HandleLdarg_2(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleLdarg_3(Instruction instruction)
+		protected virtual TState HandleLdarg_3(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleLdloc_0(Instruction instruction)
+		protected virtual TState HandleLdloc_0(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleLdloc_1(Instruction instruction)
+		protected virtual TState HandleLdloc_1(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleLdloc_2(Instruction instruction)
+		protected virtual TState HandleLdloc_2(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleLdloc_3(Instruction instruction)
+		protected virtual TState HandleLdloc_3(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleStloc_0(Instruction instruction)
+		protected virtual TState HandleStloc_0(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleStloc_1(Instruction instruction)
+		protected virtual TState HandleStloc_1(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleStloc_2(Instruction instruction)
+		protected virtual TState HandleStloc_2(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleStloc_3(Instruction instruction)
+		protected virtual TState HandleStloc_3(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleLdarg_S(Instruction instruction)
+		protected virtual TState HandleLdarg_S(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleLdarga_S(Instruction instruction)
+		protected virtual TState HandleLdarga_S(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleStarg_S(Instruction instruction)
+		protected virtual TState HandleStarg_S(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleLdloc_S(Instruction instruction)
+		protected virtual TState HandleLdloc_S(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleLdloca_S(Instruction instruction)
+		protected virtual TState HandleLdloca_S(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleStloc_S(Instruction instruction)
+		protected virtual TState HandleStloc_S(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleLdnull(Instruction instruction)
+		protected virtual TState HandleLdnull(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleLdc_I4_M1(Instruction instruction)
+		protected virtual TState HandleLdc_I4_M1(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleLdc_I4_0(Instruction instruction)
+		protected virtual TState HandleLdc_I4_0(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleLdc_I4_1(Instruction instruction)
+		protected virtual TState HandleLdc_I4_1(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleLdc_I4_2(Instruction instruction)
+		protected virtual TState HandleLdc_I4_2(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleLdc_I4_3(Instruction instruction)
+		protected virtual TState HandleLdc_I4_3(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleLdc_I4_4(Instruction instruction)
+		protected virtual TState HandleLdc_I4_4(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleLdc_I4_5(Instruction instruction)
+		protected virtual TState HandleLdc_I4_5(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleLdc_I4_6(Instruction instruction)
+		protected virtual TState HandleLdc_I4_6(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleLdc_I4_7(Instruction instruction)
+		protected virtual TState HandleLdc_I4_7(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleLdc_I4_8(Instruction instruction)
+		protected virtual TState HandleLdc_I4_8(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleLdc_I4_S(Instruction instruction)
+		protected virtual TState HandleLdc_I4_S(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleLdc_I4(Instruction instruction)
+		protected virtual TState HandleLdc_I4(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleLdc_I8(Instruction instruction)
+		protected virtual TState HandleLdc_I8(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleLdc_R4(Instruction instruction)
+		protected virtual TState HandleLdc_R4(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleLdc_R8(Instruction instruction)
+		protected virtual TState HandleLdc_R8(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleDup(Instruction instruction)
+		protected virtual TState HandleDup(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandlePop(Instruction instruction)
+		protected virtual TState HandlePop(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleJmp(Instruction instruction)
+		protected virtual TState HandleJmp(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleCall(Instruction instruction)
+		protected virtual TState HandleCall(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleCalli(Instruction instruction)
+		protected virtual TState HandleCalli(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleRet(Instruction instruction)
+		protected virtual TState HandleRet(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleBr_S(Instruction instruction)
+		protected virtual TState HandleBr_S(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleBrfalse_S(Instruction instruction)
+		protected virtual TState HandleBrfalse_S(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleBrtrue_S(Instruction instruction)
+		protected virtual TState HandleBrtrue_S(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleBeq_S(Instruction instruction)
+		protected virtual TState HandleBeq_S(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleBge_S(Instruction instruction)
+		protected virtual TState HandleBge_S(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleBgt_S(Instruction instruction)
+		protected virtual TState HandleBgt_S(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleBle_S(Instruction instruction)
+		protected virtual TState HandleBle_S(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleBlt_S(Instruction instruction)
+		protected virtual TState HandleBlt_S(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleBne_Un_S(Instruction instruction)
+		protected virtual TState HandleBne_Un_S(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleBge_Un_S(Instruction instruction)
+		protected virtual TState HandleBge_Un_S(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleBgt_Un_S(Instruction instruction)
+		protected virtual TState HandleBgt_Un_S(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleBle_Un_S(Instruction instruction)
+		protected virtual TState HandleBle_Un_S(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleBlt_Un_S(Instruction instruction)
+		protected virtual TState HandleBlt_Un_S(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleBr(Instruction instruction)
+		protected virtual TState HandleBr(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleBrfalse(Instruction instruction)
+		protected virtual TState HandleBrfalse(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleBrtrue(Instruction instruction)
+		protected virtual TState HandleBrtrue(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleBeq(Instruction instruction)
+		protected virtual TState HandleBeq(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleBge(Instruction instruction)
+		protected virtual TState HandleBge(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleBgt(Instruction instruction)
+		protected virtual TState HandleBgt(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleBle(Instruction instruction)
+		protected virtual TState HandleBle(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleBlt(Instruction instruction)
+		protected virtual TState HandleBlt(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleBne_Un(Instruction instruction)
+		protected virtual TState HandleBne_Un(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleBge_Un(Instruction instruction)
+		protected virtual TState HandleBge_Un(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleBgt_Un(Instruction instruction)
+		protected virtual TState HandleBgt_Un(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleBle_Un(Instruction instruction)
+		protected virtual TState HandleBle_Un(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleBlt_Un(Instruction instruction)
+		protected virtual TState HandleBlt_Un(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleSwitch(Instruction instruction)
+		protected virtual TState HandleSwitch(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleLdind_I1(Instruction instruction)
+		protected virtual TState HandleLdind_I1(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleLdind_U1(Instruction instruction)
+		protected virtual TState HandleLdind_U1(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleLdind_I2(Instruction instruction)
+		protected virtual TState HandleLdind_I2(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleLdind_U2(Instruction instruction)
+		protected virtual TState HandleLdind_U2(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleLdind_I4(Instruction instruction)
+		protected virtual TState HandleLdind_I4(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleLdind_U4(Instruction instruction)
+		protected virtual TState HandleLdind_U4(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleLdind_I8(Instruction instruction)
+		protected virtual TState HandleLdind_I8(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleLdind_I(Instruction instruction)
+		protected virtual TState HandleLdind_I(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleLdind_R4(Instruction instruction)
+		protected virtual TState HandleLdind_R4(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleLdind_R8(Instruction instruction)
+		protected virtual TState HandleLdind_R8(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleLdind_Ref(Instruction instruction)
+		protected virtual TState HandleLdind_Ref(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleStind_Ref(Instruction instruction)
+		protected virtual TState HandleStind_Ref(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleStind_I1(Instruction instruction)
+		protected virtual TState HandleStind_I1(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleStind_I2(Instruction instruction)
+		protected virtual TState HandleStind_I2(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleStind_I4(Instruction instruction)
+		protected virtual TState HandleStind_I4(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleStind_I8(Instruction instruction)
+		protected virtual TState HandleStind_I8(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleStind_R4(Instruction instruction)
+		protected virtual TState HandleStind_R4(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleStind_R8(Instruction instruction)
+		protected virtual TState HandleStind_R8(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleAdd(Instruction instruction)
+		protected virtual TState HandleAdd(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleSub(Instruction instruction)
+		protected virtual TState HandleSub(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleMul(Instruction instruction)
+		protected virtual TState HandleMul(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleDiv(Instruction instruction)
+		protected virtual TState HandleDiv(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleDiv_Un(Instruction instruction)
+		protected virtual TState HandleDiv_Un(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleRem(Instruction instruction)
+		protected virtual TState HandleRem(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleRem_Un(Instruction instruction)
+		protected virtual TState HandleRem_Un(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleAnd(Instruction instruction)
+		protected virtual TState HandleAnd(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleOr(Instruction instruction)
+		protected virtual TState HandleOr(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleXor(Instruction instruction)
+		protected virtual TState HandleXor(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleShl(Instruction instruction)
+		protected virtual TState HandleShl(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleShr(Instruction instruction)
+		protected virtual TState HandleShr(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleShr_Un(Instruction instruction)
+		protected virtual TState HandleShr_Un(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleNeg(Instruction instruction)
+		protected virtual TState HandleNeg(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleNot(Instruction instruction)
+		protected virtual TState HandleNot(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleConv_I1(Instruction instruction)
+		protected virtual TState HandleConv_I1(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleConv_I2(Instruction instruction)
+		protected virtual TState HandleConv_I2(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleConv_I4(Instruction instruction)
+		protected virtual TState HandleConv_I4(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleConv_I8(Instruction instruction)
+		protected virtual TState HandleConv_I8(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleConv_R4(Instruction instruction)
+		protected virtual TState HandleConv_R4(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleConv_R8(Instruction instruction)
+		protected virtual TState HandleConv_R8(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleConv_U4(Instruction instruction)
+		protected virtual TState HandleConv_U4(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleConv_U8(Instruction instruction)
+		protected virtual TState HandleConv_U8(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleCallvirt(Instruction instruction)
+		protected virtual TState HandleCallvirt(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleCpobj(Instruction instruction)
+		protected virtual TState HandleCpobj(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleLdobj(Instruction instruction)
+		protected virtual TState HandleLdobj(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleLdstr(Instruction instruction)
+		protected virtual TState HandleLdstr(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleNewobj(Instruction instruction)
+		protected virtual TState HandleNewobj(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleCastclass(Instruction instruction)
+		protected virtual TState HandleCastclass(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleIsinst(Instruction instruction)
+		protected virtual TState HandleIsinst(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleConv_R_Un(Instruction instruction)
+		protected virtual TState HandleConv_R_Un(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleUnbox(Instruction instruction)
+		protected virtual TState HandleUnbox(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleThrow(Instruction instruction)
+		protected virtual TState HandleThrow(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleLdfld(Instruction instruction)
+		protected virtual TState HandleLdfld(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleLdflda(Instruction instruction)
+		protected virtual TState HandleLdflda(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleStfld(Instruction instruction)
+		protected virtual TState HandleStfld(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleLdsfld(Instruction instruction)
+		protected virtual TState HandleLdsfld(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleLdsflda(Instruction instruction)
+		protected virtual TState HandleLdsflda(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleStsfld(Instruction instruction)
+		protected virtual TState HandleStsfld(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleStobj(Instruction instruction)
+		protected virtual TState HandleStobj(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleConv_Ovf_I1_Un(Instruction instruction)
+		protected virtual TState HandleConv_Ovf_I1_Un(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleConv_Ovf_I2_Un(Instruction instruction)
+		protected virtual TState HandleConv_Ovf_I2_Un(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleConv_Ovf_I4_Un(Instruction instruction)
+		protected virtual TState HandleConv_Ovf_I4_Un(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleConv_Ovf_I8_Un(Instruction instruction)
+		protected virtual TState HandleConv_Ovf_I8_Un(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleConv_Ovf_U1_Un(Instruction instruction)
+		protected virtual TState HandleConv_Ovf_U1_Un(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleConv_Ovf_U2_Un(Instruction instruction)
+		protected virtual TState HandleConv_Ovf_U2_Un(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleConv_Ovf_U4_Un(Instruction instruction)
+		protected virtual TState HandleConv_Ovf_U4_Un(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleConv_Ovf_U8_Un(Instruction instruction)
+		protected virtual TState HandleConv_Ovf_U8_Un(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleConv_Ovf_I_Un(Instruction instruction)
+		protected virtual TState HandleConv_Ovf_I_Un(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleConv_Ovf_U_Un(Instruction instruction)
+		protected virtual TState HandleConv_Ovf_U_Un(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleBox(Instruction instruction)
+		protected virtual TState HandleBox(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleNewarr(Instruction instruction)
+		protected virtual TState HandleNewarr(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleLdlen(Instruction instruction)
+		protected virtual TState HandleLdlen(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleLdelema(Instruction instruction)
+		protected virtual TState HandleLdelema(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleLdelem_I1(Instruction instruction)
+		protected virtual TState HandleLdelem_I1(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleLdelem_U1(Instruction instruction)
+		protected virtual TState HandleLdelem_U1(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleLdelem_I2(Instruction instruction)
+		protected virtual TState HandleLdelem_I2(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleLdelem_U2(Instruction instruction)
+		protected virtual TState HandleLdelem_U2(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleLdelem_I4(Instruction instruction)
+		protected virtual TState HandleLdelem_I4(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleLdelem_U4(Instruction instruction)
+		protected virtual TState HandleLdelem_U4(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleLdelem_I8(Instruction instruction)
+		protected virtual TState HandleLdelem_I8(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleLdelem_I(Instruction instruction)
+		protected virtual TState HandleLdelem_I(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleLdelem_R4(Instruction instruction)
+		protected virtual TState HandleLdelem_R4(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleLdelem_R8(Instruction instruction)
+		protected virtual TState HandleLdelem_R8(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleLdelem_Ref(Instruction instruction)
+		protected virtual TState HandleLdelem_Ref(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleStelem_I(Instruction instruction)
+		protected virtual TState HandleStelem_I(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleStelem_I1(Instruction instruction)
+		protected virtual TState HandleStelem_I1(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleStelem_I2(Instruction instruction)
+		protected virtual TState HandleStelem_I2(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleStelem_I4(Instruction instruction)
+		protected virtual TState HandleStelem_I4(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleStelem_I8(Instruction instruction)
+		protected virtual TState HandleStelem_I8(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleStelem_R4(Instruction instruction)
+		protected virtual TState HandleStelem_R4(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleStelem_R8(Instruction instruction)
+		protected virtual TState HandleStelem_R8(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleStelem_Ref(Instruction instruction)
+		protected virtual TState HandleStelem_Ref(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleLdelem(Instruction instruction)
+		protected virtual TState HandleLdelem(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleStelem(Instruction instruction)
+		protected virtual TState HandleStelem(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleUnbox_Any(Instruction instruction)
+		protected virtual TState HandleUnbox_Any(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleConv_Ovf_I1(Instruction instruction)
+		protected virtual TState HandleConv_Ovf_I1(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleConv_Ovf_U1(Instruction instruction)
+		protected virtual TState HandleConv_Ovf_U1(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleConv_Ovf_I2(Instruction instruction)
+		protected virtual TState HandleConv_Ovf_I2(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleConv_Ovf_U2(Instruction instruction)
+		protected virtual TState HandleConv_Ovf_U2(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleConv_Ovf_I4(Instruction instruction)
+		protected virtual TState HandleConv_Ovf_I4(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleConv_Ovf_U4(Instruction instruction)
+		protected virtual TState HandleConv_Ovf_U4(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleConv_Ovf_I8(Instruction instruction)
+		protected virtual TState HandleConv_Ovf_I8(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleConv_Ovf_U8(Instruction instruction)
+		protected virtual TState HandleConv_Ovf_U8(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleRefanyval(Instruction instruction)
+		protected virtual TState HandleRefanyval(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleCkfinite(Instruction instruction)
+		protected virtual TState HandleCkfinite(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleMkrefany(Instruction instruction)
+		protected virtual TState HandleMkrefany(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleLdtoken(Instruction instruction)
+		protected virtual TState HandleLdtoken(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleConv_U2(Instruction instruction)
+		protected virtual TState HandleConv_U2(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleConv_U1(Instruction instruction)
+		protected virtual TState HandleConv_U1(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleConv_I(Instruction instruction)
+		protected virtual TState HandleConv_I(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleConv_Ovf_I(Instruction instruction)
+		protected virtual TState HandleConv_Ovf_I(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleConv_Ovf_U(Instruction instruction)
+		protected virtual TState HandleConv_Ovf_U(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleAdd_Ovf(Instruction instruction)
+		protected virtual TState HandleAdd_Ovf(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleAdd_Ovf_Un(Instruction instruction)
+		protected virtual TState HandleAdd_Ovf_Un(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleMul_Ovf(Instruction instruction)
+		protected virtual TState HandleMul_Ovf(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleMul_Ovf_Un(Instruction instruction)
+		protected virtual TState HandleMul_Ovf_Un(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleSub_Ovf(Instruction instruction)
+		protected virtual TState HandleSub_Ovf(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleSub_Ovf_Un(Instruction instruction)
+		protected virtual TState HandleSub_Ovf_Un(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleEndfinally(Instruction instruction)
+		protected virtual TState HandleEndfinally(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleLeave(Instruction instruction)
+		protected virtual TState HandleLeave(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleLeave_S(Instruction instruction)
+		protected virtual TState HandleLeave_S(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleStind_I(Instruction instruction)
+		protected virtual TState HandleStind_I(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleConv_U(Instruction instruction)
+		protected virtual TState HandleConv_U(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandlePrefix7(Instruction instruction)
+		protected virtual TState HandlePrefix7(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandlePrefix6(Instruction instruction)
+		protected virtual TState HandlePrefix6(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandlePrefix5(Instruction instruction)
+		protected virtual TState HandlePrefix5(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandlePrefix4(Instruction instruction)
+		protected virtual TState HandlePrefix4(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandlePrefix3(Instruction instruction)
+		protected virtual TState HandlePrefix3(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandlePrefix2(Instruction instruction)
+		protected virtual TState HandlePrefix2(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandlePrefix1(Instruction instruction)
+		protected virtual TState HandlePrefix1(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandlePrefixref(Instruction instruction)
+		protected virtual TState HandlePrefixref(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleArglist(Instruction instruction)
+		protected virtual TState HandleArglist(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleCeq(Instruction instruction)
+		protected virtual TState HandleCeq(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleCgt(Instruction instruction)
+		protected virtual TState HandleCgt(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleCgt_Un(Instruction instruction)
+		protected virtual TState HandleCgt_Un(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleClt(Instruction instruction)
+		protected virtual TState HandleClt(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleClt_Un(Instruction instruction)
+		protected virtual TState HandleClt_Un(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleLdftn(Instruction instruction)
+		protected virtual TState HandleLdftn(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleLdvirtftn(Instruction instruction)
+		protected virtual TState HandleLdvirtftn(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleLdarg(Instruction instruction)
+		protected virtual TState HandleLdarg(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleLdarga(Instruction instruction)
+		protected virtual TState HandleLdarga(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleStarg(Instruction instruction)
+		protected virtual TState HandleStarg(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleLdloc(Instruction instruction)
+		protected virtual TState HandleLdloc(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleLdloca(Instruction instruction)
+		protected virtual TState HandleLdloca(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleStloc(Instruction instruction)
+		protected virtual TState HandleStloc(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleLocalloc(Instruction instruction)
+		protected virtual TState HandleLocalloc(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleEndfilter(Instruction instruction)
+		protected virtual TState HandleEndfilter(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleUnaligned(Instruction instruction)
+		protected virtual TState HandleUnaligned(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleVolatile(Instruction instruction)
+		protected virtual TState HandleVolatile(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleTailcall(Instruction instruction)
+		protected virtual TState HandleTailcall(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleInitobj(Instruction instruction)
+		protected virtual TState HandleInitobj(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleConstrained(Instruction instruction)
+		protected virtual TState HandleConstrained(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleCpblk(Instruction instruction)
+		protected virtual TState HandleCpblk(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleInitblk(Instruction instruction)
+		protected virtual TState HandleInitblk(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleRethrow(Instruction instruction)
+		protected virtual TState HandleRethrow(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleSizeof(Instruction instruction)
+		protected virtual TState HandleSizeof(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleRefanytype(Instruction instruction)
+		protected virtual TState HandleRefanytype(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
-		protected virtual void HandleReadonly(Instruction instruction)
+		protected virtual TState HandleReadonly(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
 				
-		protected virtual void RegisterHandlers(Dictionary<OpCode, Action<Instruction>> registry)
+		protected virtual void RegisterHandlers(Dictionary<OpCode, Func<TState, Instruction, TState>> registry)
 		{
 			registry[OpCodes.Nop] = HandleNop;
 			registry[OpCodes.Break] = HandleBreak;

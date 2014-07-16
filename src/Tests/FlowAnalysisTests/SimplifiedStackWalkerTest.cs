@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Reflection;
 using CodeModel.FlowAnalysis;
 using NUnit.Framework;
 using TestTarget;
@@ -17,16 +18,16 @@ namespace Tests.FlowAnalysisTests
 
             var walker = new Walker();
 
-            var stackAtEnd = walker.Walk(cfg);
+            var stackAtEnd = walker.Walk(method, cfg);
 
             Assert.That(stackAtEnd, Is.EqualTo(0));
         }
 
         private class Walker : BaseCfgWalker<int>
         {
-            public int Walk(ControlFlowGraph cfg)
+            public int Walk(MethodInfo method, ControlFlowGraph cfg)
             {
-                var results = base.WalkCore(cfg);
+                var results = base.WalkCore(method, cfg);
 
                 return results.Single();
             }
@@ -36,7 +37,7 @@ namespace Tests.FlowAnalysisTests
                 return inputState + block.StackDiff;
             }
 
-            protected override int GetInitialState()
+            protected override int GetInitialState(MethodInfo method, ControlFlowGraph graph)
             {
                 return 0;
             }

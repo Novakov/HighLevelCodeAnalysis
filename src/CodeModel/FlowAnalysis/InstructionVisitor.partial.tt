@@ -10,18 +10,18 @@ using Mono.Reflection;
 
 namespace CodeModel.FlowAnalysis
 {
-	public partial class InstructionVisitor
+	public partial class InstructionVisitor<TState>
 	{
 		<# foreach (var opcode in typeof (OpCodes).GetFields(BindingFlags.Public | BindingFlags.Static)){
-		#>protected virtual void Handle<#=opcode.Name#>(Instruction instruction)
+		#>protected virtual TState Handle<#=opcode.Name#>(TState state, Instruction instruction)
 		{
-			this.HandleUnrecognized(instruction);
+			return this.HandleUnrecognized(state, instruction);
 		}
 
 		<#}
 		#>
 		
-		protected virtual void RegisterHandlers(Dictionary<OpCode, Action<Instruction>> registry)
+		protected virtual void RegisterHandlers(Dictionary<OpCode, Func<TState, Instruction, TState>> registry)
 		{
 		<# foreach (var opcode in typeof (OpCodes).GetFields(BindingFlags.Public | BindingFlags.Static)){
 		#>	registry[OpCodes.<#=opcode.Name#>] = Handle<#=opcode.Name#>;

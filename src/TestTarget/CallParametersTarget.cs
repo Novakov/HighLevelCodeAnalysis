@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -30,7 +31,7 @@ namespace TestTarget
         public void UseVariables()
         {
             object i = Get<int>();
-            
+
             TargetWithObject(i);
         }
 
@@ -39,26 +40,53 @@ namespace TestTarget
             test = "aaaaa";
 
             TargetWithObject(test);
-        }        
+        }
+
+        public void TwoBranches()
+        {
+            object value;
+
+            if (Get<int>() == 2)
+            {
+                value = "Test";
+            }
+            else
+            {
+                value = new Dictionary<int, int>();
+            }
+
+            try
+            {
+                TargetWithObject(value);
+            }
+            finally
+            {
+                Keep();
+            }
+        }
 
         public static void ShouldBe<T>(T i)
-        {            
+        {
         }
 
         public void ManyParameters(object arg1, object arg2, object arg3, object arg4, object arg5)
-        {            
+        {
         }
 
         public void TargetWithObject(object value)
         { }
 
         public void StaticTarget(object value)
-        {            
+        {
         }
 
         public static T Get<T>()
         {
             return default(T);
+        }
+
+        public void Keep()
+        {
         }
     }
 }

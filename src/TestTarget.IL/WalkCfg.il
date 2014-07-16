@@ -35,6 +35,63 @@
 		ret
 	}		
 
+	.method public void TypeInVariableDependsOnBranch()
+	{
+		.locals init (
+			object 'var'
+		)
+
+		call bool [TestTarget.IL]TestTarget.IL.WalkCfg::Condition()
+		brtrue if
+			ldstr "Value"
+			stloc var
+			br end_if
+
+		if:
+			newobj instance void class [mscorlib]System.Exception::.ctor()
+			stloc var
+
+		end_if:
+		nop
+
+		br split
+		split:
+
+		ldloc var
+		call void [TestTarget.IL]TestTarget.IL.WalkCfg::Record(object)
+
+		ret
+	}
+
+	.method public hidebysig instance void TypeInParameterDependsOnBranch(object param)
+	{
+		call bool [TestTarget.IL]TestTarget.IL.WalkCfg::Condition()
+		brtrue if
+			ldstr "Value"
+			starg param
+			br end_if
+
+		if:
+			newobj instance void class [mscorlib]System.Exception::.ctor()
+			starg param
+
+		end_if:
+		nop
+
+		br split
+		split:
+
+		ldarg param
+		call void [TestTarget.IL]TestTarget.IL.WalkCfg::Record(object)
+
+		ret
+	}
+
+	.method public static void Record(object v)
+	{
+		ret
+	}
+
 	.method public static void Mark1()
 	{
 		ret

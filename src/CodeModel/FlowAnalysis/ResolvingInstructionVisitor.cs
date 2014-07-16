@@ -6,185 +6,178 @@ using Mono.Reflection;
 
 namespace CodeModel.FlowAnalysis
 {
-    public abstract class ResolvingInstructionVisitor : InstructionVisitor
+    public abstract class ResolvingInstructionVisitor<TState> : InstructionVisitor<TState>
     {
-        protected override void RegisterHandlers(Dictionary<OpCode, Action<Instruction>> registry)
+        protected override void RegisterHandlers(Dictionary<OpCode, Func<TState, Instruction, TState>> registry)
         {
             base.RegisterHandlers(registry);
 
             var body = new Lazy<MethodBody>(() => this.AnalyzedMethod.GetMethodBody());
 
-            registry[OpCodes.Starg] = i => HandleStoreArgument(i, (ParameterInfo)i.Operand);
-            registry[OpCodes.Starg_S] = i => HandleStoreArgument(i, (ParameterInfo)i.Operand);
+            registry[OpCodes.Starg] = (s, i) => HandleStoreArgument(s, i, (ParameterInfo)i.Operand);
+            registry[OpCodes.Starg_S] = (s, i) => HandleStoreArgument(s, i, (ParameterInfo)i.Operand);
 
-            registry[OpCodes.Ldarg_1] = i => LoadArgByIndex(i, 1);
-            registry[OpCodes.Ldarg_2] = i => LoadArgByIndex(i, 2);
-            registry[OpCodes.Ldarg_3] = i => LoadArgByIndex(i, 3);
-            registry[OpCodes.Ldarga] = i => HandleLoadArgument(i, (ParameterInfo)i.Operand);
-            registry[OpCodes.Ldarga_S] = i => HandleLoadArgument(i, (ParameterInfo)i.Operand);
+            registry[OpCodes.Ldarg_1] = (s, i) => LoadArgByIndex(s, i, 1);
+            registry[OpCodes.Ldarg_2] = (s, i) => LoadArgByIndex(s, i, 2);
+            registry[OpCodes.Ldarg_3] = (s, i) => LoadArgByIndex(s, i, 3);
+            registry[OpCodes.Ldarga] = (s, i) => HandleLoadArgument(s, i, (ParameterInfo)i.Operand);
+            registry[OpCodes.Ldarga_S] = (s, i) => HandleLoadArgument(s, i, (ParameterInfo)i.Operand);
 
-            registry[OpCodes.Stloc] = i => HandleStoreVariable(i, (LocalVariableInfo)i.Operand);
-            registry[OpCodes.Stloc_S] = i => HandleStoreVariable(i, (LocalVariableInfo)i.Operand);
-            registry[OpCodes.Stloc_0] = i => HandleStoreVariable(i, body.Value.LocalVariables[0]);
-            registry[OpCodes.Stloc_1] = i => HandleStoreVariable(i, body.Value.LocalVariables[1]);
-            registry[OpCodes.Stloc_2] = i => HandleStoreVariable(i, body.Value.LocalVariables[2]);
-            registry[OpCodes.Stloc_3] = i => HandleStoreVariable(i, body.Value.LocalVariables[3]);
+            registry[OpCodes.Stloc] = (s, i) => HandleStoreVariable(s, i, (LocalVariableInfo)i.Operand);
+            registry[OpCodes.Stloc_S] = (s, i) => HandleStoreVariable(s, i, (LocalVariableInfo)i.Operand);
+            registry[OpCodes.Stloc_0] = (s, i) => HandleStoreVariable(s, i, body.Value.LocalVariables[0]);
+            registry[OpCodes.Stloc_1] = (s, i) => HandleStoreVariable(s, i, body.Value.LocalVariables[1]);
+            registry[OpCodes.Stloc_2] = (s, i) => HandleStoreVariable(s, i, body.Value.LocalVariables[2]);
+            registry[OpCodes.Stloc_3] = (s, i) => HandleStoreVariable(s, i, body.Value.LocalVariables[3]);
 
-            registry[OpCodes.Ldloc] = i => HandleLoadVariable(i, (LocalVariableInfo)i.Operand);
-            registry[OpCodes.Ldloc_S] = i => HandleLoadVariable(i, (LocalVariableInfo)i.Operand);
-            registry[OpCodes.Ldloc_0] = i => HandleLoadVariable(i, body.Value.LocalVariables[0]);
-            registry[OpCodes.Ldloc_1] = i => HandleLoadVariable(i, body.Value.LocalVariables[1]);
-            registry[OpCodes.Ldloc_2] = i => HandleLoadVariable(i, body.Value.LocalVariables[2]);
-            registry[OpCodes.Ldloc_3] = i => HandleLoadVariable(i, body.Value.LocalVariables[3]);
+            registry[OpCodes.Ldloc] = (s, i) => HandleLoadVariable(s, i, (LocalVariableInfo)i.Operand);
+            registry[OpCodes.Ldloc_S] = (s, i) => HandleLoadVariable(s, i, (LocalVariableInfo)i.Operand);
+            registry[OpCodes.Ldloc_0] = (s, i) => HandleLoadVariable(s, i, body.Value.LocalVariables[0]);
+            registry[OpCodes.Ldloc_1] = (s, i) => HandleLoadVariable(s, i, body.Value.LocalVariables[1]);
+            registry[OpCodes.Ldloc_2] = (s, i) => HandleLoadVariable(s, i, body.Value.LocalVariables[2]);
+            registry[OpCodes.Ldloc_3] = (s, i) => HandleLoadVariable(s, i, body.Value.LocalVariables[3]);
 
-            registry[OpCodes.Ldc_I4] = i => HandleLoadInt32(i, (int)i.Operand);
-            registry[OpCodes.Ldc_I4_S] = i => HandleLoadInt32(i, (sbyte)i.Operand);
-            registry[OpCodes.Ldc_I4_M1] = i => HandleLoadInt32(i, -1);
-            registry[OpCodes.Ldc_I4_0] = i => HandleLoadInt32(i, 0);
-            registry[OpCodes.Ldc_I4_1] = i => HandleLoadInt32(i, 1);
-            registry[OpCodes.Ldc_I4_2] = i => HandleLoadInt32(i, 2);
-            registry[OpCodes.Ldc_I4_3] = i => HandleLoadInt32(i, 3);
-            registry[OpCodes.Ldc_I4_4] = i => HandleLoadInt32(i, 4);
-            registry[OpCodes.Ldc_I4_5] = i => HandleLoadInt32(i, 5);
-            registry[OpCodes.Ldc_I4_6] = i => HandleLoadInt32(i, 6);
-            registry[OpCodes.Ldc_I4_7] = i => HandleLoadInt32(i, 7);            
-            registry[OpCodes.Ldc_I4_8] = i => HandleLoadInt32(i, 8);
+            registry[OpCodes.Ldc_I4] = (s, i) => HandleLoadInt32(s, i, (int)i.Operand);
+            registry[OpCodes.Ldc_I4_S] = (s, i) => HandleLoadInt32(s, i, (sbyte)i.Operand);
+            registry[OpCodes.Ldc_I4_M1] = (s, i) => HandleLoadInt32(s, i, -1);
+            registry[OpCodes.Ldc_I4_0] = (s, i) => HandleLoadInt32(s, i, 0);
+            registry[OpCodes.Ldc_I4_1] = (s, i) => HandleLoadInt32(s, i, 1);
+            registry[OpCodes.Ldc_I4_2] = (s, i) => HandleLoadInt32(s, i, 2);
+            registry[OpCodes.Ldc_I4_3] = (s, i) => HandleLoadInt32(s, i, 3);
+            registry[OpCodes.Ldc_I4_4] = (s, i) => HandleLoadInt32(s, i, 4);
+            registry[OpCodes.Ldc_I4_5] = (s, i) => HandleLoadInt32(s, i, 5);
+            registry[OpCodes.Ldc_I4_6] = (s, i) => HandleLoadInt32(s, i, 6);
+            registry[OpCodes.Ldc_I4_7] = (s, i) => HandleLoadInt32(s, i, 7);
+            registry[OpCodes.Ldc_I4_8] = (s, i) => HandleLoadInt32(s, i, 8);
 
-            registry[OpCodes.Ldc_R8] = i => HandleLoadDouble(i, (double) i.Operand);
+            registry[OpCodes.Ldc_R8] = (s, i) => HandleLoadDouble(s, i, (double)i.Operand);
 
-            registry[OpCodes.Add] = i => HandleBinaryOperator(i, BinaryOperator.Add);
-            registry[OpCodes.Sub] = i => HandleBinaryOperator(i, BinaryOperator.Subtract);
-            registry[OpCodes.Mul] = i => HandleBinaryOperator(i, BinaryOperator.Multiply);
-            registry[OpCodes.Div] = i => HandleBinaryOperator(i, BinaryOperator.Divide);
-            registry[OpCodes.Rem] = i => HandleBinaryOperator(i, BinaryOperator.Remainder);
-            registry[OpCodes.Cgt] = i => HandleBinaryOperator(i, BinaryOperator.GreaterThan);
-            registry[OpCodes.Cgt_Un] = i => HandleBinaryOperator(i, BinaryOperator.GreaterThan);
-            registry[OpCodes.Clt] = i => HandleBinaryOperator(i, BinaryOperator.LessThan);
-            registry[OpCodes.Clt_Un] = i => HandleBinaryOperator(i, BinaryOperator.LessThan);
-            registry[OpCodes.Ceq] = i => HandleBinaryOperator(i, BinaryOperator.Equal);
+            registry[OpCodes.Add] = (s, i) => HandleBinaryOperator(s, i, BinaryOperator.Add);
+            registry[OpCodes.Sub] = (s, i) => HandleBinaryOperator(s, i, BinaryOperator.Subtract);
+            registry[OpCodes.Mul] = (s, i) => HandleBinaryOperator(s, i, BinaryOperator.Multiply);
+            registry[OpCodes.Div] = (s, i) => HandleBinaryOperator(s, i, BinaryOperator.Divide);
+            registry[OpCodes.Rem] = (s, i) => HandleBinaryOperator(s, i, BinaryOperator.Remainder);
+            registry[OpCodes.Cgt] = (s, i) => HandleBinaryOperator(s, i, BinaryOperator.GreaterThan);
+            registry[OpCodes.Cgt_Un] = (s, i) => HandleBinaryOperator(s, i, BinaryOperator.GreaterThan);
+            registry[OpCodes.Clt] = (s, i) => HandleBinaryOperator(s, i, BinaryOperator.LessThan);
+            registry[OpCodes.Clt_Un] = (s, i) => HandleBinaryOperator(s, i, BinaryOperator.LessThan);
+            registry[OpCodes.Ceq] = (s, i) => HandleBinaryOperator(s, i, BinaryOperator.Equal);
 
-            registry[OpCodes.And] = i => HandleBinaryOperator(i, BinaryOperator.And);
-            registry[OpCodes.Or] = i => HandleBinaryOperator(i, BinaryOperator.Or);
-            registry[OpCodes.Xor] = i => HandleBinaryOperator(i, BinaryOperator.Xor);
-            registry[OpCodes.Shl] = i => HandleBinaryOperator(i, BinaryOperator.ShiftLeft);
-            registry[OpCodes.Shr] = i => HandleBinaryOperator(i, BinaryOperator.ShiftRight);
-            registry[OpCodes.Shr_Un] = i => HandleBinaryOperator(i, BinaryOperator.ShiftRight);
+            registry[OpCodes.And] = (s, i) => HandleBinaryOperator(s, i, BinaryOperator.And);
+            registry[OpCodes.Or] = (s, i) => HandleBinaryOperator(s, i, BinaryOperator.Or);
+            registry[OpCodes.Xor] = (s, i) => HandleBinaryOperator(s, i, BinaryOperator.Xor);
+            registry[OpCodes.Shl] = (s, i) => HandleBinaryOperator(s, i, BinaryOperator.ShiftLeft);
+            registry[OpCodes.Shr] = (s, i) => HandleBinaryOperator(s, i, BinaryOperator.ShiftRight);
+            registry[OpCodes.Shr_Un] = (s, i) => HandleBinaryOperator(s, i, BinaryOperator.ShiftRight);
 
             //conversions            
-            registry[OpCodes.Conv_I] = i => HandleConversion(i, typeof(int));
-            registry[OpCodes.Conv_I1] = i => HandleConversion(i, typeof(int));
-            registry[OpCodes.Conv_I2] = i => HandleConversion(i, typeof(int));
-            registry[OpCodes.Conv_I4] = i => HandleConversion(i, typeof(int));
-            registry[OpCodes.Conv_I8] = i => HandleConversion(i, typeof(long));            
-            registry[OpCodes.Conv_Ovf_I] = i => HandleConversion(i, typeof(int));
-            registry[OpCodes.Conv_Ovf_I1] = i => HandleConversion(i, typeof(int));
-            registry[OpCodes.Conv_Ovf_I2] = i => HandleConversion(i, typeof(int));
-            registry[OpCodes.Conv_Ovf_I4] = i => HandleConversion(i, typeof(int));            
-            registry[OpCodes.Conv_Ovf_I8] = i => HandleConversion(i, typeof(long));
+            registry[OpCodes.Conv_I] = (s, i) => HandleConversion(s, i, typeof(int));
+            registry[OpCodes.Conv_I1] = (s, i) => HandleConversion(s, i, typeof(int));
+            registry[OpCodes.Conv_I2] = (s, i) => HandleConversion(s, i, typeof(int));
+            registry[OpCodes.Conv_I4] = (s, i) => HandleConversion(s, i, typeof(int));
+            registry[OpCodes.Conv_I8] = (s, i) => HandleConversion(s, i, typeof(long));
+            registry[OpCodes.Conv_Ovf_I] = (s, i) => HandleConversion(s, i, typeof(int));
+            registry[OpCodes.Conv_Ovf_I1] = (s, i) => HandleConversion(s, i, typeof(int));
+            registry[OpCodes.Conv_Ovf_I2] = (s, i) => HandleConversion(s, i, typeof(int));
+            registry[OpCodes.Conv_Ovf_I4] = (s, i) => HandleConversion(s, i, typeof(int));
+            registry[OpCodes.Conv_Ovf_I8] = (s, i) => HandleConversion(s, i, typeof(long));
 
-            registry[OpCodes.Ldelem_I] = i => HandleLoadNumericArrayElement(i, typeof (int));
-            registry[OpCodes.Ldelem_I1] = i => HandleLoadNumericArrayElement(i, typeof (int));
-            registry[OpCodes.Ldelem_I2] = i => HandleLoadNumericArrayElement(i, typeof (int));
-            registry[OpCodes.Ldelem_I4] = i => HandleLoadNumericArrayElement(i, typeof (int));
-            registry[OpCodes.Ldelem_I8] = i => HandleLoadNumericArrayElement(i, typeof (long));
-            registry[OpCodes.Ldelem_U1] = i => HandleLoadNumericArrayElement(i, typeof (uint));
-            registry[OpCodes.Ldelem_U2] = i => HandleLoadNumericArrayElement(i, typeof (uint));
-            registry[OpCodes.Ldelem_U4] = i => HandleLoadNumericArrayElement(i, typeof (uint));            
-            registry[OpCodes.Ldelem_R4] = i => HandleLoadNumericArrayElement(i, typeof (float));
-            registry[OpCodes.Ldelem_R8] = i => HandleLoadNumericArrayElement(i, typeof (double));
+            registry[OpCodes.Ldelem_I] = (s, i) => HandleLoadNumericArrayElement(s, i, typeof(int));
+            registry[OpCodes.Ldelem_I1] = (s, i) => HandleLoadNumericArrayElement(s, i, typeof(int));
+            registry[OpCodes.Ldelem_I2] = (s, i) => HandleLoadNumericArrayElement(s, i, typeof(int));
+            registry[OpCodes.Ldelem_I4] = (s, i) => HandleLoadNumericArrayElement(s, i, typeof(int));
+            registry[OpCodes.Ldelem_I8] = (s, i) => HandleLoadNumericArrayElement(s, i, typeof(long));
+            registry[OpCodes.Ldelem_U1] = (s, i) => HandleLoadNumericArrayElement(s, i, typeof(uint));
+            registry[OpCodes.Ldelem_U2] = (s, i) => HandleLoadNumericArrayElement(s, i, typeof(uint));
+            registry[OpCodes.Ldelem_U4] = (s, i) => HandleLoadNumericArrayElement(s, i, typeof(uint));
+            registry[OpCodes.Ldelem_R4] = (s, i) => HandleLoadNumericArrayElement(s, i, typeof(float));
+            registry[OpCodes.Ldelem_R8] = (s, i) => HandleLoadNumericArrayElement(s, i, typeof(double));
         }
 
-        protected virtual void HandleLoadNumericArrayElement(Instruction instruction, Type type)
+        protected virtual TState HandleLoadNumericArrayElement(TState state, Instruction instruction, Type type)
         {
-            this.HandleUnrecognized(instruction);
+            return this.HandleUnrecognized(state, instruction);
         }
 
-        protected virtual void HandleLoadDouble(Instruction instruction, double value)
+        protected virtual TState HandleLoadDouble(TState state, Instruction instruction, double value)
         {
-            this.HandleUnrecognized(instruction);
+            return this.HandleUnrecognized(state, instruction);
         }
 
-        protected virtual void HandleConversion(Instruction instruction, Type targetType)
+        protected virtual TState HandleConversion(TState state, Instruction instruction, Type targetType)
         {
-            this.HandleUnrecognized(instruction);
+            return this.HandleUnrecognized(state, instruction);
         }
 
-        protected virtual void HandleBinaryOperator(Instruction instruction, BinaryOperator @operator)
+        protected virtual TState HandleBinaryOperator(TState state, Instruction instruction, BinaryOperator @operator)
         {
-            this.HandleUnrecognized(instruction);
+            return this.HandleUnrecognized(state, instruction);
         }
 
-        protected virtual void HandleStoreArgument(Instruction instruction, ParameterInfo parameter)
+        protected virtual TState HandleStoreArgument(TState state, Instruction instruction, ParameterInfo parameter)
         {
-            this.HandleUnrecognized(instruction);
+            return this.HandleUnrecognized(state, instruction);
         }
 
-        protected virtual void HandleLoadInt32(Instruction instruction, int constant)
+        protected virtual TState HandleLoadInt32(TState state, Instruction instruction, int constant)
         {
-            this.HandleUnrecognized(instruction);
+            return this.HandleUnrecognized(state, instruction);
         }
 
-        protected virtual void HandleStoreVariable(Instruction instruction, LocalVariableInfo variable)
+        protected virtual TState HandleStoreVariable(TState state, Instruction instruction, LocalVariableInfo variable)
         {
-            this.HandleUnrecognized(instruction);
+            return this.HandleUnrecognized(state, instruction);
         }
 
-        protected virtual void HandleLoadVariable(Instruction instruction, LocalVariableInfo variable)
+        protected virtual TState HandleLoadVariable(TState state, Instruction instruction, LocalVariableInfo variable)
         {
-            this.HandleUnrecognized(instruction);
+            return this.HandleUnrecognized(state, instruction);
         }
 
-        protected override void HandleLdarg(Instruction instruction)
+        protected override TState HandleLdarg(TState state, Instruction instruction)
         {
-            var param = (ParameterInfo) instruction.Operand;            
-
-            if (param.Position == 0 && !this.AnalyzedMethod.IsStatic)
-            {
-                this.HandleLoadThis(instruction);
-            }
-            else
-            {
-                this.HandleLoadArgument(instruction, param);
-            }
+            var param = (ParameterInfo) instruction.Operand;
+            
+            return this.HandleLoadArgument(state, instruction, param);
         }
 
-        protected override void HandleLdarg_0(Instruction instruction)
+        protected override TState HandleLdarg_0(TState state, Instruction instruction)
         {
             if (this.AnalyzedMethod.IsStatic)
             {
-                this.HandleLoadArgument(instruction, this.AnalyzedMethod.GetParameters()[0]);
+                return this.HandleLoadArgument(state, instruction, this.AnalyzedMethod.GetParameters()[0]);
             }
             else
             {
-                this.HandleLoadThis(instruction);
+                return this.HandleLoadThis(state, instruction);
             }
         }
 
-        private void LoadArgByIndex(Instruction instruction, int index)
+        private TState LoadArgByIndex(TState state, Instruction instruction, int index)
         {
             if (this.AnalyzedMethod.IsStatic)
             {
-                this.HandleLoadArgument(instruction, this.AnalyzedMethod.GetParameters()[index]);
+                return this.HandleLoadArgument(state, instruction, this.AnalyzedMethod.GetParameters()[index]);
             }
             else
             {
-                this.HandleLoadArgument(instruction, this.AnalyzedMethod.GetParameters()[index - 1]);
+                return this.HandleLoadArgument(state, instruction, this.AnalyzedMethod.GetParameters()[index - 1]);
             }
         }
 
-        protected override void HandleLdarg_S(Instruction instruction)
+        protected override TState HandleLdarg_S(TState state, Instruction instruction)
         {
-            this.HandleLoadArgument(instruction, (ParameterInfo)instruction.Operand);
+            return this.HandleLoadArgument(state, instruction, (ParameterInfo)instruction.Operand);
         }
 
-        protected virtual void HandleLoadThis(Instruction instruction)
+        protected virtual TState HandleLoadThis(TState state, Instruction instruction)
         {
-            this.HandleUnrecognized(instruction);
+            return this.HandleUnrecognized(state, instruction);
         }
 
-        protected virtual void HandleLoadArgument(Instruction instruction, ParameterInfo parameter)
+        protected virtual TState HandleLoadArgument(TState state, Instruction instruction, ParameterInfo parameter)
         {
-            this.HandleUnrecognized(instruction);
+            return this.HandleUnrecognized(state, instruction);
         }
     }
 }

@@ -51,7 +51,7 @@ namespace Tests.FlowAnalysisTests
 
                 try
                 {
-                    var result = walker.Walk(graph);
+                    var result = walker.Walk(method, graph);
                     Assert.That(result, Is.EqualTo(0), "Stack not 0 for method" + method);
                 }
                 catch (Exception e)
@@ -63,9 +63,9 @@ namespace Tests.FlowAnalysisTests
 
         private class Walker : BaseCfgWalker<int>
         {
-            public int Walk(ControlFlowGraph cfg)
+            public int Walk(MethodInfo method, ControlFlowGraph cfg)
             {
-                var results = base.WalkCore(cfg);
+                var results = base.WalkCore(method, cfg);
 
                 return results.Single();
             }
@@ -75,7 +75,7 @@ namespace Tests.FlowAnalysisTests
                 return inputState + block.StackDiff;
             }
 
-            protected override int GetInitialState()
+            protected override int GetInitialState(MethodInfo method, ControlFlowGraph graph)
             {
                 return 0;
             }
