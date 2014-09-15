@@ -20,14 +20,17 @@ namespace CodeModel.Extensions.Cqrs
             {
                 foreach (var call in node.InboundLinks.OfType<MethodCallLink>().ToList())
                 {
-                    var commandType = this.convention.GetExecutedCommandType(call);
-
-                    var commandNode = context.FindNodes<CommandNode>(x => x.Type == commandType).SingleOrDefault();
-
-                    if (commandNode != null)
+                    foreach (var types in call.ActualParameterTypes)
                     {
-                        context.AddLink(call.Source, commandNode, new ExecuteCommandLink());
-                        context.RemoveLink(call);
+                        var commandType = this.convention.GetExecutedCommandType(types);
+
+                        var commandNode = context.FindNodes<CommandNode>(x => x.Type == commandType).SingleOrDefault();
+
+                        if (commandNode != null)
+                        {
+                            context.AddLink(call.Source, commandNode, new ExecuteCommandLink());
+                            context.RemoveLink(call);
+                        }
                     }
                 }
             }

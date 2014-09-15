@@ -5,6 +5,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using CodeModel.Convetions;
+using CodeModel.FlowAnalysis;
 using CodeModel.Links;
 using CodeModel.Model;
 
@@ -19,6 +20,6 @@ namespace CodeModel.Extensions.Cqrs
         Type GetHandledCommand(MethodInfo method);
         bool IsCommand(TypeNode node);
         bool IsCommandExecuteMethod(MethodNode node);
-        Type GetExecutedCommandType(MethodCallLink call);
+        Type GetExecutedCommandType(PotentialType[] actualParameterTypes);
     }
 }

@@ -22,6 +22,13 @@ namespace TestTarget.Cqrs
             commandDispatcher.Execute(new RegisterUser());
         }
 
+        public void ExecuteMultipleCommands()
+        {
+            var commandDispatcher = GetCommandDispatcher();
+            commandDispatcher.Execute(new RegisterUser());
+            commandDispatcher.Execute(new UnregisterUser());
+        }
+
         private static ICommandDispatcher GetCommandDispatcher()
         {
             return null;

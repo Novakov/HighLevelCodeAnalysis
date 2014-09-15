@@ -132,5 +132,27 @@ namespace Tests.ExtensionsTests
             Assert.That(Builder.Model, Graph.Has
                 .Links<ExecuteCommandLink>(exactly: 1, from: callOrigin, to: command));
         }
+
+        [Test]
+        public void ShouldLinkMultipleCommandExecutionsFromOneMethod()
+        {
+            // arrange
+            Builder.RunMutator(new AddAssemblies(typeof(Marker).Assembly));
+            Builder.RunMutator<AddTypes>();
+            Builder.RunMutator<AddMethods>();
+            Builder.RunMutator<LinkMethodCalls>();
+
+            Builder.RunMutator<DetectCommands>();
+
+            // act
+            Builder.RunMutator<LinkCommandExecutions>();
+
+            // assert           
+            var callOrigin = Builder.Model.GetNodeForMethod(Get.MethodOf<CallOrigin>(x => x.ExecuteMultipleCommands()));
+            Assert.That(callOrigin.OutboundLinks, Has
+                .Exactly(2)
+                .TypeOf<ExecuteCommandLink>()
+                );
+        }
     }
 }

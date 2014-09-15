@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Reflection;
 using CodeModel.Extensions.Cqrs;
+using CodeModel.FlowAnalysis;
 using CodeModel.Links;
 using CodeModel.Model;
 using TestTarget.Cqrs;
@@ -52,9 +53,9 @@ namespace TestTarget.Conventions
             return node.Method == CommandExecute;
         }
 
-        public Type GetExecutedCommandType(MethodCallLink call)
+        public Type GetExecutedCommandType(PotentialType[] actualParameterTypes)
         {
-            return call.ActualParameterTypes[0][0].Type;
+            return actualParameterTypes[0].Type;
         }
     }
 }
