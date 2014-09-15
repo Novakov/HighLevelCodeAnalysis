@@ -1,0 +1,44 @@
+﻿using System.Reflection;
+using CodeModel.Builder;
+using CodeModel.Extensions.Cqrs;
+using CodeModel.Extensions.Cqrs.Rules;
+using CodeModel.Model;
+using CodeModel.Mutators;
+using CodeModel.Rules;
+using NUnit.Framework;
+using TestTarget.Cqrs;
+using TestTarget.Rules.InvokeOnlyOneCommand;
+
+namespace Tests.Rules
+{
+    [TestFixture]
+    public class InvokeOnlyOneCommandTest : BaseRuleTest<InvokeOnlyOneCommand>
+    {
+        [Test]
+        [TestCase("DispatchTwoCommands")]
+        public void ShouldViolate(string methodName)
+        {
+            // arrange
+            var model = new CodeModelBuilder();
+            model.Model.AddNode(new MethodNode(typeof (Targets).GetMethod(methodName)));
+            model.Model.AddNode(new MethodNode(Get.MethodOf<ICommandDispatcher>(x => x.Execute(null))));
+            model.Model.AddNode(new TypeNode(typeof (RegisterUser)));
+            model.Model.AddNode(new TypeNode(typeof (UnregisterUser)));
+
+            model.RegisterConventionsFrom(TestTarget.Conventions.Marker.Assembly);
+
+            model.RunMutator<DetectCommands>();
+
+            model.RunMutator<LinkMethodCalls>();
+
+            model.RunMutator<LinkCommandExecutions>();
+
+            // act
+            this.Verify(model);
+
+            // assert
+            Assert.That(this.VerificationContext.Violations, Has.Exactly(1)
+                .Property("Category").EqualTo(InvokeOnlyOneCommand.Category));
+        }
+    }
+}

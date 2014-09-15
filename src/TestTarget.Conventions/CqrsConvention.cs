@@ -29,13 +29,13 @@ namespace TestTarget.Conventions
             return call.ActualParameterTypes[0][0].Type;
         }
 
-        public bool IsCommandHandlerMethod(MethodNode node)
+        public bool IsCommandHandlerMethod(MethodInfo method)
         {
-            var parameters = node.Method.GetParameters();
+            var parameters = method.GetParameters();
 
-            return node.Method.Name == "Execute"
+            return method.Name == "Execute"
                    && parameters.Length == 1
-                   && typeof (ICommandHandler<>).MakeGenericType(parameters[0].ParameterType).IsAssignableFrom(node.Method.DeclaringType);
+                   && typeof (ICommandHandler<>).MakeGenericType(parameters[0].ParameterType).IsAssignableFrom(method.DeclaringType);
         }
 
         public Type GetHandledCommand(MethodInfo method)

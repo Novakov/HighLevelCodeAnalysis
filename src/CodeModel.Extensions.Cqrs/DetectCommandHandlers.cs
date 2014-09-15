@@ -19,7 +19,7 @@ namespace CodeModel.Extensions.Cqrs
                 return;
             }
 
-            if (convention.IsCommandHandlerMethod(node))
+            if (convention.IsCommandHandlerMethod(node.Method))
             {
                context.ReplaceNode(node, new CommandHandlerNode(node.Method, convention.GetHandledCommand(node.Method))); 
             }
