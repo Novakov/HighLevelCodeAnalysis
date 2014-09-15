@@ -1,4 +1,5 @@
 ﻿using System;
+using System.CodeDom;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -15,7 +16,7 @@ namespace CodeModel.Ast
     {
         private readonly Stack<Expression> expressions;
         private readonly List<Statement> statements;
-        private readonly HashSet<int> labels; 
+        private readonly HashSet<int> labels;
 
         public AstBuilder(IEnumerable<int> labels)
         {
@@ -24,8 +25,8 @@ namespace CodeModel.Ast
             this.labels = new HashSet<int>(labels);
         }
 
-        public static object BuildForMethod(MethodInfo method)
-        {            
+        public static MethodDeclaration BuildForMethod(MethodInfo method)
+        {
             var cfg = ControlFlowGraphFactory.BuildForMethod(method);
 
             var labels = cfg.Blocks.OfType<InstructionBlockNode>().Select(x => x.First.Offset).Where(x => x != 0);
@@ -35,8 +36,8 @@ namespace CodeModel.Ast
             builder.Initialize(method);
 
             builder.Visit(null, method.GetInstructions());
-            
-            return builder.statements;
+
+            return new MethodDeclaration(method, new BlockStatement(builder.statements));
         }
 
         protected override void RegisterHandlers(Dictionary<OpCode, Func<object, Instruction, object>> registry)
@@ -64,7 +65,7 @@ namespace CodeModel.Ast
         {
             var expression = this.expressions.Pop();
 
-            statements.Add(new StoreLocal(variable, expression));
+            statements.Add(new StoreLocal(variable, expression).WithInstruction(instruction));
             return null;
         }
 
@@ -96,7 +97,7 @@ namespace CodeModel.Ast
 
             if (callee.ReturnType == typeof(void))
             {
-                this.statements.Add(new ExpressionStatement(callExpression));
+                this.statements.Add(new ExpressionStatement(callExpression).WithInstruction(instruction));
             }
             else
             {
@@ -111,9 +112,16 @@ namespace CodeModel.Ast
             var condition = this.expressions.Pop();
 
             var offset = ((Instruction)instruction.Operand).Offset;
-            this.statements.Add(new ConditionalBranchStatement(condition, offset));
+            this.statements.Add(new ConditionalBranchStatement(condition, offset).WithInstruction(instruction));
 
-            this.labels.Add(offset);
+            return null;
+        }
+
+        protected override object HandleBr_S(object state, Instruction instruction)
+        {
+            var offset = ((Instruction)instruction.Operand).Offset;
+
+            this.statements.Add(new GotoStatement(offset).WithInstruction(instruction));
 
             return null;
         }
@@ -125,7 +133,7 @@ namespace CodeModel.Ast
 
         protected override object HandleUnrecognized(object state, Instruction instruction)
         {
-            this.statements.Add(new ILStatement(instruction));
+            this.statements.Add(new ILStatement(instruction).WithInstruction(instruction));
 
             return null;
         }
@@ -144,12 +152,12 @@ namespace CodeModel.Ast
         {
             if (this.AnalyzedMethod.ReturnType == typeof(void))
             {
-                this.statements.Add(new ReturnStatement());                
+                this.statements.Add(new ReturnStatement().WithInstruction(instruction));
             }
             else
             {
                 var value = this.expressions.Pop();
-                this.statements.Add(new ReturnStatement(value));
+                this.statements.Add(new ReturnStatement(value).WithInstruction(instruction));
             }
 
             return null;
@@ -161,10 +169,62 @@ namespace CodeModel.Ast
             {
                 this.labels.Remove(instruction.Offset);
 
-                this.statements.Add(new LabelStatement(instruction.Offset));
+                this.statements.Add(new LabelStatement(instruction.Offset).WithInstruction(instruction));
             }
 
             return base.BeforeInstruction(state, instruction);
+        }
+    }
+
+    public class GotoStatement : Statement
+    {
+        public int Offset { get; private set; }
+
+        public GotoStatement(int offset)
+        {
+            this.Offset = offset;
+        }
+    }
+
+    public class MethodDeclaration : AstNode
+    {
+        public MethodInfo Method { get; private set; }
+        public BlockStatement Body { get; private set; }
+
+        public MethodDeclaration(MethodInfo method, BlockStatement body)
+        {
+            this.Method = method;
+            this.Body = body;
+        }
+    }
+
+    public abstract class AstNode : IAnnotable
+    {
+        private readonly List<object> annotations;
+
+        protected AstNode()
+        {
+            this.annotations = new List<object>();
+        }
+
+        public void Annonate(object annotation)
+        {
+            this.annotations.Add(annotation);
+        }
+
+        public IEnumerable<object> Annotations
+        {
+            get { return this.annotations; }
+        }
+
+        public void RemoveAnnotation(object annotation)
+        {
+            this.annotations.Remove(annotation);
+        }
+
+        public TAnnotation Annotation<TAnnotation>()
+        {
+            return this.annotations.OfType<TAnnotation>().SingleOrDefault();
         }
     }
 
@@ -199,7 +259,8 @@ namespace CodeModel.Ast
         public Expression Left { get; private set; }
         public Expression Right { get; private set; }
 
-        public BinaryExpression(Type type, BinaryOperator @operator, Expression left, Expression right) : base(type)
+        public BinaryExpression(Type type, BinaryOperator @operator, Expression left, Expression right)
+            : base(type)
         {
             this.Operator = @operator;
             this.Left = left;
@@ -262,11 +323,17 @@ namespace CodeModel.Ast
         }
     }
 
-    public abstract class Statement
+    public abstract class Statement : AstNode
     {
+        public Statement WithInstruction(Instruction instruction)
+        {
+            this.Annonate(instruction);
+
+            return this;
+        }
     }
 
-    public abstract class Expression
+    public abstract class Expression : AstNode
     {
         public Type Type { get; private set; }
 
@@ -280,8 +347,9 @@ namespace CodeModel.Ast
     {
         public object Value { get; private set; }
 
-        public ConstantExpression(Type type, object value) : base(type)
-        {            
+        public ConstantExpression(Type type, object value)
+            : base(type)
+        {
             this.Value = value;
         }
     }
@@ -301,11 +369,17 @@ namespace CodeModel.Ast
         }
     }
 
+    public interface IRewritable<T>
+        where T : AstNode
+    {
+        T Rewrite(AstRewriterBase visitor);
+    }
+
     public abstract class AstVisitorBase
     {
         public void Visit(object value)
         {
-            ((dynamic) this).On((dynamic) value);
+            ((dynamic)this).On((dynamic)value);
         }
 
         public virtual void On(IEnumerable<Statement> statements)
@@ -324,6 +398,39 @@ namespace CodeModel.Ast
         public virtual void On(Statement statement)
         {
             throw new InvalidOperationException("Unhandled statement " + statement.GetType().Name);
+        }
+    }
+
+    public abstract class AstRewriterBase
+    {
+        public T Rewrite<T>(T value)
+            where T : AstNode
+        {
+            if (value == null)
+            {
+                return null;
+            }
+
+            return ((dynamic)this).On((dynamic)value);
+        }
+
+        public MethodDeclaration On(MethodDeclaration method)
+        {
+            return new MethodDeclaration(method.Method, this.Rewrite(method.Body)).CopyAnnotations(method);
+        }       
+
+        public virtual T On<T>(T node)
+            where T : AstNode
+        {
+            var rewritable = node as IRewritable<T>;
+
+            if (rewritable != null)
+            {
+                return rewritable.Rewrite(this).CopyAnnotations(node);   
+            }
+
+            //throw new InvalidOperationException("Unhandled node " + node.GetType().Name);
+            return node;
         }
     }
 }

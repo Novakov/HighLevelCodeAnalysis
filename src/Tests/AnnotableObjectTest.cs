@@ -1,4 +1,5 @@
 ﻿using CodeModel;
+using CodeModel.Ast;
 using CodeModel.Graphs;
 using NUnit.Framework;
 
@@ -6,6 +7,7 @@ namespace Tests
 {
     [TestFixture(TypeArgs = new[] { typeof(AnnotableTestSampleNode)})]
     [TestFixture(TypeArgs = new[] { typeof(AnnotableTestSampleLink)})]
+    [TestFixture(TypeArgs = new[] { typeof(AnnotableSampleAstNode)})]
     public class AnnotableObjectTest<TTarget>
         where TTarget : IAnnotable, new()
     {
@@ -80,6 +82,10 @@ namespace Tests
     }
 
     internal class AnnotableTestSampleLink : Link
+    {
+    }
+
+    internal class AnnotableSampleAstNode : AstNode
     {
     }
 }

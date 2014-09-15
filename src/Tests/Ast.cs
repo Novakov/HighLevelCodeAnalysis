@@ -15,8 +15,13 @@ namespace Tests
 
             var ast = AstBuilder.BuildForMethod(method);
 
+            ast = new RewriteIf().Rewrite(ast);
+            ast = new RewriteIfElse().Rewrite(ast);
+
+            //ast.Dupa().Dupa2();
+
             var codeWriter = new WriteCode();
-            codeWriter.Visit(ast);
+            codeWriter.Visit(ast.Body);
 
             Console.WriteLine(codeWriter.Write());
         }
@@ -31,6 +36,25 @@ namespace Tests
             if (loc_3 > 10)
             {
                 Console.WriteLine("Greater");
+
+                if (loc_3 > 20)
+                {
+                    Console.WriteLine("Even greater");
+                }
+
+                if (loc_3 > 30)
+                {
+                    Console.WriteLine("Even event greater");
+                }
+                else
+                {
+                    Console.WriteLine("No so much");
+                }
+            }
+
+            while (loc_3 < 1000)
+            {
+                loc_3++;
             }
         }
     }
@@ -38,10 +62,12 @@ namespace Tests
     public class WriteCode : AstVisitorBase
     {
         private readonly StringBuilder code;
+        private int indentLevel;
 
         public WriteCode()
         {
             this.code = new StringBuilder();
+            this.indentLevel = 0;
         }
 
         public string Write()
@@ -49,13 +75,27 @@ namespace Tests
             return this.code.ToString();
         }
 
+        private StringBuilder Indent()
+        {
+            return this.code.Append(' ', this.indentLevel*4);
+        }
+
+        private void Nested(Action action)
+        {
+            this.indentLevel++;
+
+            action();
+            
+            this.indentLevel--;
+        }
+
         public void On(StoreLocal storeLocal)
         {
-            this.code
+            this.Indent()
                 .Append("loc_")
                 .Append(storeLocal.Variable.LocalIndex)
                 .Append(" = ");
-            
+
             this.Visit(storeLocal.Value);
 
             this.code.Append(";").AppendLine();
@@ -95,27 +135,28 @@ namespace Tests
             {
                 this.Visit(parameter);
                 this.code.Append(", ");
-            }            
+            }
 
             this.code.Append(")");
         }
 
         public void On(ExpressionStatement statement)
         {
+            this.Indent();
             this.Visit(statement.Expression);
             this.code.Append(";").AppendLine();
         }
 
         public void On(ConditionalBranchStatement branch)
         {
-            this.code.Append("if(");
+            this.Indent().Append("if(");
             this.Visit(branch.Condition);
             this.code.Append(") goto IL_").Append(branch.Offset.ToString("X4")).Append(";").AppendLine();
         }
 
         public void On(ILStatement il)
         {
-            this.code.Append(il.Instruction).AppendLine();
+            this.Indent().Append(il.Instruction).AppendLine();
         }
 
         public void On(BinaryExpression binary)
@@ -133,12 +174,12 @@ namespace Tests
 
         public void On(ReturnStatement ret)
         {
-            this.code.Append("return");
+            this.Indent().Append("return");
 
             if (ret.Value != null)
             {
                 this.code.Append(" ");
-                this.Visit(ret.Value);                
+                this.Visit(ret.Value);
             }
 
             this.code.Append(";").AppendLine();
@@ -146,7 +187,34 @@ namespace Tests
 
         public void On(LabelStatement label)
         {
-            this.code.Append("IL_").Append(label.Offset.ToString("X4")).Append(": ");
+            this.Indent().Append("IL_").Append(label.Offset.ToString("X4")).AppendLine(": ");
+        }
+
+        public void On(IfStatement ifStatement)
+        {
+            this.Indent().Append("if(");
+            this.Visit(ifStatement.Condition);
+            this.code.Append(")").AppendLine();
+            this.Visit(ifStatement.TrueStatement);
+
+            if (ifStatement.ElseStatement != null)
+            {
+                this.Indent().Append("else").AppendLine();
+                this.Visit(ifStatement.ElseStatement);
+            }
+        }
+
+
+        public void On(BlockStatement block)
+        {
+            this.Indent().Append("{").AppendLine();
+            this.Nested(() => this.Visit(block.Statements));
+            this.Indent().Append("}").AppendLine();
+        }
+
+        public void On(GotoStatement @goto)
+        {
+            this.Indent().Append("goto ").Append("IL_").Append(@goto.Offset.ToString("X4")).Append(";").AppendLine();
         }
     }
 }

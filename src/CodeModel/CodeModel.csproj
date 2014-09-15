@@ -67,6 +67,7 @@
     <Compile Include="Annotations\Immutable.cs" />
     <Compile Include="ArrayComparer.cs" />
     <Compile Include="Ast\AstBuilder.cs" />
+    <Compile Include="Ast\RecognizeIfStatement.cs" />
     <Compile Include="Builder\CodeModelBuilder.cs" />
     <Compile Include="Builder\ICompositeMutator.cs" />
     <Compile Include="Builder\IGraphMutator.cs" />
@@ -122,6 +123,7 @@
     <Compile Include="IAnnotable.cs" />
     <Compile Include="Dependencies\IDynamicNeed.cs" />
     <Compile Include="LambdaComparer.cs" />
+    <Compile Include="ListExtensions.cs" />
     <Compile Include="Primitives\ApplicationEntryCall.cs" />
     <Compile Include="Primitives\ContainedInLink.cs" />
     <Compile Include="Primitives\GetFieldLink.cs" />
