@@ -32,9 +32,9 @@ namespace Tests.FlowAnalysisTests
                 return results.Single();
             }
 
-            protected override int VisitBlock(int inputState, BlockNode block)
+            protected override int VisitBlock(int alreadyExecutedCommands, BlockNode block)
             {
-                return inputState + block.StackDiff;
+                return alreadyExecutedCommands + block.StackDiff;
             }
 
             protected override int GetInitialState(MethodInfo method, ControlFlowGraph graph)

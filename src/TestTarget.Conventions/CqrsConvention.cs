@@ -48,9 +48,9 @@ namespace TestTarget.Conventions
             return typeof (ICommand).IsAssignableFrom(node.Type);
         }
 
-        public bool IsCommandExecuteMethod(MethodNode node)
+        public bool IsCommandExecuteMethod(MethodInfo method)
         {
-            return node.Method == CommandExecute;
+            return method == CommandExecute;
         }
 
         public Type GetExecutedCommandType(PotentialType[] actualParameterTypes)

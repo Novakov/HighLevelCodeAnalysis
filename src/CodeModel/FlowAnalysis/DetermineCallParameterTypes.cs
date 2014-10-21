@@ -22,9 +22,9 @@ namespace CodeModel.FlowAnalysis
             base.WalkCore(method, reducedGraph);
         }
         
-        protected override TypeAnalysisState VisitBlock(TypeAnalysisState inputState, BlockNode block)
+        protected override TypeAnalysisState VisitBlock(TypeAnalysisState alreadyExecutedCommands, BlockNode block)
         {
-            return this.recorder.Visit(inputState, block.Instructions);
+            return this.recorder.Visit(alreadyExecutedCommands, block.Instructions);
         }
 
         protected override TypeAnalysisState GetInitialState(MethodInfo method, ControlFlowGraph graph)

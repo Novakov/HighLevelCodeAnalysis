@@ -1,5 +1,8 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 using CodeModel.Builder;
+using CodeModel.Convetions;
 using CodeModel.Rules;
 using TinyIoC;
 
@@ -40,6 +43,21 @@ namespace CodeModel
                     }
                 }
             }            
+        }
+
+        public void RegisterConventionsFrom(params Assembly[] assemblies)
+        {
+            var toRegister = from assembly in assemblies
+                             from type in assembly.GetTypes()
+                             where typeof(IConvention).IsAssignableFrom(type)
+                             from @interface in type.GetInterfaces()
+                             where typeof(IConvention).IsAssignableFrom(@interface)
+                             select new { Interface = @interface, Implementation = type };
+
+            foreach (var item in toRegister)
+            {
+                this.container.Register(item.Interface, item.Implementation);
+            }
         }
     }
 }

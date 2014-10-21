@@ -13,16 +13,17 @@ namespace Tests.Rules
         protected VerificationContext VerificationContext { get; private set; }
 
         [SetUp]
-        public void SetUp()
+        public void BaseSetUp()
         {
-            this.Verificator = new Verificator()
-                .AddRule<TRule>();
+            this.Verificator = new Verificator();             
 
-            this.VerificationContext = new VerificationContext();
+            this.VerificationContext = new VerificationContext();            
         }
 
         protected void Verify(CodeModelBuilder codeModel)
         {
+            this.Verificator.AddRule<TRule>();
+
             this.Verificator.Verify(this.VerificationContext, codeModel);
         }
     }

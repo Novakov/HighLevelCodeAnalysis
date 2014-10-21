@@ -19,7 +19,7 @@ namespace CodeModel.Extensions.Cqrs
         bool IsCommandHandlerMethod(MethodInfo method);
         Type GetHandledCommand(MethodInfo method);
         bool IsCommand(TypeNode node);
-        bool IsCommandExecuteMethod(MethodNode node);
+        bool IsCommandExecuteMethod(MethodInfo method);
         Type GetExecutedCommandType(PotentialType[] actualParameterTypes);
     }
 }

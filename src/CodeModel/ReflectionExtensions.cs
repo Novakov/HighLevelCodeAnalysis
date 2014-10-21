@@ -44,5 +44,10 @@ namespace CodeModel
 
             return null;
         }
+
+        public static bool HasBody(this MethodBase @this)
+        {
+            return @this.GetMethodBody() != null;
+        }
     }
 }

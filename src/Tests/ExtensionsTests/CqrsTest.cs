@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System.Linq;
+using System.Reflection;
 using CodeModel;
 using CodeModel.Builder;
 using CodeModel.Extensions.Cqrs;
@@ -129,8 +130,9 @@ namespace Tests.ExtensionsTests
             // assert           
             var callOrigin = Builder.Model.GetNodeForMethod(Get.MethodOf<CallOrigin>(x => x.ExecuteCommand()));
             var command = Builder.Model.GetNodeForType(typeof (RegisterUser));
+            
             Assert.That(Builder.Model, Graph.Has
-                .Links<ExecuteCommandLink>(exactly: 1, from: callOrigin, to: command));
+                .Links<ExecuteCommandLink>(from: callOrigin, to: command));
         }
 
         [Test]

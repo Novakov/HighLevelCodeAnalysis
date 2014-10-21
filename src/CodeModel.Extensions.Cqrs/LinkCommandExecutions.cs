@@ -16,7 +16,7 @@ namespace CodeModel.Extensions.Cqrs
 
         public void Mutate(MethodNode node, IMutateContext context)
         {
-            if (convention.IsCommandExecuteMethod(node))
+            if (convention.IsCommandExecuteMethod(node.Method))
             {
                 foreach (var call in node.InboundLinks.OfType<MethodCallLink>().ToList())
                 {
