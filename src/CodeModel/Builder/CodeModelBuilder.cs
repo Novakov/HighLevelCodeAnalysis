@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.ExceptionServices;
 using CodeModel.Convetions;
 using CodeModel.Graphs;
 using CodeModel.Rules;
@@ -65,7 +66,14 @@ namespace CodeModel.Builder
 
                 foreach (var node in context.NodesToProcess().OfType(nodeType))
                 {
-                    mutateMethod.Invoke(mutator, new object[] { node, context });
+                    try
+                    {
+                        mutateMethod.Invoke(mutator, new object[] { node, context });
+                    }
+                    catch (TargetInvocationException e)
+                    {
+                        ExceptionDispatchInfo.Capture(e.InnerException).Throw();
+                    }
                 }
             }
         }

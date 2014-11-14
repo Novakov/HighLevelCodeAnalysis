@@ -43,8 +43,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CommandExecutionCount.cs" />
     <Compile Include="CommandHandlerNode.cs" />
     <Compile Include="CommandNode.cs" />
+    <Compile Include="CountCommandExecutions.cs" />
     <Compile Include="DetectCommandHandlers.cs" />
     <Compile Include="DetectCommands.cs" />
     <Compile Include="DetectQueries.cs" />

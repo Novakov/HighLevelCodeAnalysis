@@ -1,4 +1,4 @@
-using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using CodeModel.FlowAnalysis;
@@ -22,53 +22,37 @@ namespace CodeModel.Extensions.Cqrs.Rules
 
         public void Verify(VerificationContext context, Node node)
         {
-            var methodNode = (MethodNode)node;
-          
-            var cfg = ControlFlowGraphFactory.BuildForMethod(methodNode.Method);
+            var count = node.Annotation<CommandExecutionCount>();
 
-            var violated = false;
-
-            var recorder = new RecordCommandExecution(this.cqrsConvention, () => violated = true);
-
-            recorder.Walk(methodNode.Method, cfg);
-
-            if (violated)
+            if (count == null || count.HighestCount <= 1)
             {
-                context.RecordViolation(this, node, Category, null);
-            }            
+                return;
+            }
+
+            context.RecordViolation(this, node, Category, null);
         }
 
         public bool IsApplicableTo(Node node)
-        {
-            var methodNode = node as MethodNode;
-            return methodNode != null
-                && methodNode.Method.HasBody();
+        {            
+            return node is MethodNode;
         }
     }
 
     class RecordCommandExecution : BaseCfgWalker<int>
     {
         private readonly ICqrsConvention cqrsConvention;
-        private readonly Action recordViolation;
 
-        public RecordCommandExecution(ICqrsConvention cqrsConvention, Action recordViolation)
+        public RecordCommandExecution(ICqrsConvention cqrsConvention)
         {
             this.cqrsConvention = cqrsConvention;
-            this.recordViolation = recordViolation; 
         }
 
         protected override int VisitBlock(int alreadyExecutedCommands, BlockNode block)
         {
             var calls = block.Instructions.Where(x => x.IsCall());
 
-            var commandExecutions = calls.Count(x => this.cqrsConvention.IsCommandExecuteMethod((MethodInfo) x.Operand));
-
-            var commandExecutionInBlock = commandExecutions > 0;
-            if (commandExecutionInBlock && (alreadyExecutedCommands + commandExecutions) > 1)
-            {
-                this.recordViolation();
-            }
-
+            var commandExecutions = calls.Count(x => this.cqrsConvention.IsCommandExecuteMethod((MethodInfo) x.Operand));            
+            
             return alreadyExecutedCommands + commandExecutions;
         }
 
@@ -77,9 +61,9 @@ namespace CodeModel.Extensions.Cqrs.Rules
             return 0;
         }
 
-        public void Walk(MethodInfo method, ControlFlowGraph cfg)
+        public IEnumerable<int> Walk(MethodInfo method, ControlFlowGraph cfg)
         {
-            base.WalkCore(method, cfg);
+            return base.WalkCore(method, cfg);
         }
     }
 }

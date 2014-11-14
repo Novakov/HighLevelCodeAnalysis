@@ -68,6 +68,8 @@ namespace Tests.Rules
 
             model.RunMutator<LinkCommandExecutions>();
 
+            model.RunMutator<CountCommandExecutions>();
+
             return model;
         }
     }
