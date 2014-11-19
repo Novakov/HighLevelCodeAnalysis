@@ -4,7 +4,9 @@ namespace CodeModel.Model
 {
     public class ApplicationEntryPoint : Node
     {
-        public ApplicationEntryPoint() : base("ApplicationEntryPoint")
+        public const string NodeId = "ApplicationEntryPoint";
+
+        public ApplicationEntryPoint() : base(NodeId)
         {
         }
 

@@ -152,6 +152,7 @@
     <Compile Include="ReflectionExtensions.cs" />
     <Compile Include="ReversableStack.cs" />
     <Compile Include="Rules\DoNotUseDateTimeNow.cs" />
+    <Compile Include="Rules\IGraphRule.cs" />
     <Compile Include="Rules\INodeRule.cs" />
     <Compile Include="Rules\IRule.cs" />
     <Compile Include="Rules\SymbolService.cs" />

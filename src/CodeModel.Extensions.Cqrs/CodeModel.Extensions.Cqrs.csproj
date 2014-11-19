@@ -50,6 +50,7 @@
     <Compile Include="DetectCommandHandlers.cs" />
     <Compile Include="DetectCommands.cs" />
     <Compile Include="DetectQueries.cs" />
+    <Compile Include="Dupa.cs" />
     <Compile Include="ExecuteCommandLink.cs" />
     <Compile Include="ExecutedByLink.cs" />
     <Compile Include="ICqrsConvention.cs" />

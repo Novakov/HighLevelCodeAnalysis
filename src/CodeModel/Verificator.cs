@@ -42,6 +42,12 @@ namespace CodeModel
                         }
                     }
                 }
+
+                var graphRule = rule as IGraphRule;
+                if (graphRule != null)
+                {
+                    graphRule.Verify(context, codeModel.Model);
+                }
             }            
         }
 
