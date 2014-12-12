@@ -42,5 +42,10 @@ namespace CodeModel.Symbols
         {
             get { return this.endColumn; }
         }
+
+        public override string ToString()
+        {
+            return string.Format("{0}({1},{2})", this.FileName, this.StartLine, this.StartColumn);
+        }
     }
 }

@@ -15,7 +15,7 @@ namespace CodeModel.FlowAnalysis
         {
             int pushedCount = instruction.PushedValuesCountByOpCode();
 
-            if (methodBody.ExceptionHandlingClauses.Any(x => x.HandlerOffset == instruction.Offset && !x.Flags.HasFlag(ExceptionHandlingClauseOptions.Finally)))
+            if (methodBody.ExceptionHandlingClauses.Any(x => x.HandlerOffset == instruction.Offset && !x.Flags.HasFlag(ExceptionHandlingClauseOptions.Finally) && !x.Flags.HasFlag(ExceptionHandlingClauseOptions.Fault)))
             {
                 pushedCount++;
             }

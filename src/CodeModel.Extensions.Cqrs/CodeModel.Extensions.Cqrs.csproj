@@ -50,7 +50,6 @@
     <Compile Include="DetectCommandHandlers.cs" />
     <Compile Include="DetectCommands.cs" />
     <Compile Include="DetectQueries.cs" />
-    <Compile Include="Dupa.cs" />
     <Compile Include="ExecuteCommandLink.cs" />
     <Compile Include="ExecutedByLink.cs" />
     <Compile Include="ICqrsConvention.cs" />
@@ -61,6 +60,7 @@
     <Compile Include="QueryExecutionLink.cs" />
     <Compile Include="QueryNode.cs" />
     <Compile Include="Rules\InvokeOnlyOneCommand.cs" />
+    <Compile Include="Rules\OnlyOneCommandExecutionOnPathRule.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CodeModel\CodeModel.csproj">

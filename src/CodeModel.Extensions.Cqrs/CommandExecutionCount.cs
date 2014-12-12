@@ -2,6 +2,7 @@
 {
     public class CommandExecutionCount
     {
+        [Exportable]
         public int HighestCount { get; private set; }
 
         public CommandExecutionCount(int highestCount)

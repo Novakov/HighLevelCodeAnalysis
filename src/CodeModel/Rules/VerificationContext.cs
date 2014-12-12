@@ -15,9 +15,12 @@ namespace CodeModel.Rules
             this.violations = new List<Violation>();
         }
 
-        public void RecordViolation(object rule, Node errorNode, string category, SourceLocation? sourceLocation)
+        public Violation RecordViolation(object rule, Node errorNode, string category, SourceLocation? sourceLocation)
         {
-            this.violations.Add(new Violation(rule, errorNode, category, sourceLocation));
+            var violation = new Violation(rule, errorNode, category, sourceLocation);
+            this.violations.Add(violation);
+
+            return violation;
         }
     }
 }

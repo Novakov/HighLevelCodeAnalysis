@@ -51,7 +51,7 @@ namespace CodeModel.Extensions.Cqrs.Rules
         {
             var calls = block.Instructions.Where(x => x.IsCall());
 
-            var commandExecutions = calls.Count(x => this.cqrsConvention.IsCommandExecuteMethod((MethodInfo) x.Operand));            
+            var commandExecutions = calls.Count(x => x.Operand is MethodInfo && this.cqrsConvention.IsCommandExecuteMethod((MethodInfo) x.Operand));            
             
             return alreadyExecutedCommands + commandExecutions;
         }

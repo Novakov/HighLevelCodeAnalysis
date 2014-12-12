@@ -38,7 +38,7 @@ namespace CodeModel.Rules
 
             var violatingInstructions = from instruction in methodNode.Method.GetInstructions()
                 where instruction.IsCall()
-                let callee = (MethodInfo) instruction.Operand
+                let callee = (MethodBase) instruction.Operand
                 where forbiddenMethods.Contains(callee)
                 select instruction;
 
@@ -59,7 +59,8 @@ namespace CodeModel.Rules
 
         public bool IsApplicableTo(Node node)
         {
-            return node is MethodNode;
+            return node is MethodNode
+                && (node as MethodNode).Method.HasBody();
         }
     }
 }

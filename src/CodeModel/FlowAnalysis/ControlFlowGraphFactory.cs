@@ -72,6 +72,11 @@ namespace CodeModel.FlowAnalysis
                 {
                     joinPoints.Add(clause.HandlerOffset);
                 }
+
+                if (clause.Flags.HasFlag(ExceptionHandlingClauseOptions.Fault))
+                {
+                    joinPoints.Add(clause.HandlerOffset);                    
+                }
             }
 
             var blockBoundaries = new List<int>();

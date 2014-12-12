@@ -16,7 +16,7 @@ namespace CodeModel.Extensions.Cqrs
         }
 
         public void Mutate(MethodNode node, IMutateContext context)
-        {
+        {           
             if (node.HasAnnotation<CommandExecutionCount>())
             {
                 return;
