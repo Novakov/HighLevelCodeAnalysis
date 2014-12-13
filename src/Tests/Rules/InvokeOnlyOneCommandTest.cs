@@ -18,6 +18,7 @@ namespace Tests.Rules
         [Test]
         [TestCase("PathWithThreeMethodsSecondAndThirdExecuteOneCommand")]
         [TestCase("TwoBranchesOneWithSingleCommandSecondWithTwoCommands")]
+        [TestCase("OneMethodCallsTwoMethodsEachExecuteOneCommand")]
         public void ShouldViolate(string entryPointName)
         {
             // arrange

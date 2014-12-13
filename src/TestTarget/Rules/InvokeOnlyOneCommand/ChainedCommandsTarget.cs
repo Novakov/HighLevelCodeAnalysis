@@ -62,6 +62,12 @@ namespace TestTarget.Rules.InvokeOnlyOneCommand
             }
         }
 
+        public void OneMethodCallsTwoMethodsEachExecuteOneCommand()
+        {
+            this.LastMethodThanExecutesOneCommand();
+            this.AnotherMethodExecutingOneCommand();
+        }
+
         private T Get<T>()
         {
             return default(T);

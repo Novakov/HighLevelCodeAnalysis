@@ -23,48 +23,40 @@ namespace CodeModel.Extensions.Cqrs.Rules
         public class PathVerify : DepthFirstSearch
         {
             private readonly VerificationContext context;
-            private readonly Stack<int> commandExecutionCountsOnPath;
             private readonly HashSet<Link> visitedLinks;
-            private Stack<Node> currentPath;
+            private readonly Stack<PathItem> currentPath;
 
             public PathVerify(VerificationContext context)
             {
                 this.context = context;
 
-                this.commandExecutionCountsOnPath = new Stack<int>();
-
                 this.visitedLinks = new HashSet<Link>();
-                this.currentPath = new Stack<Node>();
+                this.currentPath = new Stack<PathItem>();
             }
 
             protected override void EnterNode(Node node, IEnumerable<Link> availableThrough)
             {
                 this.visitedLinks.UnionWith(availableThrough);
 
-                this.currentPath.Push(node);
+                var item = new PathItem(node);
 
-                var count = node.Annotation<CommandExecutionCount>();
-
-                if (count != null)
+                foreach (var pathItem in this.currentPath)
                 {
-                    this.commandExecutionCountsOnPath.Push(count.HighestCount);
-                }
-                else
-                {
-                    this.commandExecutionCountsOnPath.Push(0);
+                    pathItem.Increment(item.CommandExecutionCount);
                 }
 
-                if (this.commandExecutionCountsOnPath.Sum() > 1)
-                {
-                    this.context.RecordViolation(null, node, OnlyOneCommandExecutionOnPathRule.Category, null)
-                        .Attach("path", this.currentPath.ToList());
-                }
+                this.currentPath.Push(item);
             }
 
             protected override void LeaveNode(Node node, IEnumerable<Link> availableThrough)
             {
-                this.commandExecutionCountsOnPath.Pop();
-                this.currentPath.Pop();
+                var item = this.currentPath.Pop();
+
+                if (item.CommandExecutionCount > 1)
+                {
+                    this.context.RecordViolation(null, node, OnlyOneCommandExecutionOnPathRule.Category, null)
+                        .Attach("path", this.currentPath.Select(x => x.Node).ToList());
+                }
             }
 
             protected override IEnumerable<IGrouping<Node, Link>> GetOutboundTargets(Node node)
@@ -73,6 +65,31 @@ namespace CodeModel.Extensions.Cqrs.Rules
                     .Where(x => x is MethodCallLink || x is ExecuteCommandLink || x is ApplicationEntryCall)
                     .Except(this.visitedLinks)
                     .GroupBy(x => x.Target);
+            }
+
+            private class PathItem
+            {
+                public Node Node { get; private set; }
+                public int CommandExecutionCount { get; private set; }
+
+                public PathItem(Node node)
+                {
+                    this.Node = node;
+                    var count = node.Annotation<CommandExecutionCount>();
+                    if (count != null)
+                    {
+                        this.CommandExecutionCount = count.HighestCount;
+                    }
+                    else
+                    {
+                        this.CommandExecutionCount = 0;
+                    }
+                }
+
+                public void Increment(int count)
+                {
+                    this.CommandExecutionCount += count;
+                }
             }
         }
     }
