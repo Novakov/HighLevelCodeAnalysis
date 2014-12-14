@@ -153,6 +153,10 @@
     <Compile Include="ReversableStack.cs" />
     <Compile Include="Rules\DoNotUseDateTimeNow.cs" />
     <Compile Include="Rules\IGraphRule.cs" />
+    <Compile Include="Rules\ImmutableTypeHasNonPrivateSetterViolation.cs" />
+    <Compile Include="Rules\ImmutableTypeHasWritableFieldViolation.cs" />
+    <Compile Include="Rules\ImmutableTypeSetsFieldOutsideOfConstructorViolation.cs" />
+    <Compile Include="Rules\ImmutableTypeSetsPropertyOutsideOfConstructorViolation.cs" />
     <Compile Include="Rules\INodeRule.cs" />
     <Compile Include="Rules\IRule.cs" />
     <Compile Include="Rules\SymbolService.cs" />

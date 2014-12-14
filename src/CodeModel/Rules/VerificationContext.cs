@@ -1,6 +1,4 @@
 using System.Collections.Generic;
-using CodeModel.Graphs;
-using CodeModel.Symbols;
 
 namespace CodeModel.Rules
 {
@@ -15,12 +13,9 @@ namespace CodeModel.Rules
             this.violations = new List<Violation>();
         }
 
-        public Violation RecordViolation(object rule, Node errorNode, string category, SourceLocation? sourceLocation)
+        public void RecordViolation(Violation violation)
         {
-            var violation = new Violation(rule, errorNode, category, sourceLocation);
             this.violations.Add(violation);
-
-            return violation;
         }
     }
 }

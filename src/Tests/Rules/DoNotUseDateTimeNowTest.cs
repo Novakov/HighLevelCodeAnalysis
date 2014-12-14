@@ -31,7 +31,7 @@ namespace Tests.Rules
 
 			// assert
 			Assert.That(this.VerificationContext.Violations, Has
-                .Exactly(1).Property("Category").EqualTo(DoNotUseDateTimeNow.UsesDateTimeNow));
+                .Exactly(1).Property("Category").EqualTo(UsesDateTimeNowViolation.UsesDateTimeNow));
 	    }
 
 		[Test]

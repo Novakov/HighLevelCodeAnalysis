@@ -13,10 +13,10 @@ namespace Tests.Rules
     public class ImmutabilityTest : BaseRuleTest<TypeIsImmutable>
     {
         [Test]
-        [TestCase(typeof(SetFieldOutsideOfCtor), TypeIsImmutable.SettingFieldOutsideOfConstructor)]
-        [TestCase(typeof(SetPropertyOutsideOfCtor), TypeIsImmutable.SettingPropertyOutsideOfConstructor)]
-        [TestCase(typeof(PublicPropertySetter), TypeIsImmutable.NonPrivatePropertySetter)]
-        [TestCase(typeof(WriteableField), TypeIsImmutable.WritableField)]
+        [TestCase(typeof(SetFieldOutsideOfCtor), ImmutableTypeSetsFieldOutsideOfConstructorViolation.SettingFieldOutsideOfConstructor)]
+        [TestCase(typeof(SetPropertyOutsideOfCtor), ImmutableTypeSetsPropertyOutsideOfConstructorViolation.SettingPropertyOutsideOfConstructor)]
+        [TestCase(typeof(PublicPropertySetter), ImmutableTypeHasNonPrivateSetterViolation.NonPrivatePropertySetter)]
+        [TestCase(typeof(WriteableField), ImmutableTypeHasWritableFieldViolation.WritableField)]
         public void ShouldViolate(Type type, string category)
         {
             // arrange

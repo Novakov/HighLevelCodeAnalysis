@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using CodeModel.Annotations;
 using CodeModel.Graphs;
 using CodeModel.Links;
@@ -8,11 +9,6 @@ namespace CodeModel.Rules
 {
     public class TypeIsImmutable : INodeRule
     {
-        public const string NonPrivatePropertySetter = "NonPrivatePropertySetter";
-        public const string SettingPropertyOutsideOfConstructor = "SetPropertyOutsideOfCtor";
-        public const string SettingFieldOutsideOfConstructor = "SetFieldOutsideOfCtor";
-        public const string WritableField = "WritableField";
-
         public void Verify(VerificationContext context, Node node)
         {
             var typeNode = (TypeNode)node;
@@ -36,7 +32,7 @@ namespace CodeModel.Rules
 
             foreach (var field in violatingFields)
             {
-                context.RecordViolation(this, field, WritableField, null);
+                context.RecordViolation(new ImmutableTypeHasWritableFieldViolation(this, field));                
             }
         }
 
@@ -48,7 +44,7 @@ namespace CodeModel.Rules
 
             foreach (var property in violatingProperties)
             {
-                context.RecordViolation(this, property, NonPrivatePropertySetter, null);
+                context.RecordViolation(new ImmutableTypeHasNonPrivateSetterViolation(this, property));                
             }
         }
 
@@ -60,7 +56,7 @@ namespace CodeModel.Rules
 
             foreach (var method in violatingMethods)
             {
-                context.RecordViolation(this, method, SettingPropertyOutsideOfConstructor, null);
+                context.RecordViolation(new ImmutableTypeSetsPropertyOutsideOfConstructorViolation(this, method));                
             }
         }
 
@@ -72,7 +68,7 @@ namespace CodeModel.Rules
 
             foreach (var method in violatingMethods)
             {
-                context.RecordViolation(this, method, SettingFieldOutsideOfConstructor, null);
+                context.RecordViolation(new ImmutableTypeSetsFieldOutsideOfConstructorViolation(this, method));                
             }
         }
     }

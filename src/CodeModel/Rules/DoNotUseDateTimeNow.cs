@@ -1,22 +1,16 @@
 using System;
-using System.IO;
 using System.Linq;
 using System.Reflection;
 using CodeModel.FlowAnalysis;
 using CodeModel.Graphs;
 using CodeModel.Model;
 using CodeModel.Symbols;
-using Microsoft.Samples.Debugging.CorMetadata.NativeApi;
-using Microsoft.Samples.Debugging.CorSymbolStore;
-using Microsoft.Samples.Debugging.SymbolStore;
 using Mono.Reflection;
 
 namespace CodeModel.Rules
 {
     public class DoNotUseDateTimeNow : INodeRule
     {
-        public const string UsesDateTimeNow = "UsesDateTimeNow";
-
         private readonly SymbolService symbols;
 
         public DoNotUseDateTimeNow(SymbolService symbols)
@@ -46,7 +40,7 @@ namespace CodeModel.Rules
             {
                 var sourceLocation = FindSourceLocation(violatingInstruction, methodNode);
 
-                context.RecordViolation(this, node, UsesDateTimeNow, sourceLocation);
+                context.RecordViolation(new UsesDateTimeNowViolation(this, node, sourceLocation));                
             }
         }
 
@@ -61,6 +55,16 @@ namespace CodeModel.Rules
         {
             return node is MethodNode
                 && (node as MethodNode).Method.HasBody();
+        }
+    }
+
+    public class UsesDateTimeNowViolation : Violation
+    {
+        public const string UsesDateTimeNow = "UsesDateTimeNow";
+
+        public UsesDateTimeNowViolation(DoNotUseDateTimeNow rule, Node node, SourceLocation? sourceLocation) 
+            : base(rule, node, UsesDateTimeNow, sourceLocation)
+        {
         }
     }
 }

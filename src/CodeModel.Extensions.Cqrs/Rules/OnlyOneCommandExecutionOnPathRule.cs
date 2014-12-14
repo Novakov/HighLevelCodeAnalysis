@@ -9,8 +9,6 @@ namespace CodeModel.Extensions.Cqrs.Rules
 {
     public class OnlyOneCommandExecutionOnPathRule : IGraphRule
     {
-        public const string Category = "OnlyOneCommandExecutionOnPathRule";
-
         public void Verify(VerificationContext context, Graph graph)
         {
             var v = new PathVerify(context);
@@ -54,8 +52,8 @@ namespace CodeModel.Extensions.Cqrs.Rules
 
                 if (item.CommandExecutionCount > 1)
                 {
-                    this.context.RecordViolation(null, node, OnlyOneCommandExecutionOnPathRule.Category, null)
-                        .Attach("path", this.currentPath.Select(x => x.Node).ToList());
+                    this.context.RecordViolation(new MethodCanLeadToExecutionOfMoreThanOneCommandViolation(null, node)
+                        .Attach("path", this.currentPath.Select(x => x.Node).ToList()));
                 }
             }
 
@@ -91,6 +89,17 @@ namespace CodeModel.Extensions.Cqrs.Rules
                     this.CommandExecutionCount += count;
                 }
             }
+        }
+    }
+
+    public class MethodCanLeadToExecutionOfMoreThanOneCommandViolation : Violation
+    {
+        public const string ViolationCategory = "OnlyOneCommandExecutionOnPathRule";
+
+        public MethodCanLeadToExecutionOfMoreThanOneCommandViolation(OnlyOneCommandExecutionOnPathRule rule, Node node)
+            : base(rule, node, ViolationCategory, null)
+        {
+            
         }
     }
 }

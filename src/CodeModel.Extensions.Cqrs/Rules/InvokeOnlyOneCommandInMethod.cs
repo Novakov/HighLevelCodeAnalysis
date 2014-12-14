@@ -9,13 +9,11 @@ using Mono.Reflection;
 
 namespace CodeModel.Extensions.Cqrs.Rules
 {
-    public class InvokeOnlyOneCommand : INodeRule
+    public class InvokeOnlyOneCommandInMethod : INodeRule
     {
-        public const string Category = "InvokeOnlyOneCommand";
-
         private readonly ICqrsConvention cqrsConvention;
 
-        public InvokeOnlyOneCommand(ICqrsConvention cqrsConvention)
+        public InvokeOnlyOneCommandInMethod(ICqrsConvention cqrsConvention)
         {
             this.cqrsConvention = cqrsConvention;
         }
@@ -29,7 +27,7 @@ namespace CodeModel.Extensions.Cqrs.Rules
                 return;
             }
 
-            context.RecordViolation(this, node, Category, null);
+            context.RecordViolation(new MethodExecutesMoreThanOneCommandViolation(this, node));            
         }
 
         public bool IsApplicableTo(Node node)

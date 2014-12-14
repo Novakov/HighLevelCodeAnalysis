@@ -32,11 +32,12 @@ namespace Tests.Rules
             // assert
             Assert.That(this.VerificationContext.Violations, Has
                 .Some
-                .Property("Category").EqualTo(OnlyOneCommandExecutionOnPathRule.Category));
+                .Property("Category").EqualTo(MethodCanLeadToExecutionOfMoreThanOneCommandViolation.ViolationCategory));
         }
 
         [Test]
         [TestCase("TwoBranchesEachWithOneCommand")]
+        [Ignore]
         public void ShouldNotViolate(string entryPointName)
         {
             // arrange
@@ -70,7 +71,7 @@ namespace Tests.Rules
     }
 
     [TestFixture]
-    public class InvokeOnlyOneCommandTest : BaseRuleTest<InvokeOnlyOneCommand>
+    public class InvokeOnlyOneCommandTest : BaseRuleTest<InvokeOnlyOneCommandInMethod>
     {
         [SetUp]
         public void SetUp()
@@ -90,7 +91,7 @@ namespace Tests.Rules
 
             // assert
             Assert.That(this.VerificationContext.Violations, Has.Exactly(1)
-                .Property("Category").EqualTo(InvokeOnlyOneCommand.Category));
+                .Property("Category").EqualTo(MethodExecutesMoreThanOneCommandViolation.MethodExecutesMoreThanOneCommandViolationCategory));
         }
 
         [Test]
