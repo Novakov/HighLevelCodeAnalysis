@@ -30,8 +30,11 @@ namespace Tests.Rules
 			this.Verify(builder);
 
 			// assert
-			Assert.That(this.VerificationContext.Violations, Has
-                .Exactly(1).Property("Category").EqualTo(UsesDateTimeNowViolation.UsesDateTimeNow));
+			Assert.That(this.VerificationContext.Violations, Has.Count.EqualTo(1));
+
+            Assert.That(this.VerificationContext.Violations.ElementAt(0), Is                
+                .InstanceOf<UsesDateTimeNowViolation>()                
+            );
 	    }
 
 		[Test]

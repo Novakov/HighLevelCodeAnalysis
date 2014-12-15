@@ -6,10 +6,12 @@ namespace CodeModel.Rules
     {
         public const string SettingPropertyOutsideOfConstructor = "SetPropertyOutsideOfCtor";
 
-        public ImmutableTypeSetsPropertyOutsideOfConstructorViolation(TypeIsImmutable rule, MethodNode method)
-            : base(rule, method, SettingPropertyOutsideOfConstructor, null)
+        public MethodNode ViolatingMethod { get; private set; }
+
+        public ImmutableTypeSetsPropertyOutsideOfConstructorViolation(TypeIsImmutable rule, TypeNode violatingType, MethodNode violatingMethod)
+            : base(rule, violatingType, SettingPropertyOutsideOfConstructor, null)
         {
-            
+            ViolatingMethod = violatingMethod;
         }
     }
 }

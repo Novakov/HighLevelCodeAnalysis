@@ -51,7 +51,7 @@ namespace CodeModel.Graphs
 
         public override string ToString()
         {
-            return this.Id;
+            return this.DisplayLabel;
         }
 
         public bool HasLinkTo(Node target)

@@ -6,9 +6,12 @@ namespace CodeModel.Rules
     {
         public const string WritableField = "WritableField";
 
-        public ImmutableTypeHasWritableFieldViolation(TypeIsImmutable rule, FieldNode node) 
-            : base(rule, node, WritableField, null)
+        public FieldNode ViolatingField { get; private set; }
+
+        public ImmutableTypeHasWritableFieldViolation(TypeIsImmutable rule, TypeNode violatingType, FieldNode violatingField) 
+            : base(rule, violatingType, WritableField, null)
         {
+            ViolatingField = violatingField;
         }
     }
 }

@@ -32,7 +32,7 @@ namespace CodeModel.Rules
 
             foreach (var field in violatingFields)
             {
-                context.RecordViolation(new ImmutableTypeHasWritableFieldViolation(this, field));                
+                context.RecordViolation(new ImmutableTypeHasWritableFieldViolation(this, typeNode, field));                
             }
         }
 
@@ -44,7 +44,7 @@ namespace CodeModel.Rules
 
             foreach (var property in violatingProperties)
             {
-                context.RecordViolation(new ImmutableTypeHasNonPrivateSetterViolation(this, property));                
+                context.RecordViolation(new ImmutableTypeHasNonPrivateSetterViolation(this, typeNode, property));                
             }
         }
 
@@ -56,7 +56,7 @@ namespace CodeModel.Rules
 
             foreach (var method in violatingMethods)
             {
-                context.RecordViolation(new ImmutableTypeSetsPropertyOutsideOfConstructorViolation(this, method));                
+                context.RecordViolation(new ImmutableTypeSetsPropertyOutsideOfConstructorViolation(this, typeNode, method));                
             }
         }
 
@@ -68,7 +68,7 @@ namespace CodeModel.Rules
 
             foreach (var method in violatingMethods)
             {
-                context.RecordViolation(new ImmutableTypeSetsFieldOutsideOfConstructorViolation(this, method));                
+                context.RecordViolation(new ImmutableTypeSetsFieldOutsideOfConstructorViolation(this, typeNode, method));                
             }
         }
     }

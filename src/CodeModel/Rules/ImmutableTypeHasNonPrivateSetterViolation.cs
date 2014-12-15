@@ -6,10 +6,12 @@ namespace CodeModel.Rules
     {
         public const string NonPrivatePropertySetter = "NonPrivatePropertySetter";
 
-        public ImmutableTypeHasNonPrivateSetterViolation(TypeIsImmutable rule, PropertyNode propertyNode)
-            : base(rule, propertyNode, NonPrivatePropertySetter, null)
+        public PropertyNode ViolatingProperty { get; private set; }
+
+        public ImmutableTypeHasNonPrivateSetterViolation(TypeIsImmutable rule, TypeNode violatingType, PropertyNode violatingProperty)
+            : base(rule, violatingType, NonPrivatePropertySetter, null)
         {
-            
+            ViolatingProperty = violatingProperty;
         }
     }
 }

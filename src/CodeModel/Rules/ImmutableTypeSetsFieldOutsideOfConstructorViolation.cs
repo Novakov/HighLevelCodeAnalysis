@@ -6,10 +6,12 @@ namespace CodeModel.Rules
     {
         public const string SettingFieldOutsideOfConstructor = "SetFieldOutsideOfCtor";
 
-        public ImmutableTypeSetsFieldOutsideOfConstructorViolation(TypeIsImmutable rule, MethodNode method)
-            : base(rule, method, SettingFieldOutsideOfConstructor, null)
+        public MethodNode ViolatingMethod { get; private set; }
+
+        public ImmutableTypeSetsFieldOutsideOfConstructorViolation(TypeIsImmutable rule, TypeNode violatingType, MethodNode violatingMethod)
+            : base(rule, violatingType, SettingFieldOutsideOfConstructor, null)
         {
-            
+            ViolatingMethod = violatingMethod;
         }
     }
 }
