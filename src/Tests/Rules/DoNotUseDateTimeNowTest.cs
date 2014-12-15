@@ -50,12 +50,12 @@ namespace Tests.Rules
             // assert
 		    var violation = this.VerificationContext.Violations.First();
 
-            Assert.That(violation.SourceLocation, Is.Not.Null);
-			Assert.That(violation.SourceLocation.Value.FileName, Is.StringEnding(@"TestTarget\Rules\DateTimeNow\Targets.cs"));
-			Assert.That(violation.SourceLocation.Value.StartLine, Is.EqualTo(13), "Start line mismatch");
-			Assert.That(violation.SourceLocation.Value.EndLine, Is.EqualTo(13), "End line mismatch");
-            Assert.That(violation.SourceLocation.Value.StartColumn, Is.EqualTo(13), "Start column mismatch");
-            Assert.That(violation.SourceLocation.Value.EndColumn, Is.EqualTo(45), "End column mismatch");
+            Assert.That(((UsesDateTimeNowViolation)violation).SourceLocation, Is.Not.Null);
+			Assert.That(((UsesDateTimeNowViolation)violation).SourceLocation.Value.FileName, Is.StringEnding(@"TestTarget\Rules\DateTimeNow\Targets.cs"));
+			Assert.That(((UsesDateTimeNowViolation)violation).SourceLocation.Value.StartLine, Is.EqualTo(13), "Start line mismatch");
+			Assert.That(((UsesDateTimeNowViolation)violation).SourceLocation.Value.EndLine, Is.EqualTo(13), "End line mismatch");
+            Assert.That(((UsesDateTimeNowViolation)violation).SourceLocation.Value.StartColumn, Is.EqualTo(13), "Start column mismatch");
+            Assert.That(((UsesDateTimeNowViolation)violation).SourceLocation.Value.EndColumn, Is.EqualTo(45), "End column mismatch");
 	    }
 
 

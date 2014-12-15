@@ -53,7 +53,7 @@ namespace CodeModel.Extensions.Cqrs.Rules
                 if (item.CommandExecutionCount > 1)
                 {
                     var path = this.currentPath.Select(x => x.Node).ToList();
-                    this.context.RecordViolation(new MethodCanLeadToExecutionOfMoreThanOneCommandViolation(null, node, path));
+                    this.context.RecordViolation(new MethodCanLeadToExecutionOfMoreThanOneCommandViolation(node, path));
                 }
             }
 

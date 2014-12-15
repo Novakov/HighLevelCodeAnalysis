@@ -6,12 +6,10 @@ namespace CodeModel.Extensions.Cqrs.Rules
 {
     public class MethodCanLeadToExecutionOfMoreThanOneCommandViolation : Violation
     {
-        public const string ViolationCategory = "OnlyOneCommandExecutionOnPathRule";
-
         public List<Node> Path { get; private set; }
 
-        public MethodCanLeadToExecutionOfMoreThanOneCommandViolation(OnlyOneCommandExecutionOnPathRule rule, Node node, List<Node> path)
-            : base(rule, node, ViolationCategory, null)
+        public MethodCanLeadToExecutionOfMoreThanOneCommandViolation(Node node, List<Node> path)
+            : base(node)
         {
             Path = path;
         }

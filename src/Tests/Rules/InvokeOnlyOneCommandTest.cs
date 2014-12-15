@@ -31,8 +31,8 @@ namespace Tests.Rules
 
             // assert
             Assert.That(this.VerificationContext.Violations, Has
-                .Some
-                .Property("Category").EqualTo(MethodCanLeadToExecutionOfMoreThanOneCommandViolation.ViolationCategory));
+                .Some.InstanceOf<MethodCanLeadToExecutionOfMoreThanOneCommandViolation>()
+                );
         }
 
         [Test]
@@ -58,9 +58,9 @@ namespace Tests.Rules
 
             builder.RegisterConventionsFrom(TestTarget.Conventions.Marker.Assembly);
 
-            var entryPoint = typeof (ChainedCommandsTarget).GetMethod(entryPointName);
+            var entryPoint = typeof(ChainedCommandsTarget).GetMethod(entryPointName);
 
-            builder.Model.AddNode(new TypeNode(typeof (ChainedCommandsTarget)));
+            builder.Model.AddNode(new TypeNode(typeof(ChainedCommandsTarget)));
             builder.RunMutator(new AddMethods(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public));
             builder.RunMutator<AddApplicationEntryPoint>();
             builder.RunMutator(new LinkApplicationEntryPointTo<MethodNode>(x => x.Method == entryPoint));
@@ -91,7 +91,8 @@ namespace Tests.Rules
 
             // assert
             Assert.That(this.VerificationContext.Violations, Has.Exactly(1)
-                .Property("Category").EqualTo(MethodExecutesMoreThanOneCommandViolation.MethodExecutesMoreThanOneCommandViolationCategory));
+                .InstanceOf<MethodExecutesMoreThanOneCommandViolation>()
+                );
         }
 
         [Test]
@@ -109,7 +110,7 @@ namespace Tests.Rules
             // assert
             Assert.That(this.VerificationContext.Violations, Is.Empty);
         }
-      
+
 
         private static CodeModelBuilder CreateModel(string methodName)
         {

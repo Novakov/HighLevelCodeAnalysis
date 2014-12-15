@@ -31,6 +31,8 @@ namespace CodeModel
         {
             foreach (var rule in this.rules)
             {
+                context.CurrentRule = rule;
+
                 var nodeRule = rule as INodeRule;
                 if (nodeRule != null)
                 {

@@ -27,7 +27,7 @@ namespace CodeModel.Extensions.Cqrs.Rules
                 return;
             }
 
-            context.RecordViolation(new MethodExecutesMoreThanOneCommandViolation(this, node));            
+            context.RecordViolation(new MethodExecutesMoreThanOneCommandViolation(node));            
         }
 
         public bool IsApplicableTo(Node node)

@@ -40,7 +40,7 @@ namespace CodeModel.Rules
             {
                 var sourceLocation = FindSourceLocation(violatingInstruction, methodNode);
 
-                context.RecordViolation(new UsesDateTimeNowViolation(this, node, sourceLocation));                
+                context.RecordViolation(new UsesDateTimeNowViolation(node, sourceLocation));                
             }
         }
 
@@ -58,13 +58,14 @@ namespace CodeModel.Rules
         }
     }
 
-    public class UsesDateTimeNowViolation : Violation
+    public class UsesDateTimeNowViolation : Violation, IViolationWithSourceLocation
     {
-        public const string UsesDateTimeNow = "UsesDateTimeNow";
+        public SourceLocation? SourceLocation { get; private set; }
 
-        public UsesDateTimeNowViolation(DoNotUseDateTimeNow rule, Node node, SourceLocation? sourceLocation) 
-            : base(rule, node, UsesDateTimeNow, sourceLocation)
+        public UsesDateTimeNowViolation(Node node, SourceLocation? sourceLocation) 
+            : base(node)
         {
+            this.SourceLocation = sourceLocation;
         }
     }
 }
