@@ -81,7 +81,7 @@ namespace Tests.GraphTests
         {
         }
 
-        public class CollectVisitedNodes : BreadthFirstSearch
+        public class CollectVisitedNodes : BreadthFirstSearch<Node, Link>
         {
             public string Path { get; set; }
 

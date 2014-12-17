@@ -14,6 +14,8 @@ namespace CodeModel
 
         private readonly Dictionary<string, TElement> providers;
 
+        private readonly HashSet<TElement> requiredElements; 
+
         private int elementId;
 
         public DependencyManager(Func<TElement, IEnumerable<string>> provided, Func<TElement, IEnumerable<string>> needed)
@@ -23,6 +25,7 @@ namespace CodeModel
             this.elements = new Dictionary<TElement, ElementNode>();
             this.providers = new Dictionary<string, TElement>();
             this.elementId = 0;
+            this.requiredElements = new HashSet<TElement>();
         }
 
         public void Add(TElement element)
@@ -34,6 +37,22 @@ namespace CodeModel
             {
                 this.providers[providedResource] = element;
             }
+        }
+
+        public void RequireAllElements()
+        {
+            this.requiredElements.Clear();
+            this.requiredElements.UnionWith(this.elements.Keys);
+        }
+
+        public void RequireElements(IEnumerable<TElement> required)
+        {
+            this.requiredElements.UnionWith(required);
+        }
+
+        public void RequireElements(params TElement[] required)
+        {
+            this.RequireElements((IEnumerable<TElement>)required);
         }
 
         public RunList<TElement> CalculateRunList()
@@ -63,6 +82,8 @@ namespace CodeModel
                     }
                 }
             }
+            
+            EliminateNotRequiredElements(graph);
 
             try
             {
@@ -73,6 +94,23 @@ namespace CodeModel
             catch (CannotSortGraphException)
             {
                 return new RunList<TElement>(new [] {"Unable to construct runlist - possible cyclic dependencies"});
+            }
+        }
+
+        private void EliminateNotRequiredElements(Graph<ElementNode, Link> graph)
+        {
+            var walker = new WalkAndAnnotate<ElementNode, Link>(x => new Mark(), null);
+
+            foreach (var requiredElement in this.requiredElements)
+            {
+                walker.Walk(graph, this.elements[requiredElement]);
+            }
+
+            var unusedNodes = graph.Nodes.Where(x => !x.HasAnnotation<Mark>()).ToList();
+
+            foreach (var unusedNode in unusedNodes)
+            {
+                graph.RemoveNode(unusedNode);
             }
         }
 
@@ -88,6 +126,10 @@ namespace CodeModel
         }
 
         private class ProvidesResource : Link
+        {
+        }
+
+        private class Mark
         {
         }
     }

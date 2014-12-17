@@ -23,7 +23,7 @@ namespace Tests.BuilderTests
             var link3 = graph.AddLink(node2, node3, new SampleLink());
             
             // act
-            var walkAndAnnotate = new WalkAndAnnotate(_ => "node annotation", _ => "link annotation");
+            var walkAndAnnotate = new WalkAndAnnotate<Node, Link>(_ => "node annotation", _ => "link annotation");
             walkAndAnnotate.Walk(graph, start);
 
             // assert

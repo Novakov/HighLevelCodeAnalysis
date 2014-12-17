@@ -4,23 +4,25 @@ using CodeModel.Graphs;
 
 namespace CodeModel
 {
-    public class WalkAndAnnotate : BreadthFirstSearch
+    public class WalkAndAnnotate<TNode, TLink> : BreadthFirstSearch<TNode, TLink> 
+        where TNode : Node 
+        where TLink : Link
     {
-        private readonly Func<Node, object> nodeAnnotation;
-        private readonly Func<Link, object> linkAnnotation;
+        private readonly Func<TNode, object> nodeAnnotation;
+        private readonly Func<TLink, object> linkAnnotation;
 
-        public WalkAndAnnotate(Func<Node, object> nodeAnnotation, Func<Link, object> linkAnnotation)
+        public WalkAndAnnotate(Func<TNode, object> nodeAnnotation, Func<TLink, object> linkAnnotation)
         {
             this.nodeAnnotation = nodeAnnotation;
             this.linkAnnotation = linkAnnotation;
         }
 
-        public void Walk(Graph graph, Node start)
+        public void Walk(Graph<TNode, TLink> graph, TNode start)
         {
             base.WalkCore(graph, start);
         }
 
-        protected override void HandleNode(Node node, IEnumerable<Link> availableThrough)
+        protected override void HandleNode(TNode node, IEnumerable<TLink> availableThrough)
         {
             if (this.nodeAnnotation != null)
             {

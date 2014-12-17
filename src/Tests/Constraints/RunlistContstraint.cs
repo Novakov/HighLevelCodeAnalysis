@@ -23,6 +23,15 @@ namespace Tests.Constraints
             }
         }
 
+        public RunlistConstraint Not
+        {
+            get
+            {
+                this.builder.Append(new NotOperator());
+                return this;
+            }
+        }
+
         public RunlistConstraint()
         {
             this.builder = new ConstraintBuilder();
@@ -48,16 +57,23 @@ namespace Tests.Constraints
             return this;
         }
 
-        public Constraint Resolve()
-        {
-            return this.builder.Resolve();
-        }
-
         public IResolveConstraint HasMissing(string resource)
         {
             this.builder.Append(new PropertyConstraint("Missing", new CollectionContainsConstraint(resource)));
 
             return this;
+        }
+
+        public RunlistConstraint Contains(object element)
+        {
+            this.builder.Append(new PropertyConstraint("Elements", new ContainsConstraint(element)));
+
+            return this;
+        }
+
+        public Constraint Resolve()
+        {
+            return this.builder.Resolve();
         }
     }
 

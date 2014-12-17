@@ -28,6 +28,8 @@ namespace Tests
             this.dependencyManager.Add(needAssembly);
             this.dependencyManager.Add(provideAssembly);
 
+            this.dependencyManager.RequireAllElements();
+
             // act
             var runList = this.dependencyManager.CalculateRunList();
 
@@ -51,6 +53,8 @@ namespace Tests
             this.dependencyManager.Add(provideType);
             this.dependencyManager.Add(needAssemblyAndType);
 
+            this.dependencyManager.RequireAllElements();
+
             // act
             var runList = this.dependencyManager.CalculateRunList();
 
@@ -70,6 +74,8 @@ namespace Tests
 
             this.dependencyManager.Add(provideAssembly);
             this.dependencyManager.Add(needType);
+
+            this.dependencyManager.RequireAllElements();
 
             // act
             var runList = this.dependencyManager.CalculateRunList();
@@ -94,12 +100,44 @@ namespace Tests
             this.dependencyManager.Add(provideTypeAndNeedAssembly);
             this.dependencyManager.Add(needTypeAndAssembly);
 
+            this.dependencyManager.RequireAllElements();
+
             // act
             var runList = this.dependencyManager.CalculateRunList();
 
             // assert
             Assert.That(runList, new RunlistConstraint()
                 .IsNotValid());
+        }
+
+        [Test]
+        public void ShouldBuildRunListWithOnlyElementsRequiredToRunRequiredElements()
+        {
+            // arrange
+            var provideA = new Element("A", "");
+            var needA = new Element("", "A");
+
+            var provideB = new Element("B", "");
+            var provideCneedB = new Element("C", "B");
+
+            var needC = new Element("", "C");
+
+            this.dependencyManager.Add(provideA);
+            this.dependencyManager.Add(needA);
+            this.dependencyManager.Add(provideB);
+            this.dependencyManager.Add(provideCneedB);
+            this.dependencyManager.Add(needC);
+
+            this.dependencyManager.RequireElements(needC);
+
+            // act
+            var runList = this.dependencyManager.CalculateRunList();
+
+            // assert
+            Assert.That(runList, new RunlistConstraint()
+                .IsValid()
+                .And.Not.Contains(provideA)
+                .And.Not.Contains(needA));
         }
 
         private class Element

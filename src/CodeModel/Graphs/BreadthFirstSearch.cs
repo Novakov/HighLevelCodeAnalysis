@@ -6,15 +6,17 @@ using System.Threading.Tasks;
 
 namespace CodeModel.Graphs
 {
-    public abstract class BreadthFirstSearch
+    public abstract class BreadthFirstSearch<TNode, TLink>
+        where TNode : Node
+        where TLink : Link
     {
-        protected void WalkCore(Graph graph, Node startNode)
+        protected void WalkCore(Graph<TNode, TLink> graph, TNode startNode)
         {
             var remaining = new Queue<WalkElement>();
 
-            var handled = new HashSet<Node>();
+            var handled = new HashSet<TNode>();
 
-            remaining.Enqueue(new WalkElement(startNode, Enumerable.Empty<Link>()));
+            remaining.Enqueue(new WalkElement(startNode, Enumerable.Empty<TLink>()));
 
             while (remaining.Any())
             {
@@ -34,19 +36,19 @@ namespace CodeModel.Graphs
             }
         }
 
-        protected virtual IEnumerable<IGrouping<Node, Link>> GetAvailableTargets(Node from)
+        protected virtual IEnumerable<IGrouping<TNode, TLink>> GetAvailableTargets(TNode from)
         {
-            return from.OutboundLinks.GroupBy(x => x.Target);
+            return from.OutboundLinks.OfType<TLink>().GroupBy(x => (TNode)x.Target);
         }
 
-        protected abstract void HandleNode(Node node, IEnumerable<Link> availableThrough);
+        protected abstract void HandleNode(TNode node, IEnumerable<TLink> availableThrough);
 
         private class WalkElement
         {
-            public Node Node { get; private set; }
-            public IEnumerable<Link> AvailableThrough { get; private set; }
+            public TNode Node { get; private set; }
+            public IEnumerable<TLink> AvailableThrough { get; private set; }
 
-            public WalkElement(Node node, IEnumerable<Link> availableThrough)
+            public WalkElement(TNode node, IEnumerable<TLink> availableThrough)
             {
                 this.Node = node;
                 this.AvailableThrough = availableThrough;
