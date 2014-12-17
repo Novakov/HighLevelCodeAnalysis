@@ -1,4 +1,6 @@
-﻿using System.Reflection;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 using CodeModel.Builder;
 using CodeModel.Graphs;
 using CodeModel.Model;
@@ -12,6 +14,11 @@ namespace CodeModel.Mutators
         public AddAssemblies(params Assembly[] assemblies)
         {
             this.assemblies = assemblies;
+        }
+
+        public AddAssemblies(IEnumerable<Assembly> assemblies)
+        {
+            this.assemblies = assemblies.ToArray();
         }
 
         public void Mutate(Graph model)
