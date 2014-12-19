@@ -15,6 +15,7 @@ namespace CodeModel
             this.Elements = elements;
             this.Missing = missing;
             this.IsValid = !missing.Any();
+            this.Errors = Enumerable.Empty<string>();
         }
 
         public RunList(IEnumerable<string> errors)

@@ -50,6 +50,7 @@
     <Compile Include="Configuration\RunConfiguration.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Run.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -62,6 +63,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\CodeModel.Extensions.DgmlExport\CodeModel.Extensions.DgmlExport.csproj">
+      <Project>{47A0F1FD-F593-48FB-9235-F05B3648CA61}</Project>
+      <Name>CodeModel.Extensions.DgmlExport</Name>
+    </ProjectReference>
     <ProjectReference Include="..\CodeModel\CodeModel.csproj">
       <Project>{F585754A-EE95-491A-A9CA-E2FA417B992F}</Project>
       <Name>CodeModel</Name>

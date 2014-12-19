@@ -152,7 +152,9 @@
     <Compile Include="NodeExtensions.cs" />
     <Compile Include="PatternMatch.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ProvideAttribute.cs" />
     <Compile Include="ReflectionExtensions.cs" />
+    <Compile Include="Resources.cs" />
     <Compile Include="ReversableStack.cs" />
     <Compile Include="Rules\DoNotUseDateTimeNow.cs" />
     <Compile Include="Rules\IGraphRule.cs" />

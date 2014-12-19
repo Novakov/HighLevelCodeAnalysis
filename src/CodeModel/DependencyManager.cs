@@ -39,6 +39,19 @@ namespace CodeModel
             }
         }
 
+        public void AddRange(params TElement[] newElements)
+        {
+            this.AddRange((IEnumerable<TElement>)newElements);
+        }
+
+        public void AddRange(IEnumerable<TElement> newElements)
+        {
+            foreach (var element in newElements)
+            {
+                this.Add(element);
+            }
+        }
+
         public void RequireAllElements()
         {
             this.requiredElements.Clear();
@@ -99,7 +112,7 @@ namespace CodeModel
 
         private void EliminateNotRequiredElements(Graph<ElementNode, Link> graph)
         {
-            var walker = new WalkAndAnnotate<ElementNode, Link>(x => new Mark(), null);
+            var walker = new WalkAndAnnotate<ElementNode, Link>(x => new Mark(), null, n => n.InboundLinks.GroupBy(x => (ElementNode) x.Source));
 
             foreach (var requiredElement in this.requiredElements)
             {

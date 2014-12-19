@@ -5,11 +5,12 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using CodeModel;
 using CodeModel.Builder;
-using CodeModel.Mutators;
+using CodeModel.Graphs;
+using CodeModel.Rules;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
-using NLog;
 using RuleRunner.Configuration;
 
 namespace RuleRunner
@@ -38,66 +39,50 @@ namespace RuleRunner
         }
     }
 
-    internal class Run
+    internal class StepDescriptor
     {
-        private static readonly Logger Log = LogManager.GetLogger("Run");
+        public Type Type { get; private set; }
 
-        private readonly RunConfiguration config;
-        private List<Assembly> assembliesToAnalyze;
-        private List<Assembly> conventionAssemblies;
-        private CodeModelBuilder modelBuilder;
+        public IEnumerable<string> Provides { get; private set; }
 
-        public Run(RunConfiguration config)
+        public IEnumerable<string> Needs { get; set; }
+
+        public bool IsRule { get; private set; }
+
+        public bool IsMutator { get; private set; }
+
+        public StepDescriptor(Type type)
         {
-            this.config = config;
-        }
+            this.Type = type;
 
-        public void Execute()
-        {
-            Log.Info("Executing run");
-            
-            LoadAssembliesToAnalyze();
-            LoadConventionAssemblies();
-            
-            BuildModel();
-        }
-
-        private void LoadConventionAssemblies()
-        {
-            Log.Info("Loading convention assemblies");
-            this.conventionAssemblies = LoadAssemblies(this.config.ConventionAssemblies);
-        }
-
-        private void LoadAssembliesToAnalyze()
-        {
-            Log.Info("Loading assemblies to analyze");
-
-            this.assembliesToAnalyze = LoadAssemblies(this.config.AssembliesToAnalyze);
-        }
-
-        private void BuildModel()
-        {
-            Log.Info("Building model");
-            this.modelBuilder = new CodeModelBuilder();
-
-            Log.Trace("Adding assemblies to model");
-            this.modelBuilder.RunMutator(new AddAssemblies(this.assembliesToAnalyze));
-        }
-
-        private List<Assembly> LoadAssemblies(string[] assemblyPaths)
-        {
-            var list = new List<Assembly>();
-
-            foreach (var assemblyPath in assemblyPaths)
+            var provideAttribute = type.GetCustomAttribute<ProvideAttribute>();
+            if (provideAttribute != null)
             {
-                Log.Debug("Loading assembly {0}", assemblyPath);
-
-                var assembly = Assembly.LoadFrom(assemblyPath);
-
-                list.Add(assembly);
+                this.Provides = provideAttribute.Provides;
+            }
+            else
+            {
+                this.Provides = Enumerable.Empty<string>();
             }
 
-            return list;
+
+            var needAttribute = type.GetCustomAttribute<NeedAttribute>();
+            if (needAttribute != null)
+            {
+                this.Needs = needAttribute.Needs;
+            }
+            else
+            {
+                this.Needs = Enumerable.Empty<string>();
+            }
+
+            this.IsRule = typeof (IRule).IsAssignableFrom(this.Type);
+            this.IsMutator = typeof (IMutator).IsAssignableFrom(this.Type);
+        }
+
+        public override string ToString()
+        {
+            return this.Type.Name;
         }
     }
 }

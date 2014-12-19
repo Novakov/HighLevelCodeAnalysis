@@ -4,6 +4,7 @@ using CodeModel.Model;
 
 namespace CodeModel.Mutators
 {
+    [Provide(Resources.Types)]
     public class AddTypes : INodeMutator<AssemblyNode>
     {
         public void Mutate(AssemblyNode node, IMutateContext context)

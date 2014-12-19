@@ -5,6 +5,8 @@ using CodeModel.Model;
 
 namespace CodeModel.Mutators
 {
+    [Provide(Resources.Methods)]
+    [Need(Resources.Types)]
     public class AddMethods : INodeMutator<TypeNode>
     {
         public const BindingFlags DefaultFlags = BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public;

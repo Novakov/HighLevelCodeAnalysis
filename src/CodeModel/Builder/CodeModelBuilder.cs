@@ -52,6 +52,11 @@ namespace CodeModel.Builder
             RunMutator(this.container.Resolve<TMutator>());
         }
 
+        public void RunMutator(Type mutatorType)
+        {
+            RunMutator((IMutator)this.container.Resolve(mutatorType));
+        }
+
         private void MutateNodes(INodeMutator mutator)
         {
             var implementedInterfaces = mutator.GetType().GetGenericImplementationsOfInterface(typeof(INodeMutator<>));

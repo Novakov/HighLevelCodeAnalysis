@@ -1,20 +1,23 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using CodeModel.Graphs;
 
 namespace CodeModel
 {
-    public class WalkAndAnnotate<TNode, TLink> : BreadthFirstSearch<TNode, TLink> 
-        where TNode : Node 
+    public class WalkAndAnnotate<TNode, TLink> : BreadthFirstSearch<TNode, TLink>
+        where TNode : Node
         where TLink : Link
     {
         private readonly Func<TNode, object> nodeAnnotation;
         private readonly Func<TLink, object> linkAnnotation;
+        private readonly Func<TNode, IEnumerable<IGrouping<TNode, TLink>>> availableNodes;
 
-        public WalkAndAnnotate(Func<TNode, object> nodeAnnotation, Func<TLink, object> linkAnnotation)
+        public WalkAndAnnotate(Func<TNode, object> nodeAnnotation, Func<TLink, object> linkAnnotation, Func<TNode, IEnumerable<IGrouping<TNode, TLink>>> availableNodes = null)
         {
             this.nodeAnnotation = nodeAnnotation;
             this.linkAnnotation = linkAnnotation;
+            this.availableNodes = availableNodes;
         }
 
         public void Walk(Graph<TNode, TLink> graph, TNode start)
@@ -43,6 +46,18 @@ namespace CodeModel
                         link.Annonate(this.linkAnnotation(link));
                     }
                 }
+            }
+        }
+
+        protected override IEnumerable<IGrouping<TNode, TLink>> GetAvailableTargets(TNode @from)
+        {
+            if (this.availableNodes == null)
+            {
+                return base.GetAvailableTargets(@from);
+            }
+            else
+            {
+                return this.availableNodes(@from);
             }
         }
     }

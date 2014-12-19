@@ -9,6 +9,7 @@ using Mono.Reflection;
 
 namespace CodeModel.Rules
 {
+    [Need(Resources.Methods)]
     public class DoNotUseDateTimeNow : INodeRule
     {
         private readonly SymbolService symbols;

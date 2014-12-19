@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using CodeModel.Builder;
@@ -23,6 +24,13 @@ namespace CodeModel
             where TRule: class, IRule
         {
             rules.Add(container.Resolve<TRule>());
+
+            return this;
+        }
+
+        public Verificator AddRule(Type ruleType)
+        {
+            rules.Add((IRule)container.Resolve(ruleType));
 
             return this;
         }
