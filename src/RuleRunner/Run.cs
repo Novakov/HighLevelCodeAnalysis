@@ -44,6 +44,11 @@ namespace RuleRunner
             RunRules();
 
             ExportModelAsDgml();
+
+            if (this.config.Reports.Html != null)
+            {
+                this.config.Reports.Html.Write();
+            }
         }
 
         private void RunRules()

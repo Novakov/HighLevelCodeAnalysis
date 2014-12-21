@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
+using RuleRunner.Reports.Html;
 
 namespace RuleRunner.Configuration
 {
@@ -12,5 +13,12 @@ namespace RuleRunner.Configuration
 
         [JsonProperty("conventions")]
         public string[] ConventionAssemblies { get; set; }
+
+        public ReportConfiguration Reports { get; set; }
+    }
+
+    public class ReportConfiguration
+    {
+        public HtmlReport Html { get; set; }
     }
 }
