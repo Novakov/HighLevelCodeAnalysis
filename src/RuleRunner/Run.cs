@@ -10,6 +10,7 @@ using CodeModel.Mutators;
 using CodeModel.Rules;
 using NLog;
 using RuleRunner.Configuration;
+using RuleRunner.Reports.Html;
 
 namespace RuleRunner
 {
@@ -25,6 +26,8 @@ namespace RuleRunner
         private Verificator verificator;
         private VerificationContext verificationContext;
 
+        private HtmlReport Report { get { return this.config.Reports.Html; } }
+
         public Run(RunConfiguration config)
         {
             this.config = config;
@@ -36,6 +39,8 @@ namespace RuleRunner
 
             AppDomain.CurrentDomain.AssemblyResolve += CurrentDomainOnAssemblyResolve;
 
+            this.Report.Configuration(this.config);
+
             LoadAssembliesToAnalyze();
             LoadConventionAssemblies();
 
@@ -45,9 +50,9 @@ namespace RuleRunner
 
             ExportModelAsDgml();
 
-            if (this.config.Reports.Html != null)
+            if (this.Report != null)
             {
-                this.config.Reports.Html.Write();
+                this.Report.Write();
             }
         }
 
@@ -128,6 +133,8 @@ namespace RuleRunner
             Log.Info("Determining runlist");
 
             this.runlist = DetermineRunList(mutators, rules);
+
+            this.Report.RunList(runlist);
 
             Log.Info("Runlist valid: {0}", runlist.IsValid);
 

@@ -1,16 +1,24 @@
 ﻿using System.IO;
-using System.Reflection;
+using CodeModel;
 using Newtonsoft.Json;
 using RazorEngine;
 using RazorEngine.Configuration;
 using RazorEngine.Templating;
+using RuleRunner.Configuration;
 
 namespace RuleRunner.Reports.Html
 {
     public class HtmlReport
     {
+        private readonly ReportModel reportModel;
+
+        public HtmlReport()
+        {
+            reportModel = new ReportModel();
+        }
+
         [JsonProperty("output")]
-        public string OutputDirectory { get; private set; }
+        public string OutputDirectory { get; private set; }     
 
         public void Write()
         {
@@ -18,55 +26,38 @@ namespace RuleRunner.Reports.Html
             {
                 Directory.CreateDirectory(this.OutputDirectory);
             }
+            
+            var indexPath = Path.Combine(this.OutputDirectory, "index.html");
 
-            using(var indexTemplateStream = typeof (HtmlReport).Assembly.GetManifestResourceStream("RuleRunner.Reports.Html.Templates.Index.cshtml"))
+            var context = new ExecuteContext();
+
+            var templateConfig = new TemplateServiceConfiguration()
             {
-                using (var reader = new StreamReader(indexTemplateStream))
-                {                    
-                    var indexPath = Path.Combine(this.OutputDirectory, "index.html");
-
-                    var context = new ExecuteContext();
-
-                    var templateConfig = new TemplateServiceConfiguration()
-                    {
-                        BaseTemplateType = typeof (ReportTemplateBase<>),
-                        Resolver = new EmebeddedTemplateResolver(typeof(HtmlReport).Assembly, "RuleRunner.Reports.Html.Templates")
-                    };
-
-                    var templateService = new TemplateService(templateConfig);
-
-                    var template = templateService.Resolve("Index", "");
-
-                    var result = template.Run(context);
-
-                    File.WriteAllText(indexPath, result);
-                }
-            }            
-        }
-    }
-
-    public class EmebeddedTemplateResolver : ITemplateResolver
-    {
-        private readonly Assembly assembly;
-        private readonly string baseName;
-
-        public EmebeddedTemplateResolver(Assembly assembly, string baseName)
-        {
-            this.assembly = assembly;
-            this.baseName = baseName;
-        }
-
-        public string Resolve(string name)
-        {
-            var resourceName = baseName + "." + name + ".cshtml";
-
-            using (var resourceStream = assembly.GetManifestResourceStream(resourceName))
-            {
-                using (var reader = new StreamReader(resourceStream))
+                BaseTemplateType = typeof (ReportTemplateBase<>),
+                Resolver = new EmebeddedTemplateResolver(typeof (HtmlReport).Assembly, "RuleRunner.Reports.Html.Templates"),
+                Namespaces =
                 {
-                    return reader.ReadToEnd();
+                    "RuleRunner.Reports.Html"
                 }
-            }
+            };
+
+            var templateService = new TemplateService(templateConfig);
+
+            var template = templateService.Resolve("Index", reportModel);
+
+            var result = template.Run(context);
+
+            File.WriteAllText(indexPath, result);
+        }
+
+        public void Configuration(RunConfiguration config)
+        {
+            this.reportModel.Configuration = config;
+        }
+
+        public void RunList(RunList<StepDescriptor> runlist)
+        {
+            this.reportModel.RunList = runlist;
         }
     }
 }

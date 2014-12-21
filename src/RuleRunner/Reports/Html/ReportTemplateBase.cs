@@ -27,9 +27,9 @@ namespace RuleRunner.Reports.Html
             this.templateService = templateService;
         }
 
-        public IEncodedString Partial(string templateName)
+        public IEncodedString Partial<TModel>(string templateName, TModel model)
         {
-            var template = this.templateService.Resolve(templateName, "");
+            var template = this.templateService.Resolve(templateName, model);
 
             return new RawString(template.Run(new ExecuteContext()));
         }

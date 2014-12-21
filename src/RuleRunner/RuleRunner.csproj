@@ -57,7 +57,9 @@
     <Compile Include="Configuration\RunConfiguration.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Reports\Html\EmebeddedTemplateResolver.cs" />
     <Compile Include="Reports\Html\HtmlReport.cs" />
+    <Compile Include="Reports\Html\ReportModel.cs" />
     <Compile Include="Reports\Html\ReportTemplateBase.cs" />
     <Compile Include="Run.cs" />
   </ItemGroup>
@@ -72,7 +74,8 @@
     <None Include="packages.config" />
     <EmbeddedResource Include="Reports\Html\Templates\Index.cshtml" />
     <None Include="Reports\Html\Templates\web.config" />
-    <EmbeddedResource Include="Reports\Html\Templates\_Partial.cshtml" />
+    <EmbeddedResource Include="Reports\Html\Templates\_Config.cshtml" />
+    <EmbeddedResource Include="Reports\Html\Templates\_ModelBuilding.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CodeModel.Extensions.DgmlExport\CodeModel.Extensions.DgmlExport.csproj">

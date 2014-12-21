@@ -1,0 +1,10 @@
+﻿@using System.Linq
+@inherits ReportTemplateBase<ReportModel>
+
+<h2>Mutator runlist</h2>
+<ul>
+    @foreach (var runList in Model.RunList.Elements.Where(x => x.IsMutator))
+    {
+        <li>@runList.Type.Name</li>
+    }
+</ul>

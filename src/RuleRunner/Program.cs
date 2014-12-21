@@ -39,7 +39,7 @@ namespace RuleRunner
         }
     }
 
-    internal class StepDescriptor
+    public class StepDescriptor
     {
         public Type Type { get; private set; }
 

@@ -1,12 +1,16 @@
-﻿<!DOCTYPE html>
+﻿@inherits ReportTemplateBase<ReportModel>
+
+<!DOCTYPE html>
 
 <html>
 <head>
     <title>Analysis result</title>
 </head>
 <body>
-<div>
-   @Helper.Partial("_Partial")
-</div>
+<h1>Configuration</h1>
+@Helper.Partial("_Config", Model.Configuration)
+
+<h1>Model building</h1>
+@Helper.Partial("_ModelBuilding", Model)
 </body>
 </html>
