@@ -76,6 +76,9 @@
     <None Include="Reports\Html\Templates\web.config" />
     <EmbeddedResource Include="Reports\Html\Templates\_Config.cshtml" />
     <EmbeddedResource Include="Reports\Html\Templates\_ModelBuilding.cshtml" />
+    <EmbeddedResource Include="Reports\Html\Templates\_Style.cshtml" />
+    <EmbeddedResource Include="Reports\Html\Templates\_Violations.cshtml" />
+    <EmbeddedResource Include="Reports\Html\Templates\_Violation.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CodeModel.Extensions.DgmlExport\CodeModel.Extensions.DgmlExport.csproj">

@@ -40,7 +40,7 @@ namespace RuleRunner
             AppDomain.CurrentDomain.AssemblyResolve += CurrentDomainOnAssemblyResolve;
 
             this.Report.Configuration(this.config);
-
+            
             LoadAssembliesToAnalyze();
             LoadConventionAssemblies();
 
@@ -55,7 +55,7 @@ namespace RuleRunner
                 this.Report.Write();
             }
         }
-
+         
         private void RunRules()
         {
             this.verificator = new Verificator();
@@ -78,6 +78,8 @@ namespace RuleRunner
             foreach (var violation in violations)
             {
                 Log.Warn("{0}", violation.Node);
+
+                this.Report.Violation(violation);
             }
         }
 

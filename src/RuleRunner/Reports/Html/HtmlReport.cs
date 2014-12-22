@@ -1,5 +1,7 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
 using CodeModel;
+using CodeModel.Rules;
 using Newtonsoft.Json;
 using RazorEngine;
 using RazorEngine.Configuration;
@@ -18,7 +20,7 @@ namespace RuleRunner.Reports.Html
         }
 
         [JsonProperty("output")]
-        public string OutputDirectory { get; private set; }     
+        public string OutputDirectory { get; private set; }
 
         public void Write()
         {
@@ -26,15 +28,15 @@ namespace RuleRunner.Reports.Html
             {
                 Directory.CreateDirectory(this.OutputDirectory);
             }
-            
+
             var indexPath = Path.Combine(this.OutputDirectory, "index.html");
 
             var context = new ExecuteContext();
 
             var templateConfig = new TemplateServiceConfiguration()
             {
-                BaseTemplateType = typeof (ReportTemplateBase<>),
-                Resolver = new EmebeddedTemplateResolver(typeof (HtmlReport).Assembly, "RuleRunner.Reports.Html.Templates"),
+                BaseTemplateType = typeof(ReportTemplateBase<>),
+                Resolver = new EmebeddedTemplateResolver(typeof(HtmlReport).Assembly, "RuleRunner.Reports.Html.Templates"),
                 Namespaces =
                 {
                     "RuleRunner.Reports.Html"
@@ -58,6 +60,16 @@ namespace RuleRunner.Reports.Html
         public void RunList(RunList<StepDescriptor> runlist)
         {
             this.reportModel.RunList = runlist;
+        }
+
+        public void Violation(Violation violation)
+        {
+            if (!this.reportModel.Violations.ContainsKey(violation.Rule))
+            {
+                this.reportModel.Violations.Add(violation.Rule, new List<Violation>());
+            }
+
+            this.reportModel.Violations[violation.Rule].Add(violation);
         }
     }
 }

@@ -5,12 +5,48 @@
 <html>
 <head>
     <title>Analysis result</title>
-</head>
-<body>
-<h1>Configuration</h1>
-@Helper.Partial("_Config", Model.Configuration)
 
-<h1>Model building</h1>
-@Helper.Partial("_ModelBuilding", Model)
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
+
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap-theme.min.css">
+
+    <script src="https://code.jquery.com/jquery-2.1.3.min.js"></script>
+
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+
+    @Helper.Partial("_Style", (object)null)
+</head>
+<body data-spy="scroll" data-target="#nav">
+    <div class="container-fluid">
+        <div class="col-md-2">
+            <div id="nav" class="navbar navbar-fixed-side navbar-fixed-side-left">
+                <ul class="nav nav-pills nav-stacked">
+                    <li class="active"><a href="#configuration">Configuration</a></li>
+                    <li><a href="#model-building">Model Building</a></li>
+                    <li><a href="#violations">Violations</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="col-md-10">
+            <div id="configuration">
+                <h1>Configuration</h1>
+                @Helper.Partial("_Config", Model.Configuration)
+            </div>
+
+            <div id="model-building">
+                <h1>Model building</h1>
+                @Helper.Partial("_ModelBuilding", Model)
+            </div>
+
+            <div id="violations">
+                <h1>Violations</h1>
+                @Helper.Partial("_Violations", Model)
+            </div>
+        </div>
+    </div>
 </body>
 </html>

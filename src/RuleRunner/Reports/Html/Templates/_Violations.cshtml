@@ -1,0 +1,12 @@
+﻿@inherits ReportTemplateBase<ReportModel>
+              
+
+@foreach (var rule in Model.Violations)
+{
+    <h2>@rule.Key.GetType().Name</h2>
+    
+    foreach (var violation in rule.Value)
+    {
+        <text>@Helper.Partial("_Violation", violation)</text>
+    }
+}

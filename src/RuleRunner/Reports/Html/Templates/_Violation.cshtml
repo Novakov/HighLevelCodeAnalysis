@@ -1,0 +1,5 @@
+﻿@inherits ReportTemplateBase<CodeModel.Rules.Violation>
+
+<div class="violation">
+   @Model.Rule.GetType().Name -  @Model.Node.DisplayLabel
+</div>
