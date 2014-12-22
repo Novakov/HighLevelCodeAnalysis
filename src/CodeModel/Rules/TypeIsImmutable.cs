@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using CodeModel.Annotations;
 using CodeModel.Graphs;
@@ -9,14 +10,15 @@ namespace CodeModel.Rules
 {
     public class TypeIsImmutable : INodeRule
     {
-        public void Verify(VerificationContext context, Node node)
+        public IEnumerable<Violation> Verify(VerificationContext context, Node node)
         {
             var typeNode = (TypeNode)node;
 
-            VerifyNotSettingField(context, typeNode);
-            VerifyNotSettingProperty(context, typeNode);
-            VerifyNoNotPrivatePropertySetters(context, typeNode);
-            VerifyNoWritableFields(context, typeNode);
+            return VerifyNotSettingField(context, typeNode)
+                .Union(VerifyNotSettingProperty(context, typeNode))
+                .Union(VerifyNoNotPrivatePropertySetters(context, typeNode))
+                .Union(VerifyNoWritableFields(context, typeNode))
+                ;
         }
 
         public bool IsApplicableTo(Node node)
@@ -24,7 +26,7 @@ namespace CodeModel.Rules
             return node.HasAnnotation<Immutable>();
         }
 
-        private void VerifyNoWritableFields(VerificationContext context, TypeNode typeNode)
+        private IEnumerable<Violation> VerifyNoWritableFields(VerificationContext context, TypeNode typeNode)
         {
             var violatingFields = from field in typeNode.InboundFrom<FieldNode, ContainedInLink>()
                                   where !field.Field.IsInitOnly
@@ -32,11 +34,11 @@ namespace CodeModel.Rules
 
             foreach (var field in violatingFields)
             {
-                context.RecordViolation(new ImmutableTypeHasWritableFieldViolation(typeNode, field));                
+               yield return new ImmutableTypeHasWritableFieldViolation(typeNode, field);                
             }
         }
 
-        private void VerifyNoNotPrivatePropertySetters(VerificationContext context, TypeNode typeNode)
+        private IEnumerable<Violation> VerifyNoNotPrivatePropertySetters(VerificationContext context, TypeNode typeNode)
         {
             var violatingProperties = from property in typeNode.InboundFrom<PropertyNode, ContainedInLink>()
                                       where property.Property.CanWrite && !property.Property.SetMethod.IsPrivate
@@ -44,11 +46,11 @@ namespace CodeModel.Rules
 
             foreach (var property in violatingProperties)
             {
-                context.RecordViolation(new ImmutableTypeHasNonPrivateSetterViolation(typeNode, property));                
+                yield return new ImmutableTypeHasNonPrivateSetterViolation(typeNode, property);                
             }
         }
 
-        private void VerifyNotSettingProperty(VerificationContext context, TypeNode typeNode)
+        private IEnumerable<Violation> VerifyNotSettingProperty(VerificationContext context, TypeNode typeNode)
         {
             var violatingMethods = from method in typeNode.InboundFrom<MethodNode, ContainedInLink>()
                                    where method.OutboundLinks.OfType<SetPropertyLink>().Any()
@@ -56,11 +58,11 @@ namespace CodeModel.Rules
 
             foreach (var method in violatingMethods)
             {
-                context.RecordViolation(new ImmutableTypeSetsPropertyOutsideOfConstructorViolation(typeNode, method));                
+                yield return new ImmutableTypeSetsPropertyOutsideOfConstructorViolation(typeNode, method);                
             }
         }
 
-        private void VerifyNotSettingField(VerificationContext context, TypeNode typeNode)
+        private IEnumerable<Violation> VerifyNotSettingField(VerificationContext context, TypeNode typeNode)
         {
             var violatingMethods = from method in typeNode.InboundFrom<MethodNode, ContainedInLink>()
                                    where method.OutboundLinks.OfType<SetFieldLink>().Any()
@@ -68,7 +70,7 @@ namespace CodeModel.Rules
 
             foreach (var method in violatingMethods)
             {
-                context.RecordViolation(new ImmutableTypeSetsFieldOutsideOfConstructorViolation(typeNode, method));                
+                yield return new ImmutableTypeSetsFieldOutsideOfConstructorViolation(typeNode, method);                
             }
         }
     }

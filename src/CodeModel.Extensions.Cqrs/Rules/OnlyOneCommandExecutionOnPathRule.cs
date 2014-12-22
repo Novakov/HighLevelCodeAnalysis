@@ -9,27 +9,28 @@ namespace CodeModel.Extensions.Cqrs.Rules
 {
     public class OnlyOneCommandExecutionOnPathRule : IGraphRule
     {
-        public void Verify(VerificationContext context, Graph graph)
+        public IEnumerable<Violation> Verify(VerificationContext context, Graph graph)
         {
-            var v = new PathVerify(context);
+            var v = new PathVerify();
 
             var entryPoint = graph.LookupNode<ApplicationEntryPoint>(ApplicationEntryPoint.NodeId);
 
             v.Walk(entryPoint);
+
+            return v.Violations;
         }
 
         public class PathVerify : DepthFirstSearch
         {
-            private readonly VerificationContext context;
             private readonly HashSet<Link> visitedLinks;
             private readonly Stack<PathItem> currentPath;
+            public List<Violation> Violations { get; private set; }
 
-            public PathVerify(VerificationContext context)
+            public PathVerify()
             {
-                this.context = context;
-
                 this.visitedLinks = new HashSet<Link>();
                 this.currentPath = new Stack<PathItem>();
+                this.Violations = new List<Violation>();
             }
 
             protected override void EnterNode(Node node, IEnumerable<Link> availableThrough)
@@ -53,7 +54,7 @@ namespace CodeModel.Extensions.Cqrs.Rules
                 if (item.CommandExecutionCount > 1)
                 {
                     var path = this.currentPath.Select(x => x.Node).ToList();
-                    this.context.RecordViolation(new MethodCanLeadToExecutionOfMoreThanOneCommandViolation(node, path));
+                    this.Violations.Add(new MethodCanLeadToExecutionOfMoreThanOneCommandViolation(node, path));
                 }
             }
 

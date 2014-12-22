@@ -20,5 +20,13 @@ namespace CodeModel.Rules
             violation.Rule = this.CurrentRule;
             this.violations.Add(violation);
         }
+
+        public void RecordAll(IEnumerable<Violation> newViolations)
+        {
+            foreach (var violation in newViolations)
+            {
+                this.RecordViolation(violation);
+            }
+        }
     }
 }

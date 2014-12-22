@@ -18,16 +18,16 @@ namespace CodeModel.Extensions.Cqrs.Rules
             this.cqrsConvention = cqrsConvention;
         }
 
-        public void Verify(VerificationContext context, Node node)
+        public IEnumerable<Violation> Verify(VerificationContext context, Node node)
         {
             var count = node.Annotation<CommandExecutionCount>();
 
             if (count == null || count.HighestCount <= 1)
             {
-                return;
+                yield break;
             }
 
-            context.RecordViolation(new MethodExecutesMoreThanOneCommandViolation(node));            
+            yield return new MethodExecutesMoreThanOneCommandViolation(node);            
         }
 
         public bool IsApplicableTo(Node node)

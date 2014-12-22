@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using CodeModel.FlowAnalysis;
@@ -19,7 +20,7 @@ namespace CodeModel.Rules
             this.symbols = symbols;
         }
 
-        public void Verify(VerificationContext context, Node node)
+        public IEnumerable<Violation> Verify(VerificationContext context, Node node)
         {
             var methodNode = (MethodNode)node;
 
@@ -41,7 +42,7 @@ namespace CodeModel.Rules
             {
                 var sourceLocation = FindSourceLocation(violatingInstruction, methodNode);
 
-                context.RecordViolation(new UsesDateTimeNowViolation(node, sourceLocation));                
+                yield return new UsesDateTimeNowViolation(node, sourceLocation);                
             }
         }
 

@@ -61,6 +61,9 @@ namespace RuleRunner
             this.verificator = new Verificator();
             this.verificator.RegisterConventionsFrom(this.conventionAssemblies.ToArray());
 
+            this.verificator.StartingRule += (s, e) => Log.Debug("Starting rule {0}", e.Rule.GetType().Name);
+            this.verificator.FinishedRule += (s, e) => Log.Info("Finished rule {0}", e.Rule.GetType().Name);
+
             this.verificationContext = new VerificationContext();
 
             foreach (var rule in this.runlist.Elements.Where(x => x.IsRule))

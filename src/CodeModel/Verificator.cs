@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using CodeModel.Builder;
 using CodeModel.Convetions;
+using CodeModel.Graphs;
 using CodeModel.Rules;
 using TinyIoC;
 
@@ -14,6 +15,10 @@ namespace CodeModel
         private readonly List<IRule> rules;
         private readonly TinyIoCContainer container;
 
+        public event EventHandler<RuleRunEventArgs> StartingRule;
+        public event EventHandler<RuleRunEventArgs> FinishedRule;
+        public event EventHandler<NodeVerificationEventArgs> NodeVerified;
+
         public Verificator()
         {
             this.rules = new List<IRule>();
@@ -21,7 +26,7 @@ namespace CodeModel
         }
 
         public Verificator AddRule<TRule>()
-            where TRule: class, IRule
+            where TRule : class, IRule
         {
             rules.Add(container.Resolve<TRule>());
 
@@ -35,11 +40,13 @@ namespace CodeModel
             return this;
         }
 
-        public void Verify(VerificationContext context, CodeModelBuilder codeModel)            
+        public void Verify(VerificationContext context, CodeModelBuilder codeModel)
         {
             foreach (var rule in this.rules)
             {
                 context.CurrentRule = rule;
+
+                this.OnStartingRule(rule);
 
                 var nodeRule = rule as INodeRule;
                 if (nodeRule != null)
@@ -48,7 +55,11 @@ namespace CodeModel
                     {
                         if (nodeRule.IsApplicableTo(node))
                         {
-                            nodeRule.Verify(context, node);
+                            var violations = nodeRule.Verify(context, node).ToList();
+
+                            this.OnNodeVerified(rule, node, violations);
+
+                            context.RecordAll(violations);
                         }
                     }
                 }
@@ -56,9 +67,13 @@ namespace CodeModel
                 var graphRule = rule as IGraphRule;
                 if (graphRule != null)
                 {
-                    graphRule.Verify(context, codeModel.Model);
+                    var violations = graphRule.Verify(context, codeModel.Model);
+                    
+                    context.RecordAll(violations);
                 }
-            }            
+
+                this.OnRuleFinished(rule);
+            }
         }
 
         public void RegisterConventionsFrom(params Assembly[] assemblies)
@@ -74,6 +89,45 @@ namespace CodeModel
             {
                 this.container.Register(item.Interface, item.Implementation);
             }
+        }
+
+        protected void OnStartingRule(IRule rule)
+        {
+            this.StartingRule.Call(this, new RuleRunEventArgs(rule));
+        }
+
+        protected void OnRuleFinished(IRule rule)
+        {
+            this.FinishedRule.Call(this, new RuleRunEventArgs(rule));
+        }
+
+        protected void OnNodeVerified(IRule rule, Node node, IEnumerable<Violation> violations)
+        {
+            this.NodeVerified.Call(this, new NodeVerificationEventArgs(rule, node, violations));
+        }
+    }
+
+    public class NodeVerificationEventArgs : EventArgs
+    {
+        public IRule Rule { get; private set; }
+        public Node Node { get; private set; }
+        public IEnumerable<Violation> Violations { get; private set; }
+
+        public NodeVerificationEventArgs(IRule rule, Node node, IEnumerable<Violation> violations)
+        {
+            Rule = rule;
+            Node = node;
+            Violations = violations;
+        }
+    }
+
+    public class RuleRunEventArgs : EventArgs
+    {
+        public IRule Rule { get; private set; }
+
+        public RuleRunEventArgs(IRule rule)
+        {
+            Rule = rule;
         }
     }
 }

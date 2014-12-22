@@ -9,7 +9,7 @@ namespace CodeModel.Rules
 {
     public interface INodeRule :IRule
     {
-        void Verify(VerificationContext context, Node node);
+        IEnumerable<Violation> Verify(VerificationContext context, Node node);
         bool IsApplicableTo(Node node);
     }
 }
