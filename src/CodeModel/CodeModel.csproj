@@ -81,6 +81,7 @@
     <Compile Include="DependencyManager.cs" />
     <Compile Include="EnumerableExtensions.cs" />
     <Compile Include="ExportableAttribute.cs" />
+    <Compile Include="Extensions.cs" />
     <Compile Include="FlowAnalysis\BaseCfgWalker.cs" />
     <Compile Include="FlowAnalysis\BinaryOperator.cs" />
     <Compile Include="FlowAnalysis\BlockNodeComparer.cs" />
@@ -169,6 +170,7 @@
     <Compile Include="Rules\TypeIsImmutable.cs" />
     <Compile Include="Rules\VerificationContext.cs" />
     <Compile Include="Rules\Violation.cs" />
+    <Compile Include="Rules\ViolationExtensions.cs" />
     <Compile Include="RunList.cs" />
     <Compile Include="StackExtensions.cs" />
     <Compile Include="StackMark.cs" />

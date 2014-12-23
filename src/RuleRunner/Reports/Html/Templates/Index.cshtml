@@ -27,6 +27,11 @@
                     <li class="active"><a href="#configuration">Configuration</a></li>
                     <li><a href="#model-building">Model Building</a></li>
                     <li><a href="#violations">Violations</a></li>
+                    @foreach (var rule in Model.Violations)
+                    {
+                        <li style="padding-left: 25px"><a href="#rule-@rule.Key.GetType().Name">@rule.Key.GetType().Name</a></li>
+                    }
+
                 </ul>
             </div>
         </div>

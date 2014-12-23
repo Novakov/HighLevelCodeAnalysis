@@ -10,6 +10,11 @@ namespace CodeModel.Rules
 
         public IRule Rule { get; internal set; }
 
+        public string Name
+        {
+            get { return this.GetType().Name; }
+        }
+
         protected Violation(Node node)
         {
             this.Node = node;            

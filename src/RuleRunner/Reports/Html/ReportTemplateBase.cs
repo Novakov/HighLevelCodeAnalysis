@@ -1,4 +1,5 @@
-﻿using RazorEngine.Templating;
+﻿using CodeModel.Symbols;
+using RazorEngine.Templating;
 using RazorEngine.Text;
 
 namespace RuleRunner.Reports.Html
@@ -32,6 +33,25 @@ namespace RuleRunner.Reports.Html
             var template = this.templateService.Resolve(templateName, model);
 
             return new RawString(template.Run(new ExecuteContext()));
+        }
+
+        public IEncodedString SafePercent(double percent)
+        {
+            if (double.IsNaN(percent))
+            {
+                return new HtmlEncodedString("N/A");                     
+            }
+            else
+            {
+                return new HtmlEncodedString(percent.ToString("P"));
+            }
+        }
+
+        public IEncodedString SourceLocation(SourceLocation location)
+        {
+            var s = string.Format("{0}({1},{2})", location.FileName, location.StartLine, location.StartColumn);
+
+            return new HtmlEncodedString(s);
         }
     }
 }

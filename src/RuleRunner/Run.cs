@@ -61,7 +61,17 @@ namespace RuleRunner
             this.verificator = new Verificator();
             this.verificator.RegisterConventionsFrom(this.conventionAssemblies.ToArray());
 
-            this.verificator.StartingRule += (s, e) => Log.Debug("Starting rule {0}", e.Rule.GetType().Name);
+            this.verificator.StartingRule += (s, e) =>
+            {
+                Log.Debug("Starting rule {0}", e.Rule.GetType().Name);
+                this.Report.VerificationRule(e.Rule);
+            };
+
+            this.verificator.NodeVerified += (s, e) =>
+            {
+                this.Report.NodeVerification(e.Rule, e.Node, e.Violations);
+            };
+
             this.verificator.FinishedRule += (s, e) => Log.Info("Finished rule {0}", e.Rule.GetType().Name);
 
             this.verificationContext = new VerificationContext();
@@ -80,9 +90,7 @@ namespace RuleRunner
         {
             foreach (var violation in violations)
             {
-                Log.Warn("{0}", violation.Node);
-
-                this.Report.Violation(violation);
+                Log.Warn("{0}", violation.Node);               
             }
         }
 

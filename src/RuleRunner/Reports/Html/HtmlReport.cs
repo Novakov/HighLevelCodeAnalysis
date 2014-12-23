@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using CodeModel;
+using CodeModel.Graphs;
 using CodeModel.Rules;
 using Newtonsoft.Json;
 using RazorEngine;
@@ -64,12 +66,33 @@ namespace RuleRunner.Reports.Html
 
         public void Violation(Violation violation)
         {
-            if (!this.reportModel.Violations.ContainsKey(violation.Rule))
-            {
-                this.reportModel.Violations.Add(violation.Rule, new List<Violation>());
-            }
+            
+        }
 
-            this.reportModel.Violations[violation.Rule].Add(violation);
+        public void VerificationRule(IRule rule)
+        {
+            this.reportModel.Violations.Add(rule, new RuleResult(rule));
+        }
+
+        public void NodeVerification(IRule rule, Node node, IEnumerable<Violation> violations)
+        {
+            var ruleResults = this.reportModel.Violations[rule];
+            ruleResults.Verified++;
+            
+            var violationsList = violations as IList<Violation> ?? violations.ToList();
+            
+            ruleResults.TotalViolationsCount += violationsList.Count();
+
+            if (violationsList.Any())
+            {
+                ruleResults.ViolatingNodesCount++;
+
+                ruleResults.ViolatingNodes.Add(node, violationsList);
+            }
+            else
+            {
+                ruleResults.ComplyingNodesCount++;
+            }           
         }
     }
 }

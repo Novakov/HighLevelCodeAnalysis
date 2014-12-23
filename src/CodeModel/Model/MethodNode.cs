@@ -6,17 +6,18 @@ namespace CodeModel.Model
 {
     public class MethodNode : Node
     {
+        private readonly Lazy<string> displayLabel;
         public MethodInfo Method { get; private set; }
 
-        public override string DisplayLabel
-        {
-            get { return this.Method.ToString(); }
+        public override string DisplayLabel {
+            get { return this.displayLabel.Value; }
         }
 
         public MethodNode(MethodInfo method) 
             : base(IdFor(method))
         {
             this.Method = method;
+            this.displayLabel = new Lazy<string>(() => this.Method.DisplayLabel());
         }
 
         [Exportable]

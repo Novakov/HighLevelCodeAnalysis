@@ -1,5 +1,48 @@
-﻿@inherits ReportTemplateBase<CodeModel.Rules.Violation>
+﻿@using CodeModel.Rules
+@inherits ReportTemplateBase<RuleResult>
 
-<div class="violation">
-   @Model.Rule.GetType().Name -  @Model.Node.DisplayLabel
+<h2>@Model.GetType().Name</h2>
+
+<div>
+    Verified nodes: @Model.Verified
 </div>
+<div>
+    Violating nodes: @Model.ViolatingNodesCount
+</div>
+
+<div>
+    Complying nodes: @Model.ComplyingNodesCount
+</div>
+
+<div>
+    Violations count: @Model.TotalViolationsCount
+</div>
+
+<div>
+    Percent violating: @Helper.SafePercent(Model.ViolatingRatio)
+</div>
+
+@if (Model.AnyViolations)
+{
+    <h4>Violating nodes:</h4>
+    <ul>
+        @foreach (var node in Model.ViolatingNodes)
+        {
+            <li>
+                @node.Key.DisplayLabel
+                <ul>
+                    @foreach (var violation in node.Value)
+                    {
+                        <li>
+                            @violation.Name
+                            @if (violation is IViolationWithSourceLocation)
+                            {
+                                <text> in <code>@Helper.SourceLocation((violation as IViolationWithSourceLocation).SourceLocation.Value)</code></text>
+                            }
+                        </li>
+                    }
+                </ul>
+            </li>
+        }
+    </ul>
+}

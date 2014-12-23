@@ -17,7 +17,7 @@ namespace CodeModel
 
         public static bool IsCompilerGenerated(this ICustomAttributeProvider @this)
         {
-            return @this.GetCustomAttributes(typeof (CompilerGeneratedAttribute), false).Any();
+            return @this.GetCustomAttributes(typeof(CompilerGeneratedAttribute), false).Any();
         }
 
         public static BindingFlags GetBindingFlags(this MethodBase @this)
@@ -48,6 +48,31 @@ namespace CodeModel
         public static bool HasBody(this MethodBase @this)
         {
             return @this.GetMethodBody() != null;
+        }
+
+        public static string DisplayLabel(this MethodInfo method)
+        {
+            var sb = new StringBuilder();
+
+            sb
+                .Append(method.ReturnType.FullName)
+                .Append(" ")
+                .Append(method.DeclaringType.FullName)
+                .Append(".")
+                .Append(method.Name);
+
+            if (method.IsGenericMethod)
+            {
+                sb.Append("<");
+                sb.AppendJoin(", ", method.GetGenericArguments().Select(x => x.Name));
+                sb.Append(">");
+            }
+
+            sb.Append("(")
+              .AppendJoin(", ", method.GetParameters().Select(x => (x.ParameterType.FullName ?? x.ParameterType.Name) + " " + x.Name))
+              .Append(")");
+
+            return sb.ToString();
         }
     }
 }
