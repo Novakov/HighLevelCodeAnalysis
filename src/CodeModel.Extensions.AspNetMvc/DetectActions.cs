@@ -5,6 +5,8 @@ using CodeModel.Model;
 
 namespace CodeModel.Extensions.AspNetMvc
 {
+    [Provide(AspNetMvcResources.AspNetMvcActions)]
+    [Need(Resources.Methods)]
     public class DetectActions : INodeMutator<MethodNode>
     {
         public void Mutate(MethodNode node, IMutateContext context)

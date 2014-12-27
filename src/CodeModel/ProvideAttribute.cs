@@ -23,4 +23,10 @@ namespace CodeModel
             Needs = needs;
         }
     }
+
+    [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
+    public class DynamicNeed : Attribute
+    {
+        
+    }
 }

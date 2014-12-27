@@ -2,6 +2,8 @@
 {
     public static class Resources
     {
+        public const string LinksToEntryPoints = "LinksToEntryPoints";
+        public const string EntryPoint = "EntryPoint";
         public const string Types = "Types";
         public const string Methods = "Methods";
     }

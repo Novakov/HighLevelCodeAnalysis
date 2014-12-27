@@ -92,5 +92,37 @@ namespace CodeModel.Builder
                 action(@interface);
             }
         }
+
+        public IEnumerable<string> GetNeededResources(Type type)
+        {
+            var resources = new HashSet<string>();
+
+            var needAttribute = type.GetCustomAttribute<NeedAttribute>();
+            if (needAttribute != null)
+            {
+                resources.UnionWith(needAttribute.Needs);
+            }
+
+            if (type.GetCustomAttribute<DynamicNeed>() != null)
+            {
+                var instance = (IDynamicNeed)this.container.Resolve(type);
+                resources.UnionWith(instance.NeededResources);
+            }
+
+            return resources;
+        }
+
+        public IEnumerable<string> GetProvidedResources(Type type)
+        {
+            var provideAttribute = type.GetCustomAttribute<ProvideAttribute>();
+            if (provideAttribute != null)
+            {
+                return provideAttribute.Provides;
+            }
+            else
+            {
+                return Enumerable.Empty<string>();
+            }
+        }
     }
 }

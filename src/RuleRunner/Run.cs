@@ -159,12 +159,12 @@ namespace RuleRunner
             var mutators = AppDomain.CurrentDomain.GetAssemblies()
                 .SelectMany(x => x.GetTypes())
                 .Where(x => typeof(IMutator).IsAssignableFrom(x) && x.IsClass && !x.IsAbstract)
-                .Select(x => new StepDescriptor(x));
+                .Select(x => new StepDescriptor(this.modelBuilder, x));
 
             var rules = AppDomain.CurrentDomain.GetAssemblies()
                 .SelectMany(x => x.GetTypes())
                 .Where(x => typeof(IRule).IsAssignableFrom(x) && x.IsClass && !x.IsAbstract)
-                .Select(x => new StepDescriptor(x))
+                .Select(x => new StepDescriptor(this.modelBuilder, x))
                 .ToList();
 
             Log.Info("Determining runlist");

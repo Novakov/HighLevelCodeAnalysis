@@ -4,6 +4,7 @@ using CodeModel.Model;
 
 namespace CodeModel.Mutators
 {
+    [Provide(Resources.EntryPoint)]
     public class AddApplicationEntryPoint : IGraphMutator
     {
         public void Mutate(Graph model)

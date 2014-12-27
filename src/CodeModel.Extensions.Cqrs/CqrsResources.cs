@@ -2,6 +2,6 @@
 {
     public static class CqrsResources
     {
-        public const string CountedCommandExecutions = "CountedCommandExecutions";
+        public const string CountedCommandExecutions = "Cqrs.CountedCommandExecutions";
     }
 }

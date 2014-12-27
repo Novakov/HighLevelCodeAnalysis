@@ -40,6 +40,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ActionNode.cs" />
+    <Compile Include="AspNetMvcResources.cs" />
     <Compile Include="ControllerNode.cs" />
     <Compile Include="DetectActions.cs" />
     <Compile Include="DetectControllers.cs" />
