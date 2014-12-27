@@ -6,6 +6,7 @@ using System.Reflection;
 using CodeModel;
 using CodeModel.Builder;
 using CodeModel.Extensions.DgmlExport;
+using CodeModel.Links;
 using CodeModel.Mutators;
 using CodeModel.Rules;
 using NLog;
@@ -87,6 +88,11 @@ namespace RuleRunner
                 this.Report.NodeVerification(e.Rule, e.Node, e.Violations);
             };
 
+            this.verificator.GraphVerified += (s, e) =>
+            {
+                this.Report.GraphVerification(e.Rule, e.Violations);
+            };
+
             this.verificator.FinishedRule += (s, e) => Log.Info("Finished rule {0}", e.Rule.GetType().Name);
 
             this.verificationContext = new VerificationContext();
@@ -112,7 +118,7 @@ namespace RuleRunner
         {
             foreach (var violation in violations)
             {
-                Log.Warn("{0}", violation.Node);               
+                Log.Warn("Category: {1} on {0}", violation.Node, violation.Name);
             }
         }
 
@@ -125,6 +131,8 @@ namespace RuleRunner
 
         private void ExportModelAsDgml()
         {
+            this.modelBuilder.RunMutator(new RemoveLink<ContainedInLink>(x => true));
+
             var exporter = new DgmlExporter();
 
             using (var fs = File.Create(@"d:\tmp\360.dgml"))
@@ -194,7 +202,7 @@ namespace RuleRunner
 
         private RunList<StepDescriptor> DetermineRunList(IEnumerable<StepDescriptor> descriptors, IList<StepDescriptor> rules)
         {
-            var manager = new DependencyManager<StepDescriptor>(x => x.Provides, x => x.Needs);
+            var manager = new DependencyManager<StepDescriptor>(x => x.Provides, x => x.Needs, x => x.OptionalNeeds);
 
             manager.AddRange(descriptors);
             manager.AddRange(rules);

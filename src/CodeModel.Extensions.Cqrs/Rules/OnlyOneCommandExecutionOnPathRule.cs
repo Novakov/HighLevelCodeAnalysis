@@ -7,7 +7,7 @@ using CodeModel.Rules;
 
 namespace CodeModel.Extensions.Cqrs.Rules
 {
-    [Need(Resources.LinksToEntryPoints)]
+    [Need(Resources.LinksToEntryPoints, Resources.MethodCallLinks, CqrsResources.CommandExecutionLinks, Resources.InlinedImplementations)]
     public class OnlyOneCommandExecutionOnPathRule : IGraphRule
     {
         public IEnumerable<Violation> Verify(VerificationContext context, Graph graph)

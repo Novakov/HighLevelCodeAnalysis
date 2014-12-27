@@ -15,7 +15,7 @@ namespace Tests
         [SetUp]
         public void SetUp()
         {
-            this.dependencyManager = new DependencyManager<Element>(x => x.Provide, x => x.Need);
+            this.dependencyManager = new DependencyManager<Element>(x => x.Provide, x => x.Need, x => x.OptionalNeed);
         }
 
         [Test]
@@ -23,7 +23,7 @@ namespace Tests
         {
             // arrange
             var needAssembly = new Element("", "Assembly");
-            var provideAssembly = new Element("Assembly", "");            
+            var provideAssembly = new Element("Assembly", "");
 
             this.dependencyManager.Add(needAssembly);
             this.dependencyManager.Add(provideAssembly);
@@ -34,7 +34,7 @@ namespace Tests
             var runList = this.dependencyManager.CalculateRunList();
 
             // assert
-            Assert.That(runList.Elements.ToArray(), Is.EqualTo(new[] {provideAssembly, needAssembly}));
+            Assert.That(runList.Elements.ToArray(), Is.EqualTo(new[] { provideAssembly, needAssembly }));
             Assert.That(runList.IsValid, Is.True, "Runlist should be valid");
         }
 
@@ -61,8 +61,8 @@ namespace Tests
             // assert
             Assert.That(runList, new RunlistConstraint()
                 .IsValid()
-                .And.After(needAssemblyAndType, provideAssembly, provideType)         
-                );            
+                .And.After(needAssemblyAndType, provideAssembly, provideType)
+                );
         }
 
         [Test]
@@ -140,16 +140,50 @@ namespace Tests
                 .And.Not.Contains(needA));
         }
 
+        [Test]
+        public void ShouldBuildRunListWhenSomeDependenciesAreOptional()
+        {
+            // arrange
+            var provideTypes = new Element("Types", "");
+            var provideMethods = new Element("Methods", "");
+            var provideCommands = new Element("Commands", "");
+
+            var linking = new Element("Links", "", "Types,Methods,Commands");
+
+            var useLinking = new Element("", "Types,Methods,Links");
+
+            this.dependencyManager.AddRange(provideTypes, provideMethods, provideCommands, linking, useLinking);
+
+            this.dependencyManager.RequireElements(useLinking);
+
+            // act
+            var runList = this.dependencyManager.CalculateRunList();
+
+            // assert
+            Assert.That(runList, new RunlistConstraint()
+                .IsValid()
+                .And.Contains(provideTypes)
+                .And.Contains(provideMethods)
+                .And.Contains(linking)
+                .And.Contains(useLinking)
+                .And.Not.Contains(provideCommands)
+                .And.After(linking, provideTypes, provideMethods)
+            );
+        }
+
         private class Element
         {
             public string[] Provide { get; private set; }
 
             public string[] Need { get; private set; }
 
-            public Element(string provide, string need)
+            public string[] OptionalNeed { get; private set; }
+
+            public Element(string provide, string need, string optionalNeed = "")
             {
-                this.Provide = provide.Split(new []{','}, StringSplitOptions.RemoveEmptyEntries);
-                this.Need = need.Split(new[] {','}, StringSplitOptions.RemoveEmptyEntries);
+                this.Provide = provide.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+                this.Need = need.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+                this.OptionalNeed = optionalNeed.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
             }
 
             public override string ToString()

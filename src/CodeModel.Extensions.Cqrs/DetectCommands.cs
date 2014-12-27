@@ -4,6 +4,8 @@ using CodeModel.Model;
 
 namespace CodeModel.Extensions.Cqrs
 {
+    [Provide(CqrsResources.Commands)]
+    [Need(Resources.Types)]
     public class DetectCommands : INodeMutator<TypeNode>
     {
         private readonly ICqrsConvention convention;

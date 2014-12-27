@@ -5,6 +5,8 @@ using CodeModel.Model;
 
 namespace CodeModel.Extensions.Cqrs
 {
+    [Provide(CqrsResources.CommandExecutionLinks)]
+    [Need(Resources.Methods, CqrsResources.Commands)]
     public class LinkCommandExecutions : INodeMutator<MethodNode>
     {
         private readonly ICqrsConvention convention;

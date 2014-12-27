@@ -124,5 +124,18 @@ namespace CodeModel.Builder
                 return Enumerable.Empty<string>();
             }
         }
+
+        public IEnumerable<string> GetOptionalNeeds(Type type)
+        {
+            var attribute = type.GetCustomAttribute<OptionalNeedAttribute>();
+            if (attribute != null)
+            {
+                return attribute.OptionalNeeds;
+            }
+            else
+            {
+                return Enumerable.Empty<string>();
+            }
+        }
     }
 }

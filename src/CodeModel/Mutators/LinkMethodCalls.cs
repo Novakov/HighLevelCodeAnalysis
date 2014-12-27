@@ -13,6 +13,8 @@ using Mono.Reflection;
 
 namespace CodeModel.Mutators
 {
+    [Provide(Resources.MethodCallLinks)]
+    [Need(Resources.Methods)]
     public class LinkMethodCalls : INodeMutator<MethodNode>
     {
         public void Mutate(MethodNode node, IMutateContext context)

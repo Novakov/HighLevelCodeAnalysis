@@ -1,8 +1,9 @@
-﻿@inherits ReportTemplateBase<ReportModel>
+﻿@using System.Linq
+@inherits ReportTemplateBase<ReportModel>
 
 
 <div id="summary-rules">
-    <h2>Rule summary</h2>
+    <h2>Node verification summary</h2>
     <table class="table table-condensed">
         <thead>
         <tr>
@@ -10,20 +11,40 @@
             <th>Verified nodes</th>
             <th>Violations couns</th>
             <th>Violating nodes</th>
-            <th>Violating nodes %</th>
+            <th>Violating nodes %</th>           
         </tr>
         </thead>
         <tbody>
-        @foreach (var ruleResult in Model.Violations)
+        @foreach (var ruleResult in Model.Violations.Where(x => x.Value.IsNodeRule))
         {
             <tr>
                 <td>@ruleResult.Key.GetType().Name</td>
+
                 <td>@ruleResult.Value.Verified</td>
                 <td>@ruleResult.Value.TotalViolationsCount</td>
                 <td>@ruleResult.Value.ViolatingNodesCount</td>
-                <td>@Helper.SafePercent(ruleResult.Value.ViolatingRatio)</td>
+                <td>@Helper.SafePercent(ruleResult.Value.ViolatingRatio)</td>               
             </tr>
         }
+        </tbody>
+    </table>
+
+    <h2>Graph verification summary</h2>
+    <table class="table table-condensed">
+        <thead>
+            <tr>
+                <th>Rule</th>
+                <th>Violations count</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var ruleResult in Model.Violations.Where(x => x.Value.IsGraphRule))
+            {
+                <tr>
+                    <td>@ruleResult.Key.GetType().Name</td>                   
+                    <td>@ruleResult.Value.GraphViolations.Count</td>
+                </tr>
+            }
         </tbody>
     </table>
 </div>

@@ -2,6 +2,7 @@
 {
     public class AspNetMvcResources
     {
-        public const string AspNetMvcActions = "AspNetMvc.Actions";
+        public const string Actions = "AspNetMvc.Actions";
+        public const string Controllers = "AspNetMvc.Controllers";
     }
 }

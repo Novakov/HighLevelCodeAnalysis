@@ -1,0 +1,20 @@
+﻿@using System.Linq
+@using CodeModel.Rules
+@inherits ReportTemplateBase<RuleResult>
+
+<h2>@Model.Rule.GetType().Name</h2>
+
+<div>
+    Violations count: @Model.GraphViolations.Count
+</div>
+
+@if (Model.GraphViolations.Any())
+{
+    <h4>Violations</h4>
+    <ul>
+        @foreach (var violation in Model.GraphViolations)
+        {
+            <li><span class="violation-name">@violation.Name</span> as @violation.Node.DisplayLabel</li>
+        }
+    </ul>
+}

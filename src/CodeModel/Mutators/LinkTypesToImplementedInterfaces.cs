@@ -5,6 +5,8 @@ using CodeModel.Model;
 
 namespace CodeModel.Mutators
 {
+    [Provide(Resources.ImplementsLink)]
+    [Need(Resources.Types)]
     public class LinkTypesToImplementedInterfaces : INodeMutator<TypeNode>
     {
         public void Mutate(TypeNode node, IMutateContext context)

@@ -79,8 +79,9 @@
     <EmbeddedResource Include="Reports\Html\Templates\_ModelBuilding.cshtml" />
     <EmbeddedResource Include="Reports\Html\Templates\_Style.cshtml" />
     <EmbeddedResource Include="Reports\Html\Templates\_Violations.cshtml" />
-    <EmbeddedResource Include="Reports\Html\Templates\_Violation.cshtml" />
+    <EmbeddedResource Include="Reports\Html\Templates\_NodeViolation.cshtml" />
     <EmbeddedResource Include="Reports\Html\Templates\_Summary.cshtml" />
+    <EmbeddedResource Include="Reports\Html\Templates\_GraphViolation.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CodeModel.Extensions.DgmlExport\CodeModel.Extensions.DgmlExport.csproj">

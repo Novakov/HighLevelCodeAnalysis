@@ -7,6 +7,8 @@ using CodeModel.Model;
 
 namespace CodeModel.Mutators
 {
+    [Provide(Resources.LinkToContainer)]
+    [OptionalNeed(Resources.Types, Resources.Methods, Resources.Properties, Resources.Fields)]
     public class LinkToContainer : INodeMutator<MethodNode>, INodeMutator<FieldNode>, INodeMutator<PropertyNode>, INodeMutator<TypeNode>
     {
         public void Mutate(MethodNode node, IMutateContext context)

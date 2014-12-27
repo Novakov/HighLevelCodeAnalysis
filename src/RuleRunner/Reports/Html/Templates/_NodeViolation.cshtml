@@ -34,12 +34,12 @@
                     @foreach (var violation in node.Value)
                     {
                         <li>
-                            @violation.Name
+                            <span class="violation-name">@violation.Name</span>
                             @if (violation is IViolationWithSourceLocation)
                             {
                                 <text> in <code>@Helper.SourceLocation((violation as IViolationWithSourceLocation).SourceLocation.Value)</code></text>
                             }
-                        </li>
+</li>
                     }
                 </ul>
             </li>

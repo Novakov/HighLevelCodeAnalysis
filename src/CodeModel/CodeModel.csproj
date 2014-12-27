@@ -80,6 +80,7 @@
     <Compile Include="Convetions\IImplementingConvention.cs" />
     <Compile Include="DelegateExtensions.cs" />
     <Compile Include="DependencyManager.cs" />
+    <Compile Include="DynamicNeed.cs" />
     <Compile Include="EnumerableExtensions.cs" />
     <Compile Include="ExportableAttribute.cs" />
     <Compile Include="Extensions.cs" />
@@ -154,7 +155,9 @@
     <Compile Include="Mutators\RemoveLink.cs" />
     <Compile Include="Mutators\RemoveNode.cs" />
     <Compile Include="Mutators\ReplaceInterfaceWithImplementation.cs" />
+    <Compile Include="NeedAttribute.cs" />
     <Compile Include="NodeExtensions.cs" />
+    <Compile Include="OptionalNeedAttribute.cs" />
     <Compile Include="PatternMatch.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ProvideAttribute.cs" />

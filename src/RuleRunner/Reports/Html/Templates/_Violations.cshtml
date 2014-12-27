@@ -4,6 +4,14 @@
 @foreach (var rule in Model.Violations)
 {
     <div id="rule-@rule.Key.GetType().Name">
-        @Helper.Partial("_Violation", rule.Value)
+        @if (rule.Value.IsNodeRule)
+        {
+            <text>@Helper.Partial("_NodeViolation", rule.Value)</text>
+        }
+
+        @if (rule.Value.IsGraphRule)
+        {
+            <text>@Helper.Partial("_GraphViolation", rule.Value)</text>
+        }
     </div>
 }

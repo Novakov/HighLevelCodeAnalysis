@@ -9,19 +9,22 @@ namespace CodeModel
     {
         private readonly Func<TElement, IEnumerable<string>> provided;
         private readonly Func<TElement, IEnumerable<string>> needed;
+        private readonly Func<TElement, IEnumerable<string>> optionalNeeded;
 
         private readonly Dictionary<TElement, ElementNode> elements;
 
         private readonly Dictionary<string, TElement> providers;
 
-        private readonly HashSet<TElement> requiredElements; 
+        private readonly HashSet<TElement> requiredElements;
 
         private int elementId;
 
-        public DependencyManager(Func<TElement, IEnumerable<string>> provided, Func<TElement, IEnumerable<string>> needed)
+        public DependencyManager(Func<TElement, IEnumerable<string>> provided, Func<TElement, IEnumerable<string>> needed, Func<TElement, IEnumerable<string>> optionalNeeded)
         {
             this.provided = provided;
             this.needed = needed;
+            this.optionalNeeded = optionalNeeded;
+
             this.elements = new Dictionary<TElement, ElementNode>();
             this.providers = new Dictionary<string, TElement>();
             this.elementId = 0;
@@ -70,7 +73,7 @@ namespace CodeModel
 
         public RunList<TElement> CalculateRunList()
         {
-            var graph = new Graph<ElementNode, Link>();
+            var graph = new Graph<ElementNode, ProvidesResource>();
 
             foreach (var elementNode in this.elements)
             {
@@ -87,15 +90,26 @@ namespace CodeModel
 
                         var node = this.elements[provider];
 
-                        graph.AddLink(node, elementNode.Value, new ProvidesResource());
+                        graph.AddLink(node, elementNode.Value, new ProvidesResource(true));
                     }
                     else
                     {
-                        return new RunList<TElement>(Enumerable.Empty<TElement>(), new[] {neededResource});
+                        return new RunList<TElement>(Enumerable.Empty<TElement>(), new[] { neededResource });
+                    }
+                }
+
+                foreach (var optionalNeededResource in this.optionalNeeded(elementNode.Key))
+                {
+                    if (this.providers.ContainsKey(optionalNeededResource))
+                    {
+                        var provider = this.providers[optionalNeededResource];
+                        var node = this.elements[provider];
+
+                        graph.AddLink(node, elementNode.Value, new ProvidesResource(false));
                     }
                 }
             }
-            
+
             EliminateNotRequiredElements(graph);
 
             try
@@ -106,13 +120,18 @@ namespace CodeModel
             }
             catch (CannotSortGraphException)
             {
-                return new RunList<TElement>(new [] {"Unable to construct runlist - possible cyclic dependencies"});
+                return new RunList<TElement>(new[] { "Unable to construct runlist - possible cyclic dependencies" });
             }
         }
 
-        private void EliminateNotRequiredElements(Graph<ElementNode, Link> graph)
+        private void EliminateNotRequiredElements(Graph<ElementNode, ProvidesResource> graph)
         {
-            var walker = new WalkAndAnnotate<ElementNode, Link>(x => new Mark(), null, n => n.InboundLinks.GroupBy(x => (ElementNode) x.Source));
+            Func<ElementNode, IEnumerable<IGrouping<ElementNode, ProvidesResource>>> availableNodes = n => n
+                .InboundLinks.OfType<ProvidesResource>()
+                .Where(x => x.IsRequired)
+                .GroupBy(x => (ElementNode)x.Source);
+
+            var walker = new WalkAndAnnotate<ElementNode, ProvidesResource>(x => new Mark(), null, availableNodes);
 
             foreach (var requiredElement in this.requiredElements)
             {
@@ -129,17 +148,28 @@ namespace CodeModel
 
         private class ElementNode : Node
         {
-            public TElement Element { get; private set; }            
+            public TElement Element { get; private set; }
 
             public ElementNode(string nodeId, TElement element)
                 : base(nodeId)
             {
                 this.Element = element;
             }
+
+            public override string DisplayLabel
+            {
+                get { return this.Id + ": " + this.Element.ToString(); }
+            }
         }
 
         private class ProvidesResource : Link
         {
+            public bool IsRequired { get; private set; }
+
+            public ProvidesResource(bool isRequired)
+            {
+                IsRequired = isRequired;
+            }
         }
 
         private class Mark

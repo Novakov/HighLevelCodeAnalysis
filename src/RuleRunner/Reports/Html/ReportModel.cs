@@ -37,11 +37,23 @@ namespace RuleRunner.Reports.Html
         
         public Dictionary<Node, IList<Violation>> ViolatingNodes { get; private set; }
         public bool AnyViolations { get { return this.ViolatingNodesCount > 0; } }
+        public List<Violation> GraphViolations { get; private set; }
+
+        public bool IsGraphRule
+        {
+            get { return this.Rule is IGraphRule; }
+        }
+
+        public bool IsNodeRule
+        {
+            get { return this.Rule is INodeRule; }
+        }
 
         public RuleResult(IRule rule)
         {
             this.Rule = rule;
             this.ViolatingNodes = new Dictionary<Node, IList<Violation>>();
+            this.GraphViolations = new List<Violation>();
         }
     }
 }

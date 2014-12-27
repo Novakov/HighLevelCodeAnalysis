@@ -16,6 +16,8 @@ namespace RuleRunner
 
         public IEnumerable<string> Needs { get; set; }
 
+        public IEnumerable<string> OptionalNeeds { get; private set; }
+
         public bool IsRule { get; private set; }
 
         public bool IsMutator { get; private set; }
@@ -27,6 +29,8 @@ namespace RuleRunner
             this.Provides = modelBuilder.GetProvidedResources(type);
 
             this.Needs = modelBuilder.GetNeededResources(type);
+
+            this.OptionalNeeds = modelBuilder.GetOptionalNeeds(type);
 
             this.IsRule = typeof(IRule).IsAssignableFrom(this.Type);
             this.IsMutator = typeof(IMutator).IsAssignableFrom(this.Type);

@@ -18,6 +18,7 @@ namespace CodeModel
         public event EventHandler<RuleRunEventArgs> StartingRule;
         public event EventHandler<RuleRunEventArgs> FinishedRule;
         public event EventHandler<NodeVerificationEventArgs> NodeVerified;
+        public event EventHandler<GraphVerifiedEventArgs> GraphVerified;
 
         public Verificator()
         {
@@ -67,8 +68,10 @@ namespace CodeModel
                 var graphRule = rule as IGraphRule;
                 if (graphRule != null)
                 {
-                    var violations = graphRule.Verify(context, codeModel.Model);
-                    
+                    var violations = graphRule.Verify(context, codeModel.Model).ToList();
+
+                    this.OnGraphVerified(rule, violations);
+
                     context.RecordAll(violations);
                 }
 
@@ -104,6 +107,23 @@ namespace CodeModel
         protected void OnNodeVerified(IRule rule, Node node, IEnumerable<Violation> violations)
         {
             this.NodeVerified.Call(this, new NodeVerificationEventArgs(rule, node, violations));
+        }
+
+        protected void OnGraphVerified(IRule rule, IEnumerable<Violation> violations)
+        {
+            this.GraphVerified.Call(this, new GraphVerifiedEventArgs(rule, violations));
+        }
+    }
+
+    public class GraphVerifiedEventArgs : EventArgs
+    {
+        public IRule Rule { get; private set; }
+        public IEnumerable<Violation> Violations { get; private set; }
+
+        public GraphVerifiedEventArgs(IRule rule, IEnumerable<Violation> violations)
+        {
+            Rule = rule;
+            Violations = violations;
         }
     }
 

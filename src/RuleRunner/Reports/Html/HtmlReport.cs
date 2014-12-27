@@ -97,6 +97,12 @@ namespace RuleRunner.Reports.Html
             }           
         }
 
+        public void GraphVerification(IRule rule, IEnumerable<Violation> violations)
+        {
+            var ruleResults = this.reportModel.Violations[rule];
+            ruleResults.GraphViolations.AddRange(violations);
+        }
+
         public void RunFinished(CodeModelBuilder modelBuilder)
         {
             this.reportModel.NodesCountByType = modelBuilder.Model.Nodes.GroupBy(x => x.GetType()).ToDictionary(x => x.Key, x => x.Count());
