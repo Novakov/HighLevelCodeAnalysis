@@ -1,0 +1,69 @@
+﻿@inherits ReportTemplateBase<ReportModel>
+
+
+<div id="summary-rules">
+    <h2>Rule summary</h2>
+    <table class="table table-condensed">
+        <thead>
+        <tr>
+            <th>Rule</th>
+            <th>Verified nodes</th>
+            <th>Violations couns</th>
+            <th>Violating nodes</th>
+            <th>Violating nodes %</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var ruleResult in Model.Violations)
+        {
+            <tr>
+                <td>@ruleResult.Key.GetType().Name</td>
+                <td>@ruleResult.Value.Verified</td>
+                <td>@ruleResult.Value.TotalViolationsCount</td>
+                <td>@ruleResult.Value.ViolatingNodesCount</td>
+                <td>@Helper.SafePercent(ruleResult.Value.ViolatingRatio)</td>
+            </tr>
+        }
+        </tbody>
+    </table>
+</div>
+
+<div id="summary-graph">
+    <h2>Graph summary</h2>
+
+    <table class="table table-condensed">
+        <thead>
+            <tr>
+                <th>Node type</th>
+                <th>Count</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var nodeType in Model.NodesCountByType)
+            {
+                <tr>
+                    <td>@nodeType.Key.Name</td>
+                    <td>@nodeType.Value</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <table class="table table-condensed">
+        <thead>
+            <tr>
+                <th>Link type</th>
+                <th>Count</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var linkType in Model.LinksCountByType)
+            {
+                <tr>
+                    <td>@linkType.Key.Name</td>
+                    <td>@linkType.Value</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

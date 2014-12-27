@@ -50,6 +50,8 @@ namespace RuleRunner
 
             ExportModelAsDgml();
 
+            this.Report.RunFinished(this.modelBuilder);
+
             if (this.Report != null)
             {
                 this.Report.Write();

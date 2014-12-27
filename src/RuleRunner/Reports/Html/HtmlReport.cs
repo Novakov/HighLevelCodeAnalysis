@@ -2,6 +2,7 @@
 using System.IO;
 using System.Linq;
 using CodeModel;
+using CodeModel.Builder;
 using CodeModel.Graphs;
 using CodeModel.Rules;
 using Newtonsoft.Json;
@@ -93,6 +94,12 @@ namespace RuleRunner.Reports.Html
             {
                 ruleResults.ComplyingNodesCount++;
             }           
+        }
+
+        public void RunFinished(CodeModelBuilder modelBuilder)
+        {
+            this.reportModel.NodesCountByType = modelBuilder.Model.Nodes.GroupBy(x => x.GetType()).ToDictionary(x => x.Key, x => x.Count());
+            this.reportModel.LinksCountByType = modelBuilder.Model.Links.GroupBy(x => x.GetType()).ToDictionary(x => x.Key, x => x.Count());
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using CodeModel;
 using CodeModel.Graphs;
 using CodeModel.Rules;
@@ -11,6 +12,8 @@ namespace RuleRunner.Reports.Html
         public RunConfiguration Configuration { get; set; }
         public RunList<StepDescriptor> RunList { get; set; }
         public IDictionary<IRule, RuleResult> Violations { get; private set; }
+        public Dictionary<Type, int> NodesCountByType { get; set; }
+        public Dictionary<Type, int> LinksCountByType { get; set; }
 
         public ReportModel()
         {

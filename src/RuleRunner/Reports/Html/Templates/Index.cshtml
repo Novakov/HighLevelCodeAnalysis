@@ -24,19 +24,29 @@
         <div class="col-md-2">
             <div id="nav" class="navbar navbar-fixed-side navbar-fixed-side-left">
                 <ul class="nav nav-pills nav-stacked">
-                    <li class="active"><a href="#configuration">Configuration</a></li>
-                    <li><a href="#model-building">Model Building</a></li>
+                    <li class="active"><a href="#summary">Summary</a></li>
+                    <li class="nav-level-2"><a href="#summary-rules">Rules</a></li>
+                    <li class="nav-level-2"><a href="#summary-graph">Graph</a></li>
                     <li><a href="#violations">Violations</a></li>
                     @foreach (var rule in Model.Violations)
                     {
-                        <li style="padding-left: 25px"><a href="#rule-@rule.Key.GetType().Name">@rule.Key.GetType().Name</a></li>
+                        <li class="nav-level-2"><a href="#rule-@rule.Key.GetType().Name">@rule.Key.GetType().Name</a></li>
                     }
-
+                    <li><a href="#configuration">Configuration</a></li>
+                    <li><a href="#model-building">Model Building</a></li>
                 </ul>
             </div>
         </div>
 
         <div class="col-md-10">
+            <div id="summary">
+                <h1>Summary</h1>
+                @Helper.Partial("_Summary", Model)
+            </div>
+            <div id="violations">
+                <h1>Violations</h1>
+                @Helper.Partial("_Violations", Model)
+            </div>
             <div id="configuration">
                 <h1>Configuration</h1>
                 @Helper.Partial("_Config", Model.Configuration)
@@ -45,11 +55,6 @@
             <div id="model-building">
                 <h1>Model building</h1>
                 @Helper.Partial("_ModelBuilding", Model)
-            </div>
-
-            <div id="violations">
-                <h1>Violations</h1>
-                @Helper.Partial("_Violations", Model)
             </div>
         </div>
     </div>
