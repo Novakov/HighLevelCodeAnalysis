@@ -40,7 +40,9 @@ namespace RuleRunner
             AppDomain.CurrentDomain.AssemblyResolve += CurrentDomainOnAssemblyResolve;
 
             this.Report.Configuration(this.config);
-            
+
+            LoadExtensions();
+
             LoadAssembliesToAnalyze();
             LoadConventionAssemblies();
 
@@ -57,7 +59,18 @@ namespace RuleRunner
                 this.Report.Write();
             }
         }
-         
+
+        private void LoadExtensions()
+        {
+            foreach (var path in this.config.ExtensionAssemblies)
+            {
+                Log.Info("Loading extension {0}", path);
+                var extensionAssembly = Assembly.LoadFrom(path);
+
+                this.Report.LoadedExtension(extensionAssembly);
+            }
+        }
+
         private void RunRules()
         {
             this.verificator = new Verificator();
@@ -83,7 +96,14 @@ namespace RuleRunner
                 this.verificator.AddRule(rule.Type);
             }
 
-            this.verificator.Verify(this.verificationContext, this.modelBuilder);
+            try
+            {
+                this.verificator.Verify(this.verificationContext, this.modelBuilder);
+            }
+            catch (Exception e)
+            {
+                Log.Fatal("Error running rules", e);
+            }
 
             ReportViolations(this.verificationContext.Violations);
         }
@@ -130,6 +150,8 @@ namespace RuleRunner
         {
             Log.Info("Building model");
             this.modelBuilder = new CodeModelBuilder();
+
+            this.modelBuilder.RegisterConventionsFrom(this.conventionAssemblies.ToArray());
 
             Log.Trace("Adding assemblies to model");
             this.modelBuilder.RunMutator(new AddAssemblies(this.assembliesToAnalyze));

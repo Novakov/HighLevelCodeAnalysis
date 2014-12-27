@@ -1,7 +1,7 @@
 ﻿@using CodeModel.Rules
 @inherits ReportTemplateBase<RuleResult>
 
-<h2>@Model.GetType().Name</h2>
+<h2>@Model.Rule.GetType().Name</h2>
 
 <div>
     Verified nodes: @Model.Verified

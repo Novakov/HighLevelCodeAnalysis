@@ -1,8 +1,8 @@
-﻿@inherits ReportTemplateBase<RuleRunner.Configuration.RunConfiguration>
+﻿@inherits ReportTemplateBase<ReportModel>
 
 <h2>Analyzed assemblies</h2>
 <ul>
-    @foreach (var assembly in Model.AssembliesToAnalyze)
+    @foreach (var assembly in Model.Configuration.AssembliesToAnalyze)
     {
         <li>@assembly</li>
     }
@@ -10,8 +10,16 @@
 
 <h2>Convention assemblies</h2>
 <ul>
-    @foreach (var assembly in Model.ConventionAssemblies)
+    @foreach (var assembly in Model.Configuration.ConventionAssemblies)
     {
         <li>@assembly</li>
+    }
+</ul>
+
+<h2>Extension assemblies</h2>
+<ul>
+    @foreach (var assembly in Model.Extensions)
+    {
+        <li>@assembly.Name</li>
     }
 </ul>

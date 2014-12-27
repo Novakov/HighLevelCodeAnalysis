@@ -6,6 +6,7 @@ using CodeModel.Model;
 
 namespace CodeModel.Extensions.Cqrs
 {
+    [Provide(CqrsResources.CountedCommandExecutions)]
     public class CountCommandExecutions : INodeMutator<MethodNode>
     {
         private readonly ICqrsConvention convention;

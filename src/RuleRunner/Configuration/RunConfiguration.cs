@@ -14,6 +14,9 @@ namespace RuleRunner.Configuration
         [JsonProperty("conventions")]
         public string[] ConventionAssemblies { get; set; }
 
+        [JsonProperty("extensions")]
+        public string[] ExtensionAssemblies { get; set; }
+
         public ReportConfiguration Reports { get; set; }
     }
 

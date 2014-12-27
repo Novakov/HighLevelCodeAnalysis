@@ -15,6 +15,11 @@ namespace CodeModel.Extensions.Cqrs.Rules
 
             var entryPoint = graph.LookupNode<ApplicationEntryPoint>(ApplicationEntryPoint.NodeId);
 
+            if (entryPoint == null)
+            {
+                return Enumerable.Empty<Violation>();
+            }
+
             v.Walk(entryPoint);
 
             return v.Violations;

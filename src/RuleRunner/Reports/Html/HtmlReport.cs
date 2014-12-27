@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using CodeModel;
 using CodeModel.Builder;
 using CodeModel.Graphs;
@@ -100,6 +101,11 @@ namespace RuleRunner.Reports.Html
         {
             this.reportModel.NodesCountByType = modelBuilder.Model.Nodes.GroupBy(x => x.GetType()).ToDictionary(x => x.Key, x => x.Count());
             this.reportModel.LinksCountByType = modelBuilder.Model.Links.GroupBy(x => x.GetType()).ToDictionary(x => x.Key, x => x.Count());
+        }
+
+        public void LoadedExtension(Assembly assembly)
+        {
+            this.reportModel.Extensions.Add(assembly.GetName());
         }
     }
 }

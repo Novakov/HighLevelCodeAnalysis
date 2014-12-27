@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Reflection;
 using CodeModel;
 using CodeModel.Graphs;
 using CodeModel.Rules;
@@ -14,10 +15,12 @@ namespace RuleRunner.Reports.Html
         public IDictionary<IRule, RuleResult> Violations { get; private set; }
         public Dictionary<Type, int> NodesCountByType { get; set; }
         public Dictionary<Type, int> LinksCountByType { get; set; }
+        public List<AssemblyName> Extensions { get; private set; }
 
         public ReportModel()
         {
             this.Violations = new Dictionary<IRule, RuleResult>();
+            this.Extensions = new List<AssemblyName>();
         }
     }
 

@@ -9,6 +9,7 @@ using Mono.Reflection;
 
 namespace CodeModel.Extensions.Cqrs.Rules
 {
+    [Need(CqrsResources.CountedCommandExecutions)]
     public class InvokeOnlyOneCommandInMethod : INodeRule
     {
         private readonly ICqrsConvention cqrsConvention;
