@@ -52,7 +52,7 @@ namespace Tests.FlowAnalysisTests
                 try
                 {
                     var result = walker.Walk(method, graph);
-                    Assert.That(result, Is.EqualTo(0), "Stack not 0 for method" + method);
+                    Assert.That(result, Is.EqualTo(0), string.Format("Stack not 0 for method (static:{1}) {0}", method, method.IsStatic));
                 }
                 catch (Exception e)
                 {

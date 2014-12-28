@@ -51,6 +51,21 @@ namespace CodeModel.FlowAnalysis
                         }
                     }
 
+                    if (instruction.OpCode == OpCodes.Calli)
+                    {
+                        var b = (byte[])instruction.Operand;
+                        var returnType = b[2];
+
+                        if (returnType == 0x1)
+                        {
+                            return 0;
+                        }
+                        else
+                        {
+                            return 1;
+                        }                        
+                    }
+
                     throw new InvalidOperationException("Cannot determine varpush for instruction " + instruction.ToString());
                 default:
                     throw new InvalidOperationException("(Push) Not implemented " + instruction.ToString());
@@ -115,6 +130,15 @@ namespace CodeModel.FlowAnalysis
                         {
                             return 1;
                         }
+                    }
+
+                    if (instruction.OpCode == OpCodes.Calli)
+                    {                       
+                        var b = (byte[]) instruction.Operand;
+                        
+                        var parameterCount = b[1];
+                        
+                        return parameterCount + 1;                        
                     }
 
                     throw new InvalidOperationException("Cannot determine varpop for instruction " + instruction.ToString());
