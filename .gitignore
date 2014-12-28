@@ -4,3 +4,9 @@ bin
 obj
 build
 *.swp
+
+.sonar
+
+src/packages/OpenCover.*/SampleSln
+src/packages/OpenCover.*/Samples
+src/packages/OpenCover.*/docs
