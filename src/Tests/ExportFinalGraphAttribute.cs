@@ -39,7 +39,7 @@ namespace Tests
             }
         }
 
-        private static void ExportGraph<TNode, TLink>(TestDetails testDetails, Graph<TNode, TLink> graph) 
+        private void ExportGraph<TNode, TLink>(TestDetails testDetails, Graph<TNode, TLink> graph) 
             where TNode : Node 
             where TLink : Link
         {
