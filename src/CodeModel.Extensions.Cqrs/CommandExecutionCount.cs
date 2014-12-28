@@ -1,4 +1,6 @@
-﻿namespace CodeModel.Extensions.Cqrs
+﻿using CodeModel.Graphs;
+
+namespace CodeModel.Extensions.Cqrs
 {
     public class CommandExecutionCount
     {

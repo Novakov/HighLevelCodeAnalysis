@@ -1,4 +1,5 @@
 using CodeModel.Graphs;
+using CodeModel.RuleEngine;
 using CodeModel.Rules;
 
 namespace CodeModel.Extensions.Cqrs.Rules

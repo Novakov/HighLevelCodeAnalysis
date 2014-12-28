@@ -1,5 +1,5 @@
 using System;
-using CodeModel.Model;
+using CodeModel.Primitives;
 
 namespace CodeModel.Extensions.AspNetMvc
 {

@@ -5,7 +5,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using CodeModel.Graphs;
-using CodeModel.Model;
+using CodeModel.Primitives;
 
 namespace CodeModel
 {

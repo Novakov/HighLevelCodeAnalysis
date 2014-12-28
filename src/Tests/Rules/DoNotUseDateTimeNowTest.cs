@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using CodeModel.Builder;
-using CodeModel.Model;
+using CodeModel.Primitives;
 using CodeModel.Rules;
 using NUnit.Framework;
 using NUnit.Framework.Constraints;

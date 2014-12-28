@@ -1,7 +1,7 @@
 ﻿using CodeModel.Annotations;
 using CodeModel.Builder;
-using CodeModel.Model;
-using CodeModel.Mutators;
+using CodeModel.Primitives;
+using CodeModel.Primitives.Mutators;
 using NUnit.Framework;
 using Tests.Constraints;
 using TestTarget.Rules.Immutability;

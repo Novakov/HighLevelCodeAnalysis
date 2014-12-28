@@ -1,6 +1,6 @@
 using System;
 using System.Reflection;
-using CodeModel.Model;
+using CodeModel.Primitives;
 
 namespace CodeModel.Extensions.Cqrs
 {

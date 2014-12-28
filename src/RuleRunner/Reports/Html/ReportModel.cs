@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Reflection;
 using CodeModel;
+using CodeModel.Dependencies;
 using CodeModel.Graphs;
+using CodeModel.RuleEngine;
 using CodeModel.Rules;
 using RuleRunner.Configuration;
 

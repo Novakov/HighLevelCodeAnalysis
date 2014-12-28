@@ -1,8 +1,9 @@
 using System.Collections.Generic;
 using System.Linq;
+using CodeModel.Dependencies;
 using CodeModel.Graphs;
-using CodeModel.Links;
-using CodeModel.Model;
+using CodeModel.Primitives;
+using CodeModel.RuleEngine;
 using CodeModel.Rules;
 
 namespace CodeModel.Extensions.Cqrs.Rules

@@ -1,11 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
-using CodeModel.Extensions.DgmlExport;
 using CodeModel.FlowAnalysis;
 using NUnit.Framework;
 using TestTarget;
@@ -86,10 +82,8 @@ namespace Tests.FlowAnalysisTests
     {
         public IEnumerable<Type> AllTypes()
         {
-            return typeof(string).Assembly.GetTypes()
-                //.Where(x => x.IsPublic)
-                .Where(x => !x.IsInterface)
-                //.Where(x => x != typeof (StringBuilder))
+            return typeof(string).Assembly.GetTypes()                
+                .Where(x => !x.IsInterface)               
                 .OrderBy(x => x.FullName);
         }
     }

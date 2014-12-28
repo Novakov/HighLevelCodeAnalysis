@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using CodeModel.Graphs;
-using CodeModel.Links;
-using CodeModel.Model;
 
 namespace CodeModel.Builder
 {

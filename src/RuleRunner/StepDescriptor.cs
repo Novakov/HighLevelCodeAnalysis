@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using CodeModel;
 using CodeModel.Builder;
+using CodeModel.RuleEngine;
 using CodeModel.Rules;
 
 namespace RuleRunner

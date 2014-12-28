@@ -5,8 +5,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using CodeModel.Extensions.EventSourcing.Conventions;
-using CodeModel.Links;
-using CodeModel.Model;
+using CodeModel.Primitives;
 using TestTarget.EventSourcing;
 
 namespace TestTarget.Conventions

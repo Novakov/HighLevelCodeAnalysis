@@ -4,10 +4,9 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
-using CodeModel.Convetions;
+using CodeModel.Conventions;
 using CodeModel.FlowAnalysis;
-using CodeModel.Links;
-using CodeModel.Model;
+using CodeModel.Primitives;
 
 namespace CodeModel.Extensions.Cqrs
 {

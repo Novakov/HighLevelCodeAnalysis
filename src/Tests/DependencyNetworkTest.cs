@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Text;
 using CodeModel;
+using CodeModel.Dependencies;
 using NUnit.Framework;
 using Tests.Constraints;
 

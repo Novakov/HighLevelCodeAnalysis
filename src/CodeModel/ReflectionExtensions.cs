@@ -74,5 +74,10 @@ namespace CodeModel
 
             return sb.ToString();
         }
+
+        public static Assembly Load(this AssemblyName name)
+        {
+            return Assembly.Load(name);
+        }
     }
 }

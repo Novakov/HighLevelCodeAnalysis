@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using CodeModel.Annotations;
 using CodeModel.Graphs;
-using CodeModel.Links;
-using CodeModel.Model;
+using CodeModel.Primitives;
+using CodeModel.RuleEngine;
 
 namespace CodeModel.Rules
 {

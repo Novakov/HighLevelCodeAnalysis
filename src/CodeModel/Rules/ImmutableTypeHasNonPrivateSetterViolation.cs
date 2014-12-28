@@ -1,4 +1,5 @@
-﻿using CodeModel.Model;
+﻿using CodeModel.Primitives;
+using CodeModel.RuleEngine;
 
 namespace CodeModel.Rules
 {

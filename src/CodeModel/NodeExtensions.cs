@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using CodeModel.Graphs;
-using CodeModel.Links;
+using CodeModel.Primitives;
 
 namespace CodeModel
 {

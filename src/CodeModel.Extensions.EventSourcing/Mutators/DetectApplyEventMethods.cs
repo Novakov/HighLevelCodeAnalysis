@@ -2,7 +2,7 @@
 using CodeModel.Extensions.EventSourcing.Conventions;
 using CodeModel.Extensions.EventSourcing.Nodes;
 using CodeModel.Graphs;
-using CodeModel.Model;
+using CodeModel.Primitives;
 
 namespace CodeModel.Extensions.EventSourcing.Mutators
 {

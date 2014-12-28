@@ -3,8 +3,8 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
-using CodeModel.Convetions;
-using CodeModel.Model;
+using CodeModel.Conventions;
+using CodeModel.Primitives;
 
 namespace TestTarget.Conventions
 {

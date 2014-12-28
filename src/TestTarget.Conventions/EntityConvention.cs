@@ -1,5 +1,5 @@
-﻿using CodeModel.Convetions;
-using CodeModel.Model;
+﻿using CodeModel.Conventions;
+using CodeModel.Primitives;
 using TestTarget.EventSourcing;
 
 namespace TestTarget.Conventions

@@ -1,5 +1,6 @@
 using CodeModel;
 using CodeModel.Builder;
+using CodeModel.RuleEngine;
 using CodeModel.Rules;
 using NUnit.Framework;
 

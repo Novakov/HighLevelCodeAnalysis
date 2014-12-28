@@ -1,7 +1,6 @@
 ﻿using System;
-using CodeModel.Convetions;
-using CodeModel.Links;
-using CodeModel.Model;
+using CodeModel.Conventions;
+using CodeModel.Primitives;
 
 namespace CodeModel.Extensions.EventSourcing.Conventions
 {

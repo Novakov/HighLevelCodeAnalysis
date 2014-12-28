@@ -1,9 +1,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using CodeModel.Dependencies;
 using CodeModel.FlowAnalysis;
 using CodeModel.Graphs;
-using CodeModel.Model;
+using CodeModel.Primitives;
+using CodeModel.RuleEngine;
 using CodeModel.Rules;
 using Mono.Reflection;
 

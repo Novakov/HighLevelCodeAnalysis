@@ -6,8 +6,7 @@ using System.Threading.Tasks;
 using CodeModel.Builder;
 using CodeModel.Extensions.EventSourcing.Conventions;
 using CodeModel.Extensions.EventSourcing.Links;
-using CodeModel.Links;
-using CodeModel.Model;
+using CodeModel.Primitives;
 
 namespace CodeModel.Extensions.EventSourcing.Mutators
 {

@@ -1,9 +1,8 @@
 ﻿using System.Linq;
 using CodeModel.Builder;
 using CodeModel.Graphs;
-using CodeModel.Links;
-using CodeModel.Model;
-using CodeModel.Mutators;
+using CodeModel.Primitives;
+using CodeModel.Primitives.Mutators;
 using NUnit.Framework;
 using Graph = Tests.Constraints.Graph;
 

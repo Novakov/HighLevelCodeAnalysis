@@ -27,7 +27,7 @@ namespace Tests.FlowAnalysisTests
             types.Walk(method, flowGraph);
         }
 
-        [Test]        
+        [Test]
         public void DifferentVariableTypeInTwoBranches()
         {
             // arrange
@@ -117,12 +117,13 @@ namespace Tests.FlowAnalysisTests
             return new TestCaseData(Get.MethodOf(method).Name, types);
         }
 
-        [Test, Category("Perf"), Explicit]
+        [Test, Category("Perf")]
+        [Timeout(60 * 1000)]
         public void AnalyzeMethodWith27Ifs()
         {
             var method = Get.MethodOf<NastyMethods>(x => NastyMethods.MethodWith27Ifs());
 
-            var cfg = ControlFlowGraphFactory.BuildForMethod(method);            
+            var cfg = ControlFlowGraphFactory.BuildForMethod(method);
 
             this.Result = cfg;
 

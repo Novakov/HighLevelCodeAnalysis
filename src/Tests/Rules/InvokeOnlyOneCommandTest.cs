@@ -1,10 +1,11 @@
 ﻿using System.Reflection;
 using CodeModel.Builder;
 using CodeModel.Extensions.Cqrs;
+using CodeModel.Extensions.Cqrs.Mutators;
 using CodeModel.Extensions.Cqrs.Rules;
 using CodeModel.Graphs;
-using CodeModel.Model;
-using CodeModel.Mutators;
+using CodeModel.Primitives;
+using CodeModel.Primitives.Mutators;
 using NUnit.Framework;
 using TestTarget.Cqrs;
 using TestTarget.Rules.InvokeOnlyOneCommand;

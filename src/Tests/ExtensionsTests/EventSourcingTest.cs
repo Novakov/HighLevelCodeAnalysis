@@ -4,7 +4,7 @@ using CodeModel.Builder;
 using CodeModel.Extensions.EventSourcing.Links;
 using CodeModel.Extensions.EventSourcing.Mutators;
 using CodeModel.Extensions.EventSourcing.Nodes;
-using CodeModel.Mutators;
+using CodeModel.Primitives.Mutators;
 using NUnit.Framework;
 using Tests.Constraints;
 using TestTarget;

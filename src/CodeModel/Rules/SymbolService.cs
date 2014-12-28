@@ -1,6 +1,6 @@
 ﻿using System;
 using System.IO;
-using CodeModel.Model;
+using CodeModel.Primitives;
 using CodeModel.Symbols;
 using Microsoft.Samples.Debugging.CorMetadata.NativeApi;
 using Microsoft.Samples.Debugging.CorSymbolStore;

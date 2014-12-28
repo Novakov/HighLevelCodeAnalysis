@@ -3,8 +3,7 @@ using System.Linq;
 using System.Reflection;
 using CodeModel.Extensions.Cqrs;
 using CodeModel.FlowAnalysis;
-using CodeModel.Links;
-using CodeModel.Model;
+using CodeModel.Primitives;
 using TestTarget.Cqrs;
 
 namespace TestTarget.Conventions
