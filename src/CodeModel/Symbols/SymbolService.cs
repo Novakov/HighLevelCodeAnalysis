@@ -1,12 +1,11 @@
-﻿using System;
+using System;
 using System.IO;
 using CodeModel.Primitives;
-using CodeModel.Symbols;
 using Microsoft.Samples.Debugging.CorMetadata.NativeApi;
 using Microsoft.Samples.Debugging.CorSymbolStore;
 using Microsoft.Samples.Debugging.SymbolStore;
 
-namespace CodeModel.Rules
+namespace CodeModel.Symbols
 {
     public class SymbolService
     {

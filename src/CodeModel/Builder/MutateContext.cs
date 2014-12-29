@@ -8,7 +8,7 @@ using CodeModel.Graphs;
 
 namespace CodeModel.Builder
 {
-    public class MutateContext : IMutateContext
+    internal class MutateContext : IMutateContext
     {
         private readonly Graph model;
         private readonly List<Node> nodesToProcess;

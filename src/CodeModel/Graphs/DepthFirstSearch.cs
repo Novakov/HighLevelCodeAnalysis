@@ -3,6 +3,7 @@ using System.Linq;
 
 namespace CodeModel.Graphs
 {
+    //TODO: Provide version with delegates (no need for inheritance)
     public abstract class DepthFirstSearch
     {
         public void Walk(Node startNode)

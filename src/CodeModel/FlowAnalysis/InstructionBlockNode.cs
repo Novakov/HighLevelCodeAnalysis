@@ -67,6 +67,7 @@ namespace CodeModel.FlowAnalysis
         }
 
         internal abstract BlockNode Clone();
+
         public abstract void CalculateStackProperties(MethodInfo containingMethod);
     }
 

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace CodeModel.Graphs
 {
+    //TODO: Provide version with delegates (no need for inheritance)
     public abstract class BreadthFirstSearch<TNode, TLink>
         where TNode : Node
         where TLink : Link

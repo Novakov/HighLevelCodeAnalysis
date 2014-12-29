@@ -37,6 +37,7 @@ namespace CodeModel.FlowAnalysis
             return this.Blocks.FirstOrDefault(x => x.Instructions.Contains(instruction));
         }
 
+        //TODO: Check if this method is needed. Calculating all paths is too complex
         public IEnumerable<IEnumerable<BlockNode>> FindPaths()
         {
             var paths = new FindAllControlFlowPaths(this.ExitPoint);

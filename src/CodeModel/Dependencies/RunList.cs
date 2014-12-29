@@ -3,6 +3,7 @@ using System.Linq;
 
 namespace CodeModel.Dependencies
 {
+    // FIXME: Add factory methods instead of ctors
     public class RunList<TElement>
     {
         public IEnumerable<string> Errors { get; private set; }
@@ -21,6 +22,7 @@ namespace CodeModel.Dependencies
         public RunList(IEnumerable<string> errors)
         {
             this.Errors = errors;
+            this.IsValid = false;
         }
     }
 }

@@ -3,6 +3,7 @@ using System.Linq;
 
 namespace CodeModel.FlowAnalysis
 {
+    //TODO: add equality operator
     public class PotentialType : IEquatable<PotentialType>
     {
         private static readonly Type[] NumericTypes = {typeof (decimal), typeof (double), typeof (float), typeof (UInt64), typeof (Int64), typeof (UInt32), typeof (Int32), typeof (UInt16), typeof (Int16), typeof (Byte), typeof (SByte)};

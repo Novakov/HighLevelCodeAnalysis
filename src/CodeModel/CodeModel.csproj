@@ -86,9 +86,7 @@
     <Compile Include="FlowAnalysis\BaseCfgWalker.cs" />
     <Compile Include="FlowAnalysis\BinaryOperator.cs" />
     <Compile Include="FlowAnalysis\BlockNodeComparer.cs" />
-    <Compile Include="FlowAnalysis\ComputeStackLength.cs" />
     <Compile Include="FlowAnalysis\ControlFlowGraph.cs" />
-    <Compile Include="FlowAnalysis\ControlFlowPathsWalker.cs" />
     <Compile Include="FlowAnalysis\ControlTransition.cs" />
     <Compile Include="FlowAnalysis\DetermineCallParameterTypes.cs" />
     <Compile Include="FlowAnalysis\CallParameterTypesRecorder.cs" />
@@ -171,7 +169,6 @@
     <Compile Include="Rules\ImmutableTypeSetsPropertyOutsideOfConstructorViolation.cs" />
     <Compile Include="RuleEngine\INodeRule.cs" />
     <Compile Include="RuleEngine\IRule.cs" />
-    <Compile Include="Rules\SymbolService.cs" />
     <Compile Include="Rules\TypeIsImmutable.cs" />
     <Compile Include="RuleEngine\VerificationContext.cs" />
     <Compile Include="RuleEngine\Violation.cs" />
@@ -181,6 +178,7 @@
     <Compile Include="Symbols\Extensions.cs" />
     <Compile Include="Symbols\SequencePoint.cs" />
     <Compile Include="Symbols\SourceLocation.cs" />
+    <Compile Include="Symbols\SymbolService.cs" />
     <Compile Include="TinyIoC.cs" />
     <Compile Include="RuleEngine\Verificator.cs" />
     <Compile Include="Graphs\WalkAndAnnotate.cs" />

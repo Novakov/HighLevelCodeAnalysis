@@ -8,7 +8,7 @@ using System.Reflection.Emit;
 using Mono.Reflection;
 
 namespace CodeModel.FlowAnalysis
-{
+{    
     public class ControlFlowGraphFactory
     {
         private ControlFlowGraph graph;
@@ -21,6 +21,7 @@ namespace CodeModel.FlowAnalysis
 
         internal const int EndPointOffset = -1;
 
+        // Convert to extension method for MethodInfo
         public static ControlFlowGraph BuildForMethod(MethodInfo method)
         {
             return new ControlFlowGraphFactory(method).Build();

@@ -59,7 +59,6 @@ namespace CodeModel.Graphs
             return this.outbound.Any(x => x.Target.Equals(target));
         }
 
-
         internal void AddOutboundLink(Link link)
         {
             this.outbound.Add(link);

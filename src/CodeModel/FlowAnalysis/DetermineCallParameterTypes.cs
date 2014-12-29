@@ -17,6 +17,7 @@ namespace CodeModel.FlowAnalysis
             this.recorder = new CallParameterTypesRecorder();
             this.recorder.Initialize(method);
 
+            //FIXME: Remove graph cloning (and all supporting methods)
             var reducedGraph = graph.Clone();           
 
             base.WalkCore(method, reducedGraph);

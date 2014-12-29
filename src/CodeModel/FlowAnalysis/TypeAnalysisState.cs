@@ -38,8 +38,7 @@ namespace CodeModel.FlowAnalysis
         }
 
         public override int GetHashCode()
-        {
-            //return this.stack.GetHashCode() ^ this.variables.GetHashCode() ^ this.parameters.GetHashCode();
+        {            
             return 0;
         }
 

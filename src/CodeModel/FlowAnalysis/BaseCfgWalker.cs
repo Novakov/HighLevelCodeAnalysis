@@ -5,6 +5,8 @@ using System.Reflection;
 
 namespace CodeModel.FlowAnalysis
 {
+    //TODO: Try to make this work on any graph not only CFG
+    //TODO: Provide version with delegates (no need for inheritance)
     public abstract class BaseCfgWalker<TState>
         where TState : IEquatable<TState>
     {

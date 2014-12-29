@@ -4,6 +4,7 @@ using System.Linq;
 
 namespace CodeModel.Graphs
 {
+    //FIXME: Ctor to properties with defaults
     public class WalkAndAnnotate<TNode, TLink> : BreadthFirstSearch<TNode, TLink>
         where TNode : Node
         where TLink : Link
