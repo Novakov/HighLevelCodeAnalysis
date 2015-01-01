@@ -81,6 +81,7 @@
     <Compile Include="Dependencies\DependencyManager.cs" />
     <Compile Include="Dependencies\DynamicNeed.cs" />
     <Compile Include="EnumerableExtensions.cs" />
+    <Compile Include="FlowAnalysis\ExceptionHandlingClauseExtensions.cs" />
     <Compile Include="Graphs\ExportableAttribute.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="FlowAnalysis\BaseCfgWalker.cs" />

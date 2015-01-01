@@ -15,10 +15,11 @@ namespace CodeModel.FlowAnalysis
         {
             int pushedCount = instruction.PushedValuesCountByOpCode();
 
-            if (methodBody.ExceptionHandlingClauses.Any(x => x.HandlerOffset == instruction.Offset && !x.Flags.HasFlag(ExceptionHandlingClauseOptions.Finally) && !x.Flags.HasFlag(ExceptionHandlingClauseOptions.Fault)))
+            if (methodBody.ExceptionHandlingClauses.Any(x => x.BeginsOn(instruction) && x.IsCatch()))
             {
                 pushedCount++;
             }
+
             return pushedCount;
         }
 
