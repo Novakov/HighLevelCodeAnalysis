@@ -81,10 +81,10 @@
     <Compile Include="Dependencies\DependencyManager.cs" />
     <Compile Include="Dependencies\DynamicNeed.cs" />
     <Compile Include="EnumerableExtensions.cs" />
+    <Compile Include="FlowAnalysis\ControlFlowGraphWalker.cs" />
     <Compile Include="FlowAnalysis\ExceptionHandlingClauseExtensions.cs" />
     <Compile Include="Graphs\ExportableAttribute.cs" />
     <Compile Include="Extensions.cs" />
-    <Compile Include="FlowAnalysis\BaseCfgWalker.cs" />
     <Compile Include="FlowAnalysis\BinaryOperator.cs" />
     <Compile Include="FlowAnalysis\BlockNodeComparer.cs" />
     <Compile Include="FlowAnalysis\ControlFlowGraph.cs" />
@@ -117,6 +117,7 @@
     <Compile Include="Graphs\LambdaDepthFirstSearch.cs" />
     <Compile Include="Graphs\Link.cs" />
     <Compile Include="Graphs\Node.cs" />
+    <Compile Include="Graphs\StateBasedBreadthFirstWalk.cs" />
     <Compile Include="Graphs\TopologySort.cs" />
     <Compile Include="IAnnotable.cs" />
     <Compile Include="Dependencies\IDynamicNeed.cs" />

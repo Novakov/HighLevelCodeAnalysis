@@ -43,39 +43,23 @@ namespace Tests.FlowAnalysisTests
             {
                 var graph = ControlFlowGraphFactory.BuildForMethod(method);
 
-                var walker = new Walker();
+                var walker = new ControlFlowGraphWalker<int>()
+                {
+                    InitialState = 0,
+                    VisitingBlock = (stack, block) => stack + block.StackDiff
+                };
 
                 try
                 {
-                    var result = walker.Walk(method, graph);
-                    Assert.That(result, Is.EqualTo(0), string.Format("Stack not 0 for method (static:{1}) {0}", method, method.IsStatic));
+                    var result = walker.WalkCore(method, graph);
+                    Assert.That(result.Single(), Is.EqualTo(0), string.Format("Stack not 0 for method (static:{1}) {0}", method, method.IsStatic));
                 }
                 catch (Exception e)
                 {
                     Assert.Fail("Type: {0} Method:{1} {2}", method, method.DeclaringType, e);
                 }
             }
-        }
-
-        private class Walker : BaseCfgWalker<int>
-        {
-            public int Walk(MethodInfo method, ControlFlowGraph cfg)
-            {
-                var results = base.WalkCore(method, cfg);
-
-                return results.Single();
-            }
-
-            protected override int VisitBlock(int alreadyExecutedCommands, BlockNode block)
-            {
-                return alreadyExecutedCommands + block.StackDiff;
-            }
-
-            protected override int GetInitialState(MethodInfo method, ControlFlowGraph graph)
-            {
-                return 0;
-            }
-        }
+        }        
     }
 
     internal class AllMscorlibTypes

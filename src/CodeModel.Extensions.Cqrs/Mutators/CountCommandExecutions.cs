@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Reflection;
 using CodeModel.Builder;
 using CodeModel.Dependencies;
 using CodeModel.Extensions.Cqrs.Rules;
@@ -28,13 +29,24 @@ namespace CodeModel.Extensions.Cqrs.Mutators
             if (!node.Method.HasBody())
             {
                 return;
-            }
+            }          
 
-            var walker = new RecordCommandExecution(this.convention);
+            var walker = new ControlFlowGraphWalker<int>
+            {
+                InitialState = 0,
+                VisitingBlock = (alreadyExecutedCommands, block) =>
+                {
+                    var calls = block.Instructions.Where(x => x.IsCall());
+
+                    var commandExecutions = calls.Count(x => x.Operand is MethodInfo && this.convention.IsCommandExecuteMethod((MethodInfo)x.Operand));
+
+                    return alreadyExecutedCommands + commandExecutions;
+                }
+            };
 
             var cfg = ControlFlowGraphFactory.BuildForMethod(node.Method);
 
-            var commandExecutionCountsOnPaths = walker.Walk(node.Method, cfg);
+            var commandExecutionCountsOnPaths = walker.WalkCore(node.Method, cfg);
 
             var highestCommandExecutionCount = commandExecutionCountsOnPaths.Max();
 
