@@ -66,8 +66,6 @@ namespace CodeModel.FlowAnalysis
             return this.IsJoin|| this.TransitedFrom.First().IsBranch;
         }
 
-        internal abstract BlockNode Clone();
-
         public abstract void CalculateStackProperties(MethodInfo containingMethod);
     }
 
@@ -112,11 +110,6 @@ namespace CodeModel.FlowAnalysis
             this.InStackHeight = this.TransitedFrom.Select(x => (int?)x.OutStackHeight).Distinct().SingleOrDefault() ?? 0;
             this.OutStackHeight = this.InStackHeight + this.StackDiff;            
         }
-
-        internal override BlockNode Clone()
-        {
-            return new InstructionBlockNode(this.Instructions.ToArray());
-        }
     }
 
     public class MethodExitNode : BlockNode
@@ -125,11 +118,6 @@ namespace CodeModel.FlowAnalysis
             : base("exit-point")
         {
             
-        }
-
-        internal override BlockNode Clone()
-        {
-            return new MethodExitNode();
         }
 
         public override void CalculateStackProperties(MethodInfo containingMethod)
@@ -153,11 +141,6 @@ namespace CodeModel.FlowAnalysis
         public override string DisplayLabel
         {
             get { return "Empty block"; }
-        }
-
-        internal override BlockNode Clone()
-        {
-            return new EmptyBlock(this.Id);
         }
 
         public override void CalculateStackProperties(MethodInfo containingMethod)

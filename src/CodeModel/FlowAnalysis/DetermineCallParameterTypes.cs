@@ -15,12 +15,9 @@ namespace CodeModel.FlowAnalysis
         public void Walk(MethodInfo method, ControlFlowGraph graph)
         {
             this.recorder = new CallParameterTypesRecorder();
-            this.recorder.Initialize(method);
+            this.recorder.Initialize(method);            
 
-            //FIXME: Remove graph cloning (and all supporting methods)
-            var reducedGraph = graph.Clone();           
-
-            base.WalkCore(method, reducedGraph);
+            base.WalkCore(method, graph);
         }
         
         protected override TypeAnalysisState VisitBlock(TypeAnalysisState alreadyExecutedCommands, BlockNode block)

@@ -97,7 +97,6 @@
     <Compile Include="FlowAnalysisTests\CalculateStackHeightsTest.cs" />
     <Compile Include="FlowAnalysisTests\CallParameterTypesRecorderTest.cs" />
     <Compile Include="FlowAnalysisTests\CallParameterTypesStackWalkerTest.cs" />
-    <Compile Include="FlowAnalysisTests\ControlFlowGraphTest.cs" />
     <Compile Include="FlowAnalysisTests\ControlFlowTest.cs" />
     <Compile Include="FlowAnalysisTests\SimplifiedStackWalkerTest.cs" />
     <Compile Include="FlowAnalysisTests\StackWalkerTest.cs" />
