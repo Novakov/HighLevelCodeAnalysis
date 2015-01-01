@@ -12,34 +12,34 @@ using TestTarget.Rules.DateTimeNow;
 
 namespace Tests.Rules
 {
-	[TestFixture]
+    [TestFixture]
     public class DoNotUseDateTimeNowTest : BaseRuleTest<DoNotUseDateTimeNow>
-	{
-		[Test]
+    {
+        [Test]
         [TestCase("UseDateTimeNow")]
         [TestCase("UseDateTimeUtcNow")]
         [TestCase("UseDateTimeOffsetNow")]
-        [TestCase("UseDateTimeOffsetUtcNow")]        
-	    public void ShouldViolate(string methodName)
-	    {
-	        // arrange
-		    var builder = new CodeModelBuilder();
+        [TestCase("UseDateTimeOffsetUtcNow")]
+        public void ShouldViolate(string methodName)
+        {
+            // arrange
+            var builder = new CodeModelBuilder();
             builder.Model.AddNode(new MethodNode(typeof(Targets).GetMethod(methodName)));
 
-			// act
-			this.Verify(builder);
+            // act
+            this.Verify(builder);
 
-			// assert
-			Assert.That(this.VerificationContext.Violations, Has.Count.EqualTo(1));
+            // assert
+            Assert.That(this.VerificationContext.Violations, Has.Count.EqualTo(1));
 
-            Assert.That(this.VerificationContext.Violations.ElementAt(0), Is                
-                .InstanceOf<UsesDateTimeNowViolation>()                
+            Assert.That(this.VerificationContext.Violations.ElementAt(0), Is
+                .InstanceOf<UsesDateTimeNowViolation>()
             );
-	    }
+        }
 
-		[Test]
-	    public void ShouldRecordSourceLocation()
-	    {
+        [Test]
+        public void ShouldRecordSourceLocation()
+        {
             // arrange
             var builder = new CodeModelBuilder();
             builder.Model.AddNode(new MethodNode(typeof(Targets).GetMethod("UseDateTimeNow")));
@@ -48,15 +48,15 @@ namespace Tests.Rules
             this.Verify(builder);
 
             // assert
-		    var violation = this.VerificationContext.Violations.First();
+            var violation = this.VerificationContext.Violations.First();
 
             Assert.That(((UsesDateTimeNowViolation)violation).SourceLocation, Is.Not.Null);
-			Assert.That(((UsesDateTimeNowViolation)violation).SourceLocation.Value.FileName, Is.StringEnding(@"TestTarget\Rules\DateTimeNow\Targets.cs"));
-			Assert.That(((UsesDateTimeNowViolation)violation).SourceLocation.Value.StartLine, Is.EqualTo(13), "Start line mismatch");
-			Assert.That(((UsesDateTimeNowViolation)violation).SourceLocation.Value.EndLine, Is.EqualTo(13), "End line mismatch");
+            Assert.That(((UsesDateTimeNowViolation)violation).SourceLocation.Value.FileName, Is.StringEnding(@"TestTarget\Rules\DateTimeNow\Targets.cs"));
+            Assert.That(((UsesDateTimeNowViolation)violation).SourceLocation.Value.StartLine, Is.EqualTo(13), "Start line mismatch");
+            Assert.That(((UsesDateTimeNowViolation)violation).SourceLocation.Value.EndLine, Is.EqualTo(13), "End line mismatch");
             Assert.That(((UsesDateTimeNowViolation)violation).SourceLocation.Value.StartColumn, Is.EqualTo(13), "Start column mismatch");
             Assert.That(((UsesDateTimeNowViolation)violation).SourceLocation.Value.EndColumn, Is.EqualTo(45), "End column mismatch");
-	    }
+        }
 
 
         [Test]

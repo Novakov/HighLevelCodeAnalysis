@@ -25,7 +25,7 @@ namespace CodeModel.Primitives.Mutators
             {
                 var method = (MethodInfo)instruction.Operand;
 
-                var property = method.ReflectedType.GetProperties(method.GetBindingFlags() | BindingFlags.Public).FirstOrDefault(x => (x.CanRead && x.GetMethod == method) || (x.CanWrite && x.SetMethod == method));
+                var property = method.ReflectedType.GetProperties(method.GetBindingFlags() | BindingFlags.Public).FirstOrDefault(x => method.IsAccessorFor(x));
 
                 if (property != null)
                 {

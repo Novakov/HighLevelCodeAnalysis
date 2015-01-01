@@ -79,5 +79,20 @@ namespace CodeModel
         {
             return Assembly.Load(name);
         }
+
+        public static bool IsSetterFor(this MethodInfo method, PropertyInfo property)
+        {
+            return (property.CanWrite && property.SetMethod == method);
+        }
+
+        public static bool IsGetterFor(this MethodInfo method, PropertyInfo property)
+        {
+            return (property.CanRead && property.GetMethod == method);
+        }
+
+        public static bool IsAccessorFor(this MethodInfo method, PropertyInfo property)
+        {
+            return method.IsGetterFor(property) || method.IsSetterFor(property);
+        }
     }
 }

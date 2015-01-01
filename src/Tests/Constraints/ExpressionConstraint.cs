@@ -9,7 +9,7 @@ namespace Tests.Constraints
         private readonly Expression<Func<T, bool>> predicate;
         private readonly Lazy<Func<T, bool>> compiledPredicate;
 
-        public ExpressionConstraint(Expression<Func<T, bool>>  predicate)
+        public ExpressionConstraint(Expression<Func<T, bool>> predicate)
         {
             this.predicate = predicate;
             this.compiledPredicate = new Lazy<Func<T, bool>>(() => this.predicate.Compile());
@@ -20,7 +20,9 @@ namespace Tests.Constraints
             this.actual = actual;
 
             if (!(actual is T))
+            {
                 return false;
+            }
 
             return this.compiledPredicate.Value((T)actual);
         }
