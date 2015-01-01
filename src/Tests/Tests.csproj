@@ -103,6 +103,7 @@
     <Compile Include="Get.cs" />
     <Compile Include="GraphTests\AllPathsTest.cs" />
     <Compile Include="GraphTests\BreadthFirstSearchTest.cs" />
+    <Compile Include="GraphTests\DepthFirstSearchTest.cs" />
     <Compile Include="GraphTests\GraphMergeTest.cs" />
     <Compile Include="GraphTests\GraphTest.cs" />
     <Compile Include="GraphTests\GraphViewTest.cs" />

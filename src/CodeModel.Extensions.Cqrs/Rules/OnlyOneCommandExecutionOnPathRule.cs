@@ -27,7 +27,7 @@ namespace CodeModel.Extensions.Cqrs.Rules
             return v.Violations;
         }
 
-        public class PathVerify : DepthFirstSearch
+        private class PathVerify : DepthFirstSearch
         {
             private readonly HashSet<Link> visitedLinks;
             private readonly Stack<PathItem> currentPath;
