@@ -35,8 +35,7 @@ namespace Tests
             var runList = this.dependencyManager.CalculateRunList();
 
             // assert
-            Assert.That(runList.Elements.ToArray(), Is.EqualTo(new[] { provideAssembly, needAssembly }));
-            Assert.That(runList.IsValid, Is.True, "Runlist should be valid");
+            Assert.That(runList.Elements.ToArray(), Is.EqualTo(new[] { provideAssembly, needAssembly }));  
         }
 
         [Test]
@@ -61,8 +60,7 @@ namespace Tests
 
             // assert
             Assert.That(runList, new RunlistConstraint()
-                .IsValid()
-                .And.After(needAssemblyAndType, provideAssembly, provideType)
+                .After(needAssemblyAndType, provideAssembly, provideType)
                 );
         }
 
@@ -78,12 +76,11 @@ namespace Tests
 
             this.dependencyManager.RequireAllElements();
 
-            // act
-            var runList = this.dependencyManager.CalculateRunList();
-
-            // assert
-            Assert.That(runList, new RunlistConstraint().IsNotValid()
-                .And.HasMissing("Type"));
+            // act & assert
+            Assert.That(()=>this.dependencyManager.CalculateRunList(), Throws
+                .InstanceOf<NeedsNotSatisfiedException>()
+                .And.Property("MissingResource").EqualTo("Type")
+            );            
         }
 
         [Test]
@@ -103,12 +100,10 @@ namespace Tests
 
             this.dependencyManager.RequireAllElements();
 
-            // act
-            var runList = this.dependencyManager.CalculateRunList();
-
-            // assert
-            Assert.That(runList, new RunlistConstraint()
-                .IsNotValid());
+            // act & assert
+            Assert.That(() => this.dependencyManager.CalculateRunList(), Throws
+                .InstanceOf<UnableToBuildRunListException>()
+                );            
         }
 
         [Test]
@@ -136,8 +131,7 @@ namespace Tests
 
             // assert
             Assert.That(runList, new RunlistConstraint()
-                .IsValid()
-                .And.Not.Contains(provideA)
+                .Not.Contains(provideA)
                 .And.Not.Contains(needA));
         }
 
@@ -162,8 +156,7 @@ namespace Tests
 
             // assert
             Assert.That(runList, new RunlistConstraint()
-                .IsValid()
-                .And.Contains(provideTypes)
+                .Contains(provideTypes)
                 .And.Contains(provideMethods)
                 .And.Contains(linking)
                 .And.Contains(useLinking)

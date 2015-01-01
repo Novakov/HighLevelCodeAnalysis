@@ -73,6 +73,24 @@ namespace CodeModel.Dependencies
 
         public RunList<TElement> CalculateRunList()
         {
+            var graph = BuildDependencyGraph();
+
+            EliminateNotRequiredElements(graph);
+
+            try
+            {
+                var sorted = TopologySort.SortGraph(graph);
+
+                return new RunList<TElement>(sorted.Select(x => x.Element));
+            }
+            catch (CannotSortGraphException e)
+            {
+                throw new UnableToBuildRunListException(e);
+            }
+        }
+
+        private Graph<ElementNode, ProvidesResource> BuildDependencyGraph()
+        {
             var graph = new Graph<ElementNode, ProvidesResource>();
 
             foreach (var elementNode in this.elements)
@@ -94,7 +112,7 @@ namespace CodeModel.Dependencies
                     }
                     else
                     {
-                        return new RunList<TElement>(Enumerable.Empty<TElement>(), new[] { neededResource });
+                        throw new NeedsNotSatisfiedException(neededResource);
                     }
                 }
 
@@ -110,18 +128,7 @@ namespace CodeModel.Dependencies
                 }
             }
 
-            EliminateNotRequiredElements(graph);
-
-            try
-            {
-                var sorted = TopologySort.SortGraph(graph);
-
-                return new RunList<TElement>(sorted.Select(x => x.Element), new string[0]);
-            }
-            catch (CannotSortGraphException)
-            {
-                return new RunList<TElement>(new[] { "Unable to construct runlist - possible cyclic dependencies" });
-            }
+            return graph;
         }
 
         private void EliminateNotRequiredElements(Graph<ElementNode, ProvidesResource> graph)
@@ -174,6 +181,26 @@ namespace CodeModel.Dependencies
 
         private class Mark
         {
+        }
+    }
+
+    public class NeedsNotSatisfiedException : Exception
+    {
+        public string MissingResource { get; private set; }
+
+        public NeedsNotSatisfiedException(string missingResource)
+            : base(string.Format("Resource {0} not satisifed", missingResource))
+        {
+            MissingResource = missingResource;
+        }
+    }
+
+    public class UnableToBuildRunListException : Exception
+    {
+        public UnableToBuildRunListException(Exception innerException)
+            : base("Unable to build runlist: " + innerException.Message, innerException)
+        {
+
         }
     }
 }

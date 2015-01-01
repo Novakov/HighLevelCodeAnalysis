@@ -37,29 +37,9 @@ namespace Tests.Constraints
             this.builder = new ConstraintBuilder();
         }
 
-        public RunlistConstraint IsValid()
-        {
-            this.builder.Append(new PropertyConstraint("IsValid", Is.True));
-            return this;
-        }
-
-        public RunlistConstraint IsNotValid()
-        {            
-            this.builder.Append(new PropertyConstraint("IsValid", Is.False));
-
-            return this;
-        }
-
         public RunlistConstraint After(object element, params object[] after)
         {
             this.builder.Append(new PropertyConstraint("Elements", new ElementAfterElementsConstraint(element, after)));
-
-            return this;
-        }
-
-        public IResolveConstraint HasMissing(string resource)
-        {
-            this.builder.Append(new PropertyConstraint("Missing", new CollectionContainsConstraint(resource)));
 
             return this;
         }

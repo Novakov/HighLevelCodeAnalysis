@@ -179,22 +179,25 @@ namespace RuleRunner
 
             Log.Info("Determining runlist");
 
-            this.runlist = DetermineRunList(mutators, rules);
+            try
+            {
+                this.runlist = DetermineRunList(mutators, rules);
+            }
+            catch (NeedsNotSatisfiedException e)
+            {
+                Log.Error("Missing resources: {0}", e.MissingResource);
+                throw;
+            }
+            catch (UnableToBuildRunListException e)
+            {
+                Log.Error("Unable to build runlist {0}", e.InnerException.Message);
+                throw;
+            }
 
             this.Report.RunList(runlist);
 
-            Log.Info("Runlist valid: {0}", runlist.IsValid);
-
-            if (runlist.IsValid)
-            {
-                Log.Info("Order: {0}", string.Join(", ", runlist.Elements));
-            }
-            else
-            {
-                Log.Error("Runlist error: {0}", string.Join(",", runlist.Errors));
-                Log.Error("Missing resources: {0}", string.Join(",", runlist.Missing));
-            }
-
+            Log.Info("Order: {0}", string.Join(", ", runlist.Elements));
+           
             foreach (var mutatorType in this.runlist.Elements.Where(x => x.IsMutator))
             {
                 Log.Debug("Running mutator {0}", mutatorType);
