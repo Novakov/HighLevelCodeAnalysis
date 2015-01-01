@@ -113,6 +113,7 @@
     <Compile Include="Graphs\FindAllPaths.cs" />
     <Compile Include="Graphs\Graph.cs" />
     <Compile Include="Graphs\GraphView.cs" />
+    <Compile Include="Graphs\LambdaBreadthFirstSearch.cs" />
     <Compile Include="Graphs\LambdaDepthFirstSearch.cs" />
     <Compile Include="Graphs\Link.cs" />
     <Compile Include="Graphs\Node.cs" />

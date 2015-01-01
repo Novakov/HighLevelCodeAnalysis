@@ -31,11 +31,17 @@ namespace Tests.GraphTests
             graph.AddLink(e, h, new SampleLink());
 
             // act
-            var collectVisitedNodes = new CollectVisitedNodes();
+            var path = new List<Node>();
+
+            var collectVisitedNodes = new LambdaBreadthFirstSearch<Node, Link>
+            {
+                HandlingNode = (node, links) => path.Add(node)
+            };
+
             collectVisitedNodes.Walk(graph, a);
 
             // assert
-            Assert.That(collectVisitedNodes.Path, Is.EqualTo("abcdefgh"));
+            Assert.That(path, Is.EqualTo(new[] { a, b, c, d, e, f, g, h }));
         }
 
         [Test]
@@ -63,11 +69,17 @@ namespace Tests.GraphTests
             graph.AddLink(e, a, new SampleLink());
 
             // act
-            var collectVisitedNodes = new CollectVisitedNodes();
+            var path = new List<Node>();
+
+            var collectVisitedNodes = new LambdaBreadthFirstSearch<Node, Link>
+            {
+                HandlingNode = (node, links) => path.Add(node)
+            };
+
             collectVisitedNodes.Walk(graph, a);
 
-            // assert
-            Assert.That(collectVisitedNodes.Path, Is.EqualTo("abcdefgh"));
+            // assert            
+            Assert.That(path, Is.EqualTo(new[] {a, b, c, d, e, f, g, h}));
         }
 
         private class SampleNode : Node
@@ -79,22 +91,6 @@ namespace Tests.GraphTests
 
         private class SampleLink : Link
         {
-        }
-
-        public class CollectVisitedNodes : BreadthFirstSearch<Node, Link>
-        {
-            public string Path { get; set; }
-
-            public void Walk(Graph graph, Node startNode)
-            {
-                this.Path = "";
-                base.WalkCore(graph, startNode);
-            }
-
-            protected override void HandleNode(Node node, IEnumerable<Link> availableThrough)
-            {
-                this.Path += node.Id;
-            }
         }
     }   
 }
