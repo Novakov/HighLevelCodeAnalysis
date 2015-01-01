@@ -11,6 +11,11 @@ namespace CodeModel.FlowAnalysis
 
         public readonly static TypeAnalysisState Empty = new TypeAnalysisState(new Dictionary<int, PotentialType>(), new Dictionary<int, PotentialType>());
 
+        public PotentialType StackTop
+        {
+            get { return this.stack.Top; }
+        }
+
         public TypeAnalysisState(EquatableImmutableStack<PotentialType> stack, EquatableImmutableDictionary<int, PotentialType> variables, EquatableImmutableDictionary<int, PotentialType> parameters)
         {
             this.stack = stack;

@@ -10,9 +10,11 @@ namespace CodeModel
     public class EquatableImmutableStack<T> : IEnumerable<T>, IEquatable<EquatableImmutableStack<T>>
         where T : IEquatable<T>
     {
+        public static readonly EquatableImmutableStack<T> Empty = new EquatableImmutableStack<T>();
+
         private readonly IImmutableList<T> stack;
 
-        public static readonly EquatableImmutableStack<T> Empty = new EquatableImmutableStack<T>();
+        public T Top { get { return this.stack[this.stack.Count - 1]; } }
 
         private EquatableImmutableStack()
             : this(ImmutableList<T>.Empty)

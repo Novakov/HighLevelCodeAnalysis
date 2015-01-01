@@ -104,13 +104,13 @@ namespace CodeModel.FlowAnalysis
                     if (instruction.OpCode == OpCodes.Initobj || instruction.OpCode == OpCodes.Newobj)
                     {
                         var method = ((ConstructorInfo)instruction.Operand);
-                        return method.GetParameters().Count();//x => !x.IsOut);
+                        return method.GetParameters().Count();
                     }
 
                     if (instruction.OpCode == OpCodes.Call || instruction.OpCode == OpCodes.Callvirt)
                     {
                         var method = ((MethodBase)instruction.Operand);
-                        var parametersCount = method.GetParameters().Count();//x => !x.IsOut);
+                        var parametersCount = method.GetParameters().Count();
 
                         if (!method.IsStatic)
                         {

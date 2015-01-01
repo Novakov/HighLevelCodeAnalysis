@@ -23,9 +23,9 @@ namespace Tests.FlowAnalysisTests
             recorder.Initialize(method);
 
             var takeWhile = instructions.TakeWhile(x => x.OpCode != OpCodes.Nop);
-            recorder.Visit(TypeAnalysisState.Empty,  takeWhile);
+            var state = recorder.Visit(TypeAnalysisState.Empty,  takeWhile);
 
-            //Assert.That(recorder.Stack, Is.EqualTo(new[] {expectedType}));
+            Assert.That(state.StackTop, Is.EqualTo(expectedType));
         }
 
         private static IEnumerable<object[]> ILTargets()
