@@ -133,12 +133,14 @@ namespace CodeModel.Dependencies
 
         private void EliminateNotRequiredElements(Graph<ElementNode, ProvidesResource> graph)
         {
-            Func<ElementNode, IEnumerable<IGrouping<ElementNode, ProvidesResource>>> availableNodes = n => n
-                .InboundLinks.OfType<ProvidesResource>()
-                .Where(x => x.IsRequired)
-                .GroupBy(x => (ElementNode)x.Source);
-
-            var walker = new WalkAndAnnotate<ElementNode, ProvidesResource>(x => new Mark(), null, availableNodes);
+            var walker = new WalkAndAnnotate<ElementNode, ProvidesResource>
+            {
+                NodeAnnotation = _ => new Mark(),
+                AvailableNodes = n => n
+                                    .InboundLinks.OfType<ProvidesResource>()
+                                    .Where(x => x.IsRequired)
+                                    .GroupBy(x => (ElementNode)x.Source)
+            };
 
             foreach (var requiredElement in this.requiredElements)
             {

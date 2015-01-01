@@ -3,61 +3,47 @@ using System.Collections.Generic;
 using System.Linq;
 
 namespace CodeModel.Graphs
-{
-    //FIXME: Ctor to properties with defaults
-    public class WalkAndAnnotate<TNode, TLink> : BreadthFirstSearch<TNode, TLink>
+{    
+    public class WalkAndAnnotate<TNode, TLink>
         where TNode : Node
         where TLink : Link
     {
-        private readonly Func<TNode, object> nodeAnnotation;
-        private readonly Func<TLink, object> linkAnnotation;
-        private readonly Func<TNode, IEnumerable<IGrouping<TNode, TLink>>> availableNodes;
-
-        public WalkAndAnnotate(Func<TNode, object> nodeAnnotation, Func<TLink, object> linkAnnotation, Func<TNode, IEnumerable<IGrouping<TNode, TLink>>> availableNodes = null)
-        {
-            this.nodeAnnotation = nodeAnnotation;
-            this.linkAnnotation = linkAnnotation;
-            this.availableNodes = availableNodes;
-        }
+        public Func<TNode, object> NodeAnnotation { get; set; }
+        public Func<TLink, object> LinkAnnotation { get; set; }
+        public Func<TNode, IEnumerable<IGrouping<TNode, TLink>>> AvailableNodes { get; set; }
 
         public void Walk(Graph<TNode, TLink> graph, TNode start)
-        {
-            base.WalkCore(graph, start);
+        {           
+            var bfs = new LambdaBreadthFirstSearch<TNode, TLink>
+            {
+                HandlingNode = HandleNode,
+                AvailableTargets = this.AvailableNodes
+            };
+
+            bfs.Walk(graph, start);
         }
 
-        protected override void HandleNode(TNode node, IEnumerable<TLink> availableThrough)
+        private void HandleNode(TNode node, IEnumerable<TLink> availableThrough)
         {
-            if (this.nodeAnnotation != null)
+            if (this.NodeAnnotation != null)
             {
-                var nodeAnn = this.nodeAnnotation(node);
+                var nodeAnn = this.NodeAnnotation(node);
                 if (nodeAnn != null)
                 {
                     node.Annonate(nodeAnn);
                 }
             }
 
-            if (this.linkAnnotation != null)
+            if (this.LinkAnnotation != null)
             {
                 foreach (var link in availableThrough)
                 {
-                    var linkAnn = this.linkAnnotation(link);
+                    var linkAnn = this.LinkAnnotation(link);
                     if (linkAnn != null)
                     {
-                        link.Annonate(this.linkAnnotation(link));
+                        link.Annonate(this.LinkAnnotation(link));
                     }
                 }
-            }
-        }
-
-        protected override IEnumerable<IGrouping<TNode, TLink>> GetAvailableTargets(TNode @from)
-        {
-            if (this.availableNodes == null)
-            {
-                return base.GetAvailableTargets(@from);
-            }
-            else
-            {
-                return this.availableNodes(@from);
             }
         }
     }
