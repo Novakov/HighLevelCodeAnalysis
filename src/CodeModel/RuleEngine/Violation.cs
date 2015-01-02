@@ -1,3 +1,5 @@
+using System.Globalization;
+using System.Reflection;
 using CodeModel.Graphs;
 using CodeModel.Symbols;
 
@@ -10,6 +12,25 @@ namespace CodeModel.RuleEngine
         public string Name
         {
             get { return this.GetType().Name; }
+        }
+
+        public string DisplayText
+        {
+            get { return this.FormatDisplayTextWith(new DefaultFormatter(CultureInfo.CurrentUICulture)); }
+        }
+
+        public string FormatDisplayTextWith(IValueFormatter formatter)
+        {
+            var attribute = this.GetType().GetCustomAttribute<ViolationAttribute>();
+
+            if (attribute == null || attribute.DisplayText == null)
+            {
+                return this.Name;
+            }
+
+            var description = attribute.DisplayText.Interpolate(this, formatter);
+
+            return this.Name + ": " + description;
         }
     }
 
