@@ -41,7 +41,7 @@ namespace CodeModel.FlowAnalysis
         {
             base.ReplaceNode(old, replaceWith);
 
-            if (this.EntryPoint.Equals(old))
+            if (this.EntryPoint == old)
             {
                 this.EntryPoint = replaceWith;
             }

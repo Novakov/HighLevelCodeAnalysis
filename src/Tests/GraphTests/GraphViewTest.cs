@@ -71,7 +71,7 @@ namespace Tests.GraphTests
             var view = graph.PrepareView(x => x.Id.StartsWith("A"), x => ((SampleLink)x).Name != "1");
 
             // assert
-            var nodeA1View = view.Nodes.Single(x => x.Node.Equals(nodeA1));
+            var nodeA1View = view.Nodes.Single(x => x.Node == nodeA1);
 
             Assert.That(nodeA1View.OutboundLinks, Has.No.Member(link1));
         }

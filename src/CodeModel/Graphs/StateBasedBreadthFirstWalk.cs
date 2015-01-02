@@ -40,7 +40,7 @@ namespace CodeModel.Graphs
 
                 this.startPoints.Remove(startPoint.Key);
 
-                if (startPoint.Key.Equals(finishAt))
+                if (startPoint.Key == finishAt)
                 {
                     this.resultStates.UnionWith(startPoint.Value.States);
                 }

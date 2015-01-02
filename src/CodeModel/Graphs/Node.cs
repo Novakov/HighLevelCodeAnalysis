@@ -12,7 +12,7 @@ namespace CodeModel.Graphs
 
         public string Id { get; private set; }
 
-        public IEnumerable<Link> InboundLinks { get { return this.inbound; } } 
+        public IEnumerable<Link> InboundLinks { get { return this.inbound; } }
         public IEnumerable<Link> OutboundLinks { get { return this.outbound; } }
 
         public virtual string DisplayLabel
@@ -29,7 +29,7 @@ namespace CodeModel.Graphs
             this.inbound = new HashSet<Link>();
             this.outbound = new HashSet<Link>();
 
-            this.annotations = new List<object>();            
+            this.annotations = new List<object>();
         }
 
         public bool Equals(Node other)
@@ -49,6 +49,26 @@ namespace CodeModel.Graphs
             return !object.ReferenceEquals(node, null) && this.Equals(node);
         }
 
+        public static bool operator ==(Node left, Node right)
+        {
+            if (object.ReferenceEquals(left, null) && object.ReferenceEquals(right, null))
+            {
+                return true;
+            }
+
+            if (object.ReferenceEquals(left, null) || object.ReferenceEquals(right, null))
+            {
+                return false;
+            }
+
+            return left.Equals(right);
+        }
+
+        public static bool operator !=(Node left, Node right)
+        {
+            return !(left == right);
+        }
+
         public override string ToString()
         {
             return this.DisplayLabel;
@@ -56,7 +76,7 @@ namespace CodeModel.Graphs
 
         public bool HasLinkTo(Node target)
         {
-            return this.outbound.Any(x => x.Target.Equals(target));
+            return this.outbound.Any(x => x.Target == target);
         }
 
         internal void AddOutboundLink(Link link)

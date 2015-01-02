@@ -112,7 +112,7 @@ namespace Tests.FlowAnalysisTests
             var throwNode = this.Result.Nodes.OfType<InstructionBlockNode>().Single(x => x.Instructions.Any(y => y.OpCode == OpCodes.Throw));
 
             Assert.That(throwNode.OutboundLinks, Has.Exactly(1)
-                .Matches<ControlTransition>(x => x.Target.Equals(this.Result.ExitPoint)));
+                .Matches<ControlTransition>(x => x.Target == this.Result.ExitPoint));
         }
 
         [Test]

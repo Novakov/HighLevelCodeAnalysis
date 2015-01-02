@@ -42,7 +42,7 @@ namespace Tests.EntryPointTests
             var nodeB1 = this.Builder.Model.AddNode(new SampleNode("B1"));
 
             // act
-            this.Builder.RunMutator(new LinkApplicationEntryPointTo<SampleNode>(node => nodeA1.Equals(node) || nodeA2.Equals(node)));
+            this.Builder.RunMutator(new LinkApplicationEntryPointTo<SampleNode>(node => nodeA1 == node || nodeA2 == node));
 
             // assert
             var entryPoint = this.Builder.Model.Nodes.OfType<ApplicationEntryPoint>().Single();

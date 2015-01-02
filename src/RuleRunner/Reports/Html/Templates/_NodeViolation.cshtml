@@ -35,7 +35,7 @@
                     @foreach (var violation in node.Value)
                     {
                         <li>
-                            <span class="violation-name">@violation.Name</span>
+                            <span class="violation-name">@violation.DisplayText</span>
                             @if (violation is IViolationWithSourceLocation)
                             {
                                 <text> in <code>@Helper.SourceLocation((violation as IViolationWithSourceLocation).SourceLocation.Value)</code></text>

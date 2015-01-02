@@ -141,7 +141,7 @@ namespace CodeModel.FlowAnalysis
                 var from = byBoundary[transition.Item1];
                 var to = byBoundary[transition.Item2];
 
-                if (from.Equals(to) && transition.Item1 <= transition.Item2)
+                if (from == to && transition.Item1 <= transition.Item2)
                 {
                     continue;
                 }

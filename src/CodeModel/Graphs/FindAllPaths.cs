@@ -33,7 +33,7 @@ namespace CodeModel.Graphs
         {
             this.currentPath.Add(node);
 
-            if (node.Equals(this.endNode))
+            if (node == this.endNode)
             {
                 this.Paths.Add(new List<Node>(this.currentPath));
             }
