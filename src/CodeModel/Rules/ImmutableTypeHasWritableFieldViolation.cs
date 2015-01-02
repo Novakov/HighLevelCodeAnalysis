@@ -1,16 +1,18 @@
-﻿using CodeModel.Primitives;
+﻿using CodeModel.Graphs;
+using CodeModel.Primitives;
 using CodeModel.RuleEngine;
 
 namespace CodeModel.Rules
 {
-    public class ImmutableTypeHasWritableFieldViolation : Violation
+    public class ImmutableTypeHasWritableFieldViolation : Violation, INodeViolation
     {
         public FieldNode ViolatingField { get; private set; }
+        public Node Node { get; private set; }
 
-        public ImmutableTypeHasWritableFieldViolation(TypeNode violatingType, FieldNode violatingField) 
-            : base(violatingType)
+        public ImmutableTypeHasWritableFieldViolation(TypeNode violatingType, FieldNode violatingField)             
         {
-            ViolatingField = violatingField;
+            this.Node = violatingType;
+            this.ViolatingField = violatingField;
         }
     }
 }

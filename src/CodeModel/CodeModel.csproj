@@ -178,6 +178,7 @@
     <Compile Include="RuleEngine\Violation.cs" />
     <Compile Include="RuleEngine\ViolationExtensions.cs" />
     <Compile Include="Dependencies\RunList.cs" />
+    <Compile Include="Rules\UsesDateTimeNowViolation.cs" />
     <Compile Include="StackMark.cs" />
     <Compile Include="Symbols\Extensions.cs" />
     <Compile Include="Symbols\SequencePoint.cs" />

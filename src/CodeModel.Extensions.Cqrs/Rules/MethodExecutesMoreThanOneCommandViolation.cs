@@ -4,12 +4,13 @@ using CodeModel.Rules;
 
 namespace CodeModel.Extensions.Cqrs.Rules
 {
-    public class MethodExecutesMoreThanOneCommandViolation : Violation
+    public class MethodExecutesMoreThanOneCommandViolation : Violation, INodeViolation
     {
-        public MethodExecutesMoreThanOneCommandViolation(Node node) 
-            : base(node)
+        public Node Node { get; private set; }
+
+        public MethodExecutesMoreThanOneCommandViolation(Node node)           
         {
-            
+            this.Node = node;
         }
     }
 }

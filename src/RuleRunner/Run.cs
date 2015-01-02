@@ -118,10 +118,7 @@ namespace RuleRunner
 
         private void ReportViolations(IEnumerable<Violation> violations)
         {
-            foreach (var violation in violations)
-            {
-                Log.Warn("Category: {1} on {0}", violation.Node, violation.Name);
-            }
+            Log.Warn("Violations count: {0}", violations.Count());
         }
 
         private Assembly CurrentDomainOnAssemblyResolve(object sender, ResolveEventArgs args)

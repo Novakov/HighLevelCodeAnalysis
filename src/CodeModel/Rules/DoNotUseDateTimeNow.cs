@@ -61,15 +61,4 @@ namespace CodeModel.Rules
                 && (node as MethodNode).Method.HasBody();
         }
     }
-
-    public class UsesDateTimeNowViolation : Violation, IViolationWithSourceLocation
-    {
-        public SourceLocation? SourceLocation { get; private set; }
-
-        public UsesDateTimeNowViolation(Node node, SourceLocation? sourceLocation) 
-            : base(node)
-        {
-            this.SourceLocation = sourceLocation;
-        }
-    }
 }
