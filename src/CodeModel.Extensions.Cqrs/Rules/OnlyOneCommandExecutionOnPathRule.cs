@@ -9,22 +9,20 @@ using CodeModel.Rules;
 namespace CodeModel.Extensions.Cqrs.Rules
 {
     [Need(Resources.LinksToEntryPoints, Resources.MethodCallLinks, CqrsResources.CommandExecutionLinks, Resources.InlinedImplementations)]
-    public class OnlyOneCommandExecutionOnPathRule : IGraphRule
+    public class OnlyOneCommandExecutionOnPathRule : INodeRule
     {
-        public IEnumerable<Violation> Verify(VerificationContext context, Graph graph)
+        public IEnumerable<Violation> Verify(VerificationContext context, Node node)
         {
             var v = new PathVerify();
 
-            var entryPoint = graph.LookupNode<ApplicationEntryPoint>(ApplicationEntryPoint.NodeId);
-
-            if (entryPoint == null)
-            {
-                return Enumerable.Empty<Violation>();
-            }
-
-            v.Walk(entryPoint);
+            v.Walk(node);
 
             return v.Violations;
+        }
+
+        public bool IsApplicableTo(Node node)
+        {
+            return node.HasInboundFrom<ApplicationEntryPoint, ApplicationEntryCall>();
         }
 
         private class PathVerify : DepthFirstSearch
@@ -67,6 +65,7 @@ namespace CodeModel.Extensions.Cqrs.Rules
 
             protected override IEnumerable<IGrouping<Node, Link>> GetOutboundTargets(Node node)
             {
+                //FIXME: Move walkable links condition to convention
                 return node.OutboundLinks
                     .Where(x => x is MethodCallLink || x is ExecuteCommandLink || x is ApplicationEntryCall)
                     .Except(this.visitedLinks)

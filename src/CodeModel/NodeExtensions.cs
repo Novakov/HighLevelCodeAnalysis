@@ -18,5 +18,12 @@ namespace CodeModel
         {
             return @this.InboundLinks.OfType<TVia>().Where(x => x.Source is TFrom).Select(x => (TFrom) x.Source);
         }
+
+        public static bool HasInboundFrom<TFrom, TVia>(this Node @this) 
+            where TFrom : Node 
+            where TVia : Link
+        {
+            return @this.InboundFrom<TFrom, TVia>().Any();
+        }
     }
 }
