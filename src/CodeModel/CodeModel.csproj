@@ -165,6 +165,7 @@
     <Compile Include="ReflectionExtensions.cs" />
     <Compile Include="Primitives\Resources.cs" />
     <Compile Include="ReversableStack.cs" />
+    <Compile Include="RuleEngine\ViolationAttribute.cs" />
     <Compile Include="Rules\DoNotUseDateTimeNow.cs" />
     <Compile Include="RuleEngine\IGraphRule.cs" />
     <Compile Include="Rules\ImmutableTypeHasNonPrivateSetterViolation.cs" />
@@ -180,6 +181,7 @@
     <Compile Include="Dependencies\RunList.cs" />
     <Compile Include="Rules\UsesDateTimeNowViolation.cs" />
     <Compile Include="StackMark.cs" />
+    <Compile Include="StringInterpolate.cs" />
     <Compile Include="Symbols\Extensions.cs" />
     <Compile Include="Symbols\SequencePoint.cs" />
     <Compile Include="Symbols\SourceLocation.cs" />

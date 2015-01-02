@@ -116,6 +116,8 @@
     <Compile Include="Rules\ImmutabilityTest.cs" />
     <Compile Include="Rules\InvokeOnlyOneCommandTest.cs" />
     <Compile Include="Rules\OnlyOneCommandExecutionOnPathRuleTest.cs" />
+    <Compile Include="Rules\ViolationTest.cs" />
+    <Compile Include="StringInterpolateTest.cs" />
     <Compile Include="TestSettings.cs" />
   </ItemGroup>
   <ItemGroup>
