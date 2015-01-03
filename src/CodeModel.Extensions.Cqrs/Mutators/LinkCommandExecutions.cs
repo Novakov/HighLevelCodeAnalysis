@@ -6,7 +6,7 @@ using CodeModel.Primitives;
 namespace CodeModel.Extensions.Cqrs.Mutators
 {
     [Provide(CqrsResources.CommandExecutionLinks)]
-    [Need(Resources.Methods, CqrsResources.Commands)]
+    [Need(Resources.Methods, CqrsResources.Commands, Resources.MethodCallLinks)]
     public class LinkCommandExecutions : INodeMutator<MethodNode>
     {
         private readonly ICqrsConvention convention;

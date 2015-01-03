@@ -1,11 +1,10 @@
 ﻿@using CodeModel.RuleEngine
 @using CodeModel.Rules
-@inherits ReportTemplateBase<RuleResult>
+@inherits ReportTemplateBase<NodesVerificationResult>
 
-<h2>@Model.Rule.GetType().Name</h2>
 
 <div>
-    Verified nodes: @Model.Verified
+    Verified nodes: @Model.VerifiedCount
 </div>
 <div>
     Violating nodes: @Model.ViolatingNodesCount
@@ -16,7 +15,7 @@
 </div>
 
 <div>
-    Violations count: @Model.TotalViolationsCount
+    Violations count: @Model.ViolationsCount
 </div>
 
 <div>
@@ -27,7 +26,7 @@
 {
     <h4>Violating nodes:</h4>
     <ul>
-        @foreach (var node in Model.ViolatingNodes)
+        @foreach (var node in Model.ViolationsByNode)
         {
             <li>
                 @node.Key.DisplayLabel

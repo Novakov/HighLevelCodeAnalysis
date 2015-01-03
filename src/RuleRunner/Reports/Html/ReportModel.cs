@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using CodeModel;
 using CodeModel.Dependencies;
@@ -30,16 +31,9 @@ namespace RuleRunner.Reports.Html
     {
         public IRule Rule { get; private set; }
 
-        public int Verified { get; set; }
-        public int ViolatingNodesCount { get; set; }
-        public int ComplyingNodesCount { get; set; }
-        public int TotalViolationsCount { get; set; }
+        public NodesVerificationResult NodesVerification { get; private set; }
 
-        public double ViolatingRatio { get { return this.ViolatingNodesCount/(double) this.Verified; } }
-        
-        public Dictionary<Node, IList<Violation>> ViolatingNodes { get; private set; }
-        public bool AnyViolations { get { return this.ViolatingNodesCount > 0; } }
-        public List<Violation> GraphViolations { get; private set; }
+        public GraphVerificationResult GraphVerification { get; private set; }
 
         public bool IsGraphRule
         {
@@ -53,9 +47,39 @@ namespace RuleRunner.Reports.Html
 
         public RuleResult(IRule rule)
         {
-            this.Rule = rule;
-            this.ViolatingNodes = new Dictionary<Node, IList<Violation>>();
-            this.GraphViolations = new List<Violation>();
+            this.Rule = rule;                       
+
+            this.NodesVerification = new NodesVerificationResult();
+            this.GraphVerification = new GraphVerificationResult();
+        }
+    }
+
+    public class NodesVerificationResult
+    {
+        public int VerifiedCount { get; set; }
+        public int ViolatingNodesCount { get; set; }
+        public int ComplyingNodesCount { get; set; }
+        public int ViolationsCount { get; set; }
+        public double ViolatingRatio { get { return this.ViolatingNodesCount / (double)this.VerifiedCount; } }
+        public IDictionary<Node, IList<Violation>> ViolationsByNode { get; private set; }
+
+        public bool AnyViolations { get { return this.ViolationsByNode.Any(); } }
+
+        public NodesVerificationResult()
+        {
+            this.ViolationsByNode = new Dictionary<Node, IList<Violation>>();
+        }
+    }
+
+    public class GraphVerificationResult
+    {
+        public List<Violation> Violations { get; private set; }
+        public int ViolationsCount { get { return this.Violations.Count; } }
+        public bool AnyViolations { get { return this.ViolationsCount > 0; } }
+
+        public GraphVerificationResult()
+        {
+            this.Violations = new List<Violation>();
         }
     }
 }

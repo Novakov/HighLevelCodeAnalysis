@@ -20,10 +20,10 @@
             <tr>
                 <td>@ruleResult.Key.GetType().Name</td>
 
-                <td>@ruleResult.Value.Verified</td>
-                <td>@ruleResult.Value.TotalViolationsCount</td>
-                <td>@ruleResult.Value.ViolatingNodesCount</td>
-                <td>@Helper.SafePercent(ruleResult.Value.ViolatingRatio)</td>               
+                <td>@ruleResult.Value.NodesVerification.VerifiedCount</td>
+                <td>@ruleResult.Value.NodesVerification.ViolationsCount</td>
+                <td>@ruleResult.Value.NodesVerification.ViolatingNodesCount</td>
+                <td>@Helper.SafePercent(ruleResult.Value.NodesVerification.ViolatingRatio)</td>               
             </tr>
         }
         </tbody>
@@ -42,7 +42,7 @@
             {
                 <tr>
                     <td>@ruleResult.Key.GetType().Name</td>                   
-                    <td>@ruleResult.Value.GraphViolations.Count</td>
+                    <td>@ruleResult.Value.GraphVerification.ViolationsCount</td>
                 </tr>
             }
         </tbody>

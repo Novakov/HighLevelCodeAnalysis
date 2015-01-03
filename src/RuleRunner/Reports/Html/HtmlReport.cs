@@ -80,18 +80,18 @@ namespace RuleRunner.Reports.Html
 
         public void NodeVerification(IRule rule, Node node, IEnumerable<Violation> violations)
         {
-            var ruleResults = this.reportModel.Violations[rule];
-            ruleResults.Verified++;
+            var ruleResults = this.reportModel.Violations[rule].NodesVerification;
+            ruleResults.VerifiedCount++;
             
             var violationsList = violations as IList<Violation> ?? violations.ToList();
             
-            ruleResults.TotalViolationsCount += violationsList.Count();
+            ruleResults.ViolationsCount += violationsList.Count();
 
             if (violationsList.Any())
             {
                 ruleResults.ViolatingNodesCount++;
 
-                ruleResults.ViolatingNodes.Add(node, violationsList);
+                ruleResults.ViolationsByNode.Add(node, violationsList);
             }
             else
             {
@@ -102,7 +102,7 @@ namespace RuleRunner.Reports.Html
         public void GraphVerification(IRule rule, IEnumerable<Violation> violations)
         {
             var ruleResults = this.reportModel.Violations[rule];
-            ruleResults.GraphViolations.AddRange(violations);
+            ruleResults.GraphVerification.Violations.AddRange(violations);
         }
 
         public void RunFinished(CodeModelBuilder modelBuilder)
