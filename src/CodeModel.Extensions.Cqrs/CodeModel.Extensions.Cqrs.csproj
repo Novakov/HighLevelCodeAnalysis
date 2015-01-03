@@ -64,6 +64,8 @@
     <Compile Include="Rules\MethodCanLeadToExecutionOfMoreThanOneCommandViolation.cs" />
     <Compile Include="Rules\MethodExecutesMoreThanOneCommandViolation.cs" />
     <Compile Include="Rules\OnlyOneCommandExecutionOnPathRule.cs" />
+    <Compile Include="Rules\UnusedCommandRule.cs" />
+    <Compile Include="Rules\UnusedCommandViolation.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CodeModel\CodeModel.csproj">

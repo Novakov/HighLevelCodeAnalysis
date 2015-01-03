@@ -95,6 +95,7 @@
     <Compile Include="Rules\Immutability\Targets.cs" />
     <Compile Include="Rules\InvokeOnlyOneCommand\ChainedCommandsTarget.cs" />
     <Compile Include="Rules\InvokeOnlyOneCommand\Targets.cs" />
+    <Compile Include="Rules\UnusedCommands\Targets.cs" />
     <Compile Include="ToBeRemovedFromGraph.cs" />
   </ItemGroup>
   <ItemGroup>
