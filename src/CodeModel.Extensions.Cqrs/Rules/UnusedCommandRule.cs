@@ -8,13 +8,15 @@ using CodeModel.RuleEngine;
 namespace CodeModel.Extensions.Cqrs.Rules
 {
     [Need(CqrsResources.CommandExecutionLinks, CqrsResources.Commands, Resources.EntryPoint, Resources.LinksToEntryPoints, Resources.MethodCallLinks)]
-    public class UnusedCommandRule : IGraphRule
+    public class UnusedCommandRule : IRuleWithBootstrap, INodeRule
     {
-        public IEnumerable<Violation> Verify(VerificationContext context, Graph graph)
+        private HashSet<CommandNode> unusedCommands;
+
+        public void Initialize(VerificationContext context, Graph graph)
         {
             var entryPoint = graph.LookupNode<ApplicationEntryPoint>(ApplicationEntryPoint.NodeId);
 
-            var unusedCommands = new HashSet<CommandNode>(graph.Nodes.OfType<CommandNode>());
+            this.unusedCommands = new HashSet<CommandNode>(graph.Nodes.OfType<CommandNode>());
 
             var bfs = new LambdaBreadthFirstSearch<Node, Link>
             {
@@ -29,11 +31,19 @@ namespace CodeModel.Extensions.Cqrs.Rules
             };
 
             bfs.Walk(graph, entryPoint);
+        }     
 
-            foreach (var unusedCommand in unusedCommands)
+        public IEnumerable<Violation> Verify(VerificationContext context, Node node)
+        {
+            if(this.unusedCommands.Contains((CommandNode)node))
             {
-                yield return new UnusedCommandViolation(unusedCommand);
+                yield return new UnusedCommandViolation((CommandNode) node);
             }
+        }
+
+        public bool IsApplicableTo(Node node)
+        {
+            return node is CommandNode;
         }
     }
 }

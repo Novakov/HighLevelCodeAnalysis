@@ -48,6 +48,13 @@ namespace CodeModel.RuleEngine
 
                 this.OnStartingRule(rule);
 
+                var bootstrapRule = rule as IRuleWithBootstrap;
+
+                if (bootstrapRule != null)
+                {
+                    bootstrapRule.Initialize(context, codeModel.Model);
+                }
+
                 var nodeRule = rule as INodeRule;
                 if (nodeRule != null)
                 {

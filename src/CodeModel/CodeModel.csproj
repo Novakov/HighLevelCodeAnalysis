@@ -165,6 +165,7 @@
     <Compile Include="ReflectionExtensions.cs" />
     <Compile Include="Primitives\Resources.cs" />
     <Compile Include="ReversableStack.cs" />
+    <Compile Include="RuleEngine\IRuleWithBootstrap.cs" />
     <Compile Include="RuleEngine\ViolationAttribute.cs" />
     <Compile Include="Rules\DoNotUseDateTimeNow.cs" />
     <Compile Include="RuleEngine\IGraphRule.cs" />
