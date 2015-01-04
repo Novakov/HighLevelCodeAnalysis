@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using CodeModel.Graphs;
+using CodeModel.Primitives;
 
 namespace CodeModel.Builder
 {
@@ -59,6 +60,11 @@ namespace CodeModel.Builder
         public IEnumerable<TNode> FindNodes<TNode>(Func<TNode, bool> predicate) where TNode : Node
         {
             return this.model.Nodes.OfType<TNode>().Where(predicate);
+        }
+
+        public TNode FindNode<TNode>(Func<TNode, bool> predicate)
+        {
+            return this.model.Nodes.OfType<TNode>().SingleOrDefault(predicate);
         }
 
         public TLink AddLink<TLink>(Node source, Node target, TLink link) where TLink : Link

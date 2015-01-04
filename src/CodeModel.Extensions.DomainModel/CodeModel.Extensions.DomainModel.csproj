@@ -43,8 +43,11 @@
     <Compile Include="Class1.cs" />
     <Compile Include="Conventions\IDomainModelConvention.cs" />
     <Compile Include="EntityNode.cs" />
+    <Compile Include="HasManyEntityLink.cs" />
+    <Compile Include="HasOneEntityLink.cs" />
     <Compile Include="Mutators\DetectAggregates.cs" />
     <Compile Include="Mutators\DetectEntities.cs" />
+    <Compile Include="Mutators\LinkContainedEntities.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

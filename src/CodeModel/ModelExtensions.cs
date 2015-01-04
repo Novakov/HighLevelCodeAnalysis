@@ -13,7 +13,13 @@ namespace CodeModel
     {
         public static TypeNode GetNodeForType(this Graph model, Type type)
         {
-            return model.Nodes.OfType<TypeNode>().SingleOrDefault(x => x.Type == type);
+            return model.GetNodeForType<TypeNode>(type);
+        }
+
+        public static TNode GetNodeForType<TNode>(this Graph model, Type type)
+            where TNode : TypeNode
+        {
+            return model.Nodes.OfType<TNode>().SingleOrDefault(x => x.Type == type);
         }
 
         public static MethodNode GetNodeForMethod(this Graph model, MethodInfo method)

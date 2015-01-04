@@ -3,7 +3,7 @@ using CodeModel.Primitives;
 
 namespace CodeModel.Extensions.DomainModel
 {
-    public class AggregateNode : TypeNode
+    public class AggregateNode : EntityNode
     {
         public AggregateNode(Type type) : base(type)
         {

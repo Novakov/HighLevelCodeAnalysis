@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using CodeModel.Graphs;
+using CodeModel.Primitives;
 
 namespace CodeModel.Builder
 {
@@ -16,6 +17,8 @@ namespace CodeModel.Builder
         IEnumerable<TNode> FindNodes<TNode>(Func<TNode, bool> predicate)
             where TNode : Node;
 
+        TNode FindNode<TNode>(Func<TNode, bool> predicate);
+            
         TLink AddLink<TLink>(Node source, Node target, TLink link)
             where TLink : Link;
 

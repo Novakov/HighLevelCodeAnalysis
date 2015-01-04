@@ -94,5 +94,15 @@ namespace CodeModel
         {
             return method.IsGetterFor(property) || method.IsSetterFor(property);
         }
+
+        public static bool IsEnumerable(this Type type)
+        {
+            return type.GetGenericImplementationsOfInterface(typeof(IEnumerable<>)).Any();
+        }
+
+        public static Type GetEnumerableElement(this Type type)
+        {
+            return type.GetGenericImplementationsOfInterface(typeof (IEnumerable<>)).Select(x => x.GetGenericArguments()[0]).SingleOrDefault();
+        }
     }
 }

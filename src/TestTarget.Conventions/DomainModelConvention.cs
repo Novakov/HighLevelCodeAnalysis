@@ -10,12 +10,12 @@ namespace TestTarget.Conventions
     {
         public bool IsEntity(TypeNode node)
         {
-            return typeof (EntityBase).IsAssignableFrom(node.Type);
+            return typeof(EntityBase).IsAssignableFrom(node.Type) && !typeof(IAggregate).IsAssignableFrom(node.Type);
         }
 
         public bool IsAggregate(TypeNode node)
         {
-            return IsEntity(node) && typeof(IAggregate).IsAssignableFrom(node.Type);
+            return typeof(EntityBase).IsAssignableFrom(node.Type) && typeof(IAggregate).IsAssignableFrom(node.Type);
         }
     }
 }

@@ -76,7 +76,7 @@ namespace Tests.Constraints
                 builder.Append(new ExpressionConstraint<TLink>(matches));
             }
 
-            this.constraints.Add(new PropertyConstraint("Links", builder.Resolve()));
+            this.constraints.Add(new FilteredCollectionPropertyConstraint("Links", x => x.OfType<TLink>(), builder.Resolve()));
 
             return this;
         }
@@ -98,6 +98,38 @@ namespace Tests.Constraints
             }
 
             return builder.Resolve();
+        }
+    }
+
+    public class FilteredCollectionPropertyConstraint : Constraint
+    {
+        private readonly string property;
+        private readonly Func<IEnumerable<object>, IEnumerable<object>> func;
+        private readonly Constraint innerConstraint;
+
+
+        public FilteredCollectionPropertyConstraint(string property, Func<IEnumerable<object>, IEnumerable<object>> func, IResolveConstraint innerConstraint)
+        {
+            this.property = property;
+            this.func = func;
+            this.innerConstraint = innerConstraint.Resolve();
+        }
+
+        public override bool Matches(object input)
+        {
+            var unfiltered = input.GetType().GetProperty(this.property).GetValue(input);
+
+            var filtered = this.func((IEnumerable<object>) unfiltered);
+
+            this.actual = filtered;
+
+            return this.innerConstraint.Matches(filtered);
+        }
+
+        public override void WriteDescriptionTo(MessageWriter writer)
+        {
+            writer.Write("Property {0} ", this.property);
+            innerConstraint.WriteDescriptionTo(writer);
         }
     }
 }

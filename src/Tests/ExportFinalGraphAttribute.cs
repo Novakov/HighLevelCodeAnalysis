@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using CodeModel.Builder;
 using CodeModel.Extensions.DgmlExport;
+using CodeModel.Extensions.DomainModel;
 using CodeModel.Graphs;
 using NUnit.Framework;
 
@@ -43,7 +44,14 @@ namespace Tests
             where TNode : Node 
             where TLink : Link
         {
-            var exporter = new DgmlExporter();
+            var exporter = new DgmlExporter
+            {
+                CategoryStyles =
+                {
+                    new CategoryStyle {Target = typeof(EntityNode), Background = "#E4465B"},
+                    new CategoryStyle {Target = typeof(AggregateNode), Background = "#39E13F"}
+                }
+            };
 
             var targetDirectory = Path.Combine(TestContext.CurrentContext.WorkDirectory, "Graphs", testDetails.Fixture.GetType().FullName);
 
