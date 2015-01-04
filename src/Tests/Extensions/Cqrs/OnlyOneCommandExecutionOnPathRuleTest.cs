@@ -6,9 +6,10 @@ using CodeModel.Graphs;
 using CodeModel.Primitives;
 using CodeModel.Primitives.Mutators;
 using NUnit.Framework;
+using Tests.Rules;
 using TestTarget.Rules.InvokeOnlyOneCommand;
 
-namespace Tests.Rules
+namespace Tests.Extensions.Cqrs
 {
     public class OnlyOneCommandExecutionOnPathRuleTest : BaseRuleTest<OnlyOneCommandExecutionOnPathRule>, IHaveGraph<Node, Link>
     {

@@ -89,10 +89,10 @@
     <Compile Include="DependencyNetworkTest.cs" />
     <Compile Include="EntryPointTests\EntryPointTest.cs" />
     <Compile Include="ExportFinalGraphAttribute.cs" />
-    <Compile Include="ExtensionsTests\AspNetMvcTest.cs" />
-    <Compile Include="ExtensionsTests\CqrsTest.cs" />
-    <Compile Include="ExtensionsTests\DgmlExportTest.cs" />
-    <Compile Include="ExtensionsTests\EventSourcingTest.cs" />
+    <Compile Include="Extensions\AspNetMvc\MutatorsTests.cs" />
+    <Compile Include="Extensions\Cqrs\MutatorTests.cs" />
+    <Compile Include="Extensions\DgmlExport\DgmlExportTest.cs" />
+    <Compile Include="Extensions\EventSourcing\EventSourcingTest.cs" />
     <Compile Include="FlowAnalysisTests\Bugs.cs" />
     <Compile Include="FlowAnalysisTests\CalculateStackHeightsTest.cs" />
     <Compile Include="FlowAnalysisTests\CallParameterTypesRecorderTest.cs" />
@@ -114,9 +114,9 @@
     <Compile Include="ReversableStackTest.cs" />
     <Compile Include="Rules\BaseRuleTest.cs" />
     <Compile Include="Rules\ImmutabilityTest.cs" />
-    <Compile Include="Rules\InvokeOnlyOneCommandTest.cs" />
-    <Compile Include="Rules\OnlyOneCommandExecutionOnPathRuleTest.cs" />
-    <Compile Include="Rules\UnusedCommandRuleTest.cs" />
+    <Compile Include="Extensions\Cqrs\InvokeOnlyOneCommandTest.cs" />
+    <Compile Include="Extensions\Cqrs\OnlyOneCommandExecutionOnPathRuleTest.cs" />
+    <Compile Include="Extensions\Cqrs\UnusedCommandRuleTest.cs" />
     <Compile Include="Rules\ViolationTest.cs" />
     <Compile Include="StringInterpolateTest.cs" />
     <Compile Include="TestSettings.cs" />
@@ -162,7 +162,9 @@
   <ItemGroup>
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="ExtensionsTests\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

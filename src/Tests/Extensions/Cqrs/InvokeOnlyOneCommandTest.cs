@@ -1,14 +1,14 @@
 ﻿using CodeModel.Builder;
-using CodeModel.Extensions.Cqrs;
 using CodeModel.Extensions.Cqrs.Mutators;
 using CodeModel.Extensions.Cqrs.Rules;
 using CodeModel.Primitives;
 using CodeModel.Primitives.Mutators;
 using NUnit.Framework;
+using Tests.Rules;
 using TestTarget.Cqrs;
 using TestTarget.Rules.InvokeOnlyOneCommand;
 
-namespace Tests.Rules
+namespace Tests.Extensions.Cqrs
 {
     [TestFixture]
     public class InvokeOnlyOneCommandTest : BaseRuleTest<InvokeOnlyOneCommandInMethod>

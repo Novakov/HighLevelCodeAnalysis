@@ -4,12 +4,12 @@ using CodeModel.Extensions.Cqrs.Mutators;
 using CodeModel.Extensions.Cqrs.Rules;
 using CodeModel.Primitives;
 using CodeModel.Primitives.Mutators;
-using CodeModel.RuleEngine;
 using NUnit.Framework;
+using Tests.Rules;
 using TestTarget.Cqrs;
 using TestTarget.Rules.UnusedCommands;
 
-namespace Tests.Rules
+namespace Tests.Extensions.Cqrs
 {
     [TestFixture]
     public class UnusedCommandRuleTest : BaseRuleTest<UnusedCommandRule>
