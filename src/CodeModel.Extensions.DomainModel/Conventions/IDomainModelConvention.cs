@@ -3,8 +3,9 @@ using CodeModel.Primitives;
 
 namespace CodeModel.Extensions.DomainModel.Conventions
 {
-    public interface IEntityConvention : IConvention
+    public interface IDomainModelConvention : IConvention
     {
         bool IsEntity(TypeNode node);
+        bool IsAggregate(TypeNode node);
     }
 }

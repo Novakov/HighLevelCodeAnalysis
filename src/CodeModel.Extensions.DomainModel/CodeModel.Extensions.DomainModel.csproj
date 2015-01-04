@@ -39,9 +39,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AggregateNode.cs" />
     <Compile Include="Class1.cs" />
-    <Compile Include="Conventions\IEntityConvention.cs" />
+    <Compile Include="Conventions\IDomainModelConvention.cs" />
     <Compile Include="EntityNode.cs" />
+    <Compile Include="Mutators\DetectAggregates.cs" />
     <Compile Include="Mutators\DetectEntities.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

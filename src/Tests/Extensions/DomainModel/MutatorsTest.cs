@@ -22,14 +22,16 @@ namespace Tests.Extensions.DomainModel
         public void SetUp()
         {
             this.Builder = new CodeModelBuilder();
+            
             Builder.RegisterConventionsFrom(typeof(TestTarget.Conventions.Marker).Assembly);
+            
+            Builder.RunMutator(new AddAssemblies(TargetAssembly));
         }
 
         [Test]
         public void ShouldRecognizeEntity()
         {
-            // arrange                       
-            Builder.RunMutator(new AddAssemblies(TargetAssembly));
+            // arrange                                   
             Builder.RunMutator<AddTypes>();
 
             // act
@@ -38,6 +40,20 @@ namespace Tests.Extensions.DomainModel
             // assert            
             Assert.That(Builder.Model, Graph.Has
                 .NodeForType<Person>(Is.InstanceOf<EntityNode>()));
+        }
+
+        [Test]
+        public void ShouldRecognizeAggregates()
+        {
+            // arrange                                   
+            Builder.RunMutator<AddTypes>();            
+
+            // act            
+            Builder.RunMutator<DetectAggregates>();
+
+            // assert            
+            Assert.That(Builder.Model, Graph.Has
+                .NodeForType<OrganizationUnit>(Is.InstanceOf<AggregateNode>()));
         }
     }
 }

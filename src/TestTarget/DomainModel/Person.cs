@@ -6,4 +6,13 @@ namespace TestTarget.DomainModel
     {
          
     }
+
+    public class OrganizationUnit : EntityBase, IAggregate
+    {
+        
+    }
+
+    public interface IAggregate
+    {
+    }
 }

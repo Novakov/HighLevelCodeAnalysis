@@ -1,24 +1,28 @@
 using CodeModel.Builder;
-using CodeModel.Conventions;
 using CodeModel.Extensions.DomainModel.Conventions;
 using CodeModel.Primitives;
 
 namespace CodeModel.Extensions.DomainModel.Mutators
 {
-    public class DetectEntities : INodeMutator<TypeNode>
+    public class DetectAggregates : INodeMutator<TypeNode>
     {
         private readonly IDomainModelConvention convention;
 
-        public DetectEntities(IDomainModelConvention convention)
+        public DetectAggregates(IDomainModelConvention convention)
         {
             this.convention = convention;
         }
 
         public void Mutate(TypeNode node, IMutateContext context)
         {
-            if (!(node is EntityNode) && this.convention.IsEntity(node))
+            if (node is AggregateNode)
             {
-                context.ReplaceNode(node, new EntityNode(node.Type));
+                return;
+            }
+
+            if (this.convention.IsAggregate(node))
+            {
+                context.ReplaceNode(node, new AggregateNode(node.Type));
             }
         }
     }

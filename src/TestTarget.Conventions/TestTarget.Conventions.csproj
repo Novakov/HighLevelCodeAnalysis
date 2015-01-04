@@ -40,7 +40,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CqrsConvention.cs" />
-    <Compile Include="EntityConvention.cs" />
+    <Compile Include="DomainModelConvention.cs" />
     <Compile Include="EventSourcingConvention.cs" />
     <Compile Include="ImmutablityConvention.cs" />
     <Compile Include="ImplementingConvention.cs" />
