@@ -1,7 +1,9 @@
-﻿using CodeModel.Builder;
+using CodeModel.Builder;
 using CodeModel.Conventions;
+using CodeModel.Extensions.DomainModel.Conventions;
+using CodeModel.Primitives;
 
-namespace CodeModel.Primitives.Mutators
+namespace CodeModel.Extensions.DomainModel.Mutators
 {
     public class DetectEntities : INodeMutator<TypeNode>
     {

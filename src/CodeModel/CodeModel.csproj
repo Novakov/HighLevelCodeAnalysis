@@ -75,7 +75,6 @@
     <Compile Include="Builder\MutateContext.cs" />
     <Compile Include="Conventions\IApplicationEntryPointConvention.cs" />
     <Compile Include="Conventions\IConvention.cs" />
-    <Compile Include="Conventions\IEntityConvention.cs" />
     <Compile Include="Conventions\IImmutablityConvention.cs" />
     <Compile Include="Conventions\IImplementingConvention.cs" />
     <Compile Include="Dependencies\DependencyManager.cs" />
@@ -133,7 +132,6 @@
     <Compile Include="ModelExtensions.cs" />
     <Compile Include="Primitives\ApplicationEntryPoint.cs" />
     <Compile Include="Primitives\AssemblyNode.cs" />
-    <Compile Include="Primitives\EntityNode.cs" />
     <Compile Include="Primitives\FieldNode.cs" />
     <Compile Include="Primitives\MethodNode.cs" />
     <Compile Include="Primitives\PropertyNode.cs" />
@@ -145,7 +143,6 @@
     <Compile Include="Primitives\Mutators\AddProperties.cs" />
     <Compile Include="Primitives\Mutators\AddTypes.cs" />
     <Compile Include="Primitives\Mutators\AnnonateImmutableTypes.cs" />
-    <Compile Include="Primitives\Mutators\DetectEntities.cs" />
     <Compile Include="Primitives\Mutators\LinkApplicationEntryPoint.cs" />
     <Compile Include="Primitives\Mutators\LinkApplicationEntryPointTo.cs" />
     <Compile Include="Primitives\Mutators\LinkFieldAccess.cs" />

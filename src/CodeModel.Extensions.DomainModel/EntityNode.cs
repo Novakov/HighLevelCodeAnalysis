@@ -1,6 +1,7 @@
 ﻿using System;
+using CodeModel.Primitives;
 
-namespace CodeModel.Primitives
+namespace CodeModel.Extensions.DomainModel
 {
     public class EntityNode : TypeNode
     {

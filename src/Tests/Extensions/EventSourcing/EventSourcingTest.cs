@@ -31,8 +31,7 @@ namespace Tests.Extensions.EventSourcing
 
             Builder.RunMutator(new AddAssemblies(typeof(Marker).Assembly));
             Builder.RunMutator<AddTypes>();
-            Builder.RunMutator(new AddMethods(AddMethods.DefaultFlags | BindingFlags.NonPublic));
-            Builder.RunMutator<DetectEntities>();      
+            Builder.RunMutator(new AddMethods(AddMethods.DefaultFlags | BindingFlags.NonPublic));                 
             Builder.RunMutator<LinkMethodCalls>();
 
             // act

@@ -5,6 +5,7 @@ using CodeModel.Extensions.DgmlExport;
 using CodeModel.Extensions.EventSourcing.Links;
 using CodeModel.Extensions.EventSourcing.Mutators;
 using CodeModel.Extensions.EventSourcing.Nodes;
+using CodeModel.Extensions.DomainModel.Mutators;
 using CodeModel.Primitives;
 using CodeModel.Primitives.Mutators;
 using NUnit.Framework;

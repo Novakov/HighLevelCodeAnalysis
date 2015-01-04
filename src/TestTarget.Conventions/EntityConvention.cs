@@ -1,4 +1,5 @@
 ﻿using CodeModel.Conventions;
+using CodeModel.Extensions.DomainModel.Conventions;
 using CodeModel.Primitives;
 using TestTarget.EventSourcing;
 

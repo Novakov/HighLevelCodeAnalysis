@@ -92,6 +92,7 @@
     <Compile Include="Extensions\AspNetMvc\MutatorsTests.cs" />
     <Compile Include="Extensions\Cqrs\MutatorTests.cs" />
     <Compile Include="Extensions\DgmlExport\DgmlExportTest.cs" />
+    <Compile Include="Extensions\DomainModel\MutatorsTest.cs" />
     <Compile Include="Extensions\EventSourcing\EventSourcingTest.cs" />
     <Compile Include="FlowAnalysisTests\Bugs.cs" />
     <Compile Include="FlowAnalysisTests\CalculateStackHeightsTest.cs" />
@@ -134,6 +135,10 @@
       <Project>{47A0F1FD-F593-48FB-9235-F05B3648CA61}</Project>
       <Name>CodeModel.Extensions.DgmlExport</Name>
     </ProjectReference>
+    <ProjectReference Include="..\CodeModel.Extensions.DomainModel\CodeModel.Extensions.DomainModel.csproj">
+      <Project>{65F7BF26-F7A4-4945-9416-5808A8F59E0D}</Project>
+      <Name>CodeModel.Extensions.DomainModel</Name>
+    </ProjectReference>
     <ProjectReference Include="..\CodeModel.Extensions.EventSourcing\CodeModel.Extensions.EventSourcing.csproj">
       <Project>{ee94106e-b911-4e33-a19a-0c2dad04bd71}</Project>
       <Name>CodeModel.Extensions.EventSourcing</Name>
@@ -163,7 +168,7 @@
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="ExtensionsTests\" />
+    <Folder Include="Extensions\DomainModel\Mutators\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

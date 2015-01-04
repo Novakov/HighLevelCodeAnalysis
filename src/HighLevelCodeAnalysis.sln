@@ -41,6 +41,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tools", "Tools", "{B53EF507
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RuleRunner", "RuleRunner\RuleRunner.csproj", "{3C45E4BC-7D2F-4B42-BB55-652ED0573FFD}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeModel.Extensions.DomainModel", "CodeModel.Extensions.DomainModel\CodeModel.Extensions.DomainModel.csproj", "{65F7BF26-F7A4-4945-9416-5808A8F59E0D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -87,6 +89,10 @@ Global
 		{3C45E4BC-7D2F-4B42-BB55-652ED0573FFD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3C45E4BC-7D2F-4B42-BB55-652ED0573FFD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3C45E4BC-7D2F-4B42-BB55-652ED0573FFD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{65F7BF26-F7A4-4945-9416-5808A8F59E0D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{65F7BF26-F7A4-4945-9416-5808A8F59E0D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{65F7BF26-F7A4-4945-9416-5808A8F59E0D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{65F7BF26-F7A4-4945-9416-5808A8F59E0D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -102,5 +108,6 @@ Global
 		{C75F786D-141C-47F1-9F85-A967405A3CB9} = {B270694A-5360-46A2-AAEE-B4FADF1654CA}
 		{CFCD8DAA-3C30-451E-BAC5-F81210586356} = {6E18EB8C-5739-4EE6-A0DD-D08E2C91A9D1}
 		{3C45E4BC-7D2F-4B42-BB55-652ED0573FFD} = {B53EF507-EBDA-4C8D-BF0A-01FAAE663C74}
+		{65F7BF26-F7A4-4945-9416-5808A8F59E0D} = {B270694A-5360-46A2-AAEE-B4FADF1654CA}
 	EndGlobalSection
 EndGlobal

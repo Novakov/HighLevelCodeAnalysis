@@ -64,24 +64,7 @@ namespace Tests.BuilderTests
             // assert
             Assert.That(Builder.Model, Graph.Has
                 .Nodes<TypeNode>(exactly: 0, matches: n => n.Type.Name == "ToBeRemovedFromGraph"));
-        }
-
-        [Test]
-        public void ShouldRecognizeEntity()
-        {
-            // arrange            
-            Builder.RegisterConventionsFrom(typeof(TestTarget.Conventions.Marker).Assembly);
-
-            Builder.RunMutator(new AddAssemblies(TargetAssembly));
-            Builder.RunMutator<AddTypes>();
-
-            // act
-            Builder.RunMutator<DetectEntities>();
-
-            // assert            
-            Assert.That(Builder.Model, Graph.Has
-                .NodeForType<Person>(Is.InstanceOf<EntityNode>()));
-        }
+        }      
 
         [Test]
         public void ShouldAddMethods()
