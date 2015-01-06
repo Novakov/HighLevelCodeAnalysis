@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Linq;
 using CodeModel.Builder;
+using CodeModel.Dependencies;
 using CodeModel.Primitives;
 
 namespace CodeModel.Extensions.DomainModel.Mutators
 {
+    [Provide(DomainModelResources.ContainedEntitiesLink)]
+    [Need(DomainModelResources.Aggregates, DomainModelResources.Entities, Resources.Properties)]
     public class LinkContainedEntities : INodeMutator<AggregateNode>, INodeMutator<EntityNode>
     {
         public void Mutate(AggregateNode node, IMutateContext context)

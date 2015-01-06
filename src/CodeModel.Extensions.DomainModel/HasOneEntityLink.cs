@@ -2,7 +2,7 @@ using CodeModel.Graphs;
 
 namespace CodeModel.Extensions.DomainModel
 {
-    public class HasOneEntityLink : Link
+    public class HasOneEntityLink : ReferenceLink
     {
         public Node Via { get; private set; }
 

@@ -42,6 +42,7 @@
     <Compile Include="AggregateNode.cs" />
     <Compile Include="Class1.cs" />
     <Compile Include="Conventions\IDomainModelConvention.cs" />
+    <Compile Include="DomainModelResources.cs" />
     <Compile Include="EntityNode.cs" />
     <Compile Include="HasManyEntityLink.cs" />
     <Compile Include="HasOneEntityLink.cs" />
@@ -49,6 +50,9 @@
     <Compile Include="Mutators\DetectEntities.cs" />
     <Compile Include="Mutators\LinkContainedEntities.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ReferenceLink.cs" />
+    <Compile Include="Rules\AvoidBidirectionalReferenceRule.cs" />
+    <Compile Include="Rules\BidirectionalReferenceViolation.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CodeModel\CodeModel.csproj">

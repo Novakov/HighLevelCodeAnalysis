@@ -1,9 +1,12 @@
 using CodeModel.Builder;
+using CodeModel.Dependencies;
 using CodeModel.Extensions.DomainModel.Conventions;
 using CodeModel.Primitives;
 
 namespace CodeModel.Extensions.DomainModel.Mutators
 {
+    [Provide(DomainModelResources.Aggregates)]
+    [Need(Resources.Types)]
     public class DetectAggregates : INodeMutator<TypeNode>
     {
         private readonly IDomainModelConvention convention;
