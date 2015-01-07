@@ -33,6 +33,11 @@ namespace Tests
         private static TMemberInfo ExtractMemberInfo<TMemberInfo>(Expression body)
             where TMemberInfo : MemberInfo
         {
+            if (body.NodeType == ExpressionType.Convert)
+            {
+                return ExtractMemberInfo<TMemberInfo>(((UnaryExpression) body).Operand);
+            }
+
             var memberExpression = (MemberExpression)body;
 
             return (TMemberInfo)memberExpression.Member;

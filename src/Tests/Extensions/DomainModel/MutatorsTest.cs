@@ -34,6 +34,11 @@ namespace Tests.Extensions.DomainModel
             get { return this.Builder.Model.GetNodeForType<EntityNode>(typeof(SomeEntity)); }
         }
 
+        public EntityNode OtherEntityNode
+        {
+            get { return this.Builder.Model.GetNodeForType<EntityNode>(typeof(OtherEntity)); }
+        }
+
         [SetUp]
         public void SetUp()
         {
@@ -170,6 +175,46 @@ namespace Tests.Extensions.DomainModel
 
             Assert.That(this.Builder.Model, Graph.Has
                 .Links<HasOneEntityLink>(exactly: 1, from: PersonNode, to: OrganizationUnitNode, matches: x => x.Via == managedOrganizationUnit));
+        }
+
+        [Test]
+        public void ShouldLinkReferenceFromAggregateToAggregateById()
+        {
+            // arrange
+            Builder.RunMutator<AddTypes>();
+            Builder.RunMutator<AddProperties>();
+            Builder.RunMutator<LinkToContainer>();
+            Builder.RunMutator<DetectEntities>();
+            Builder.RunMutator<DetectAggregates>();
+
+            // act
+            Builder.RunMutator<LinkAggregateReferences>();
+
+            // assert
+            var parentProperty = Builder.Model.GetNodeForProperty(Get.PropertyOf<OrganizationUnit>(x => x.ParentOrganizationUnit));
+
+            Assert.That(Builder.Model, Graph.Has
+                .Links<AggregateReferenceLink>(exactly: 1, from: OrganizationUnitNode, to: OrganizationUnitNode, matches: x => x.Via == parentProperty));
+        }
+
+        [Test]
+        public void ShouldLinkReferenceFromEntityToAggregateById()
+        {
+            // arrange
+            Builder.RunMutator<AddTypes>();
+            Builder.RunMutator<AddProperties>();
+            Builder.RunMutator<LinkToContainer>();
+            Builder.RunMutator<DetectEntities>();
+            Builder.RunMutator<DetectAggregates>();
+
+            // act
+            Builder.RunMutator<LinkAggregateReferences>();
+
+            // assert
+            var parentProperty = Builder.Model.GetNodeForProperty(Get.PropertyOf<OtherEntity>(x => x.AffectedOrganizationUnitId));
+
+            Assert.That(Builder.Model, Graph.Has
+                .Links<AggregateReferenceLink>(exactly: 1, from: OtherEntityNode, to: OrganizationUnitNode, matches: x => x.Via == parentProperty));
         }
     }
 }

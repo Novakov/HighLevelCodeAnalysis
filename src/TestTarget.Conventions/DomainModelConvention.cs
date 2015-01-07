@@ -1,4 +1,6 @@
-﻿using CodeModel.Conventions;
+﻿using System;
+using System.Reflection;
+using CodeModel.Conventions;
 using CodeModel.Extensions.DomainModel.Conventions;
 using CodeModel.Primitives;
 using TestTarget.DomainModel;
@@ -16,6 +18,16 @@ namespace TestTarget.Conventions
         public bool IsAggregate(TypeNode node)
         {
             return typeof(EntityBase).IsAssignableFrom(node.Type) && typeof(IAggregate).IsAssignableFrom(node.Type);
+        }
+
+        public bool IsAggregateReference(PropertyInfo property)
+        {
+            return property.GetCustomAttribute<ReferenceAttribute>() != null;
+        }
+
+        public Type GetReferenceAggregateType(PropertyInfo property)
+        {
+            return property.GetCustomAttribute<ReferenceAttribute>().TargetAggregate;
         }
     }
 }
