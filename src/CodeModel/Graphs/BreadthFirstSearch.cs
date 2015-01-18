@@ -9,7 +9,7 @@ namespace CodeModel.Graphs
         where TNode : Node
         where TLink : Link
     {
-        protected void WalkCore(Graph<TNode, TLink> graph, TNode startNode)
+        protected void WalkCore(TNode startNode)
         {
             var remaining = new Queue<WalkElement>();
 

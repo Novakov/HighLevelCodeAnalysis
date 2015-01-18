@@ -31,9 +31,9 @@ namespace CodeModel.Graphs
             }
         }
 
-        public void Walk(Graph<TNode, TLink> graph, TNode startFrom)
+        public void Walk(TNode startFrom)
         {
-            base.WalkCore(graph, startFrom);
+            base.WalkCore(startFrom);
         }
     }
 }

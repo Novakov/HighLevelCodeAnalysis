@@ -38,7 +38,7 @@ namespace Tests.GraphTests
                 HandlingNode = (node, links) => path.Add(node)
             };
 
-            collectVisitedNodes.Walk(graph, a);
+            collectVisitedNodes.Walk(a);
 
             // assert
             Assert.That(path, Is.EqualTo(new[] { a, b, c, d, e, f, g, h }));
@@ -76,7 +76,7 @@ namespace Tests.GraphTests
                 HandlingNode = (node, links) => path.Add(node)
             };
 
-            collectVisitedNodes.Walk(graph, a);
+            collectVisitedNodes.Walk(a);
 
             // assert            
             Assert.That(path, Is.EqualTo(new[] {a, b, c, d, e, f, g, h}));

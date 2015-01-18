@@ -30,7 +30,7 @@ namespace CodeModel.Extensions.Cqrs.Rules
                 }
             };
 
-            bfs.Walk(graph, entryPoint);
+            bfs.Walk(entryPoint);
         }     
 
         public IEnumerable<Violation> Verify(VerificationContext context, Node node)

@@ -20,7 +20,7 @@ namespace CodeModel.Graphs
                 AvailableTargets = this.AvailableNodes
             };
 
-            bfs.Walk(graph, start);
+            bfs.Walk(start);
         }
 
         private void HandleNode(TNode node, IEnumerable<TLink> availableThrough)
