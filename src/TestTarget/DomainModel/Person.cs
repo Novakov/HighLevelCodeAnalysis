@@ -10,10 +10,29 @@ namespace TestTarget.DomainModel
         public ISet<SomeEntity> EntitySet { get; private set; }
 
         public OrganizationUnit ManagedOrganizationUnit { get; private set; }
+
+        public void DoSomething()
+        {
+            
+        }
+
+        public void CallSomething()
+        {
+            this.DoSomething();
+        }
+
+        public void CallSomethingOnSomeEntity()
+        {
+            this.OneEntity.DoSomethingOnSomeEntity();
+        }
     }
 
     public class SomeEntity : EntityBase
     {
+        public void DoSomethingOnSomeEntity()
+        {
+            
+        }
     }
 
     public class OrganizationUnit : EntityBase, IAggregate
@@ -23,12 +42,34 @@ namespace TestTarget.DomainModel
 
         [Reference(typeof(OrganizationUnit))]
         public int ParentOrganizationUnit { get; private set; }
+
+        public void LetManagerKnow()
+        {
+            this.Manager.DoSomething();
+        }
+
+        public void DoSomethingOnEntityInAggregate(OtherAggregate other)
+        {
+            other.OtherEntity.DoSomething();
+        }
     }
 
     public class OtherEntity : EntityBase
     {
         [Reference(typeof(OrganizationUnit))]
         public int AffectedOrganizationUnitId { get; set; }
+    }
+
+    public class OtherAggregate : EntityBase, IAggregate
+    {
+        public SomeOtherEntity OtherEntity { get; private set; }
+    }
+
+    public class SomeOtherEntity : EntityBase
+    {
+        public void DoSomething()
+        {
+        }
     }
 
     public class ReferenceAttribute : Attribute

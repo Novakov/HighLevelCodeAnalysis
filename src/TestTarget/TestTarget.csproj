@@ -79,6 +79,7 @@
     <Compile Include="Cqrs\IQuery.cs" />
     <Compile Include="Cqrs\IQueryDispatcher.cs" />
     <Compile Include="Cqrs\RegisterUser.cs" />
+    <Compile Include="DomainModel\CallEntityMethods.cs" />
     <Compile Include="DomainModel\Person.cs" />
     <Compile Include="EventSourcing\DomainEvent.cs" />
     <Compile Include="EventSourcing\EntityBase.cs" />

@@ -41,7 +41,7 @@
   <ItemGroup>
     <Compile Include="AggregateNode.cs" />
     <Compile Include="AggregateReferenceLink.cs" />
-    <Compile Include="Class1.cs" />
+    <Compile Include="Extension.cs" />
     <Compile Include="Conventions\IDomainModelConvention.cs" />
     <Compile Include="DomainModelResources.cs" />
     <Compile Include="EntityNode.cs" />
@@ -55,6 +55,8 @@
     <Compile Include="ReferenceLink.cs" />
     <Compile Include="Rules\AvoidBidirectionalReferenceRule.cs" />
     <Compile Include="Rules\BidirectionalReferenceViolation.cs" />
+    <Compile Include="Rules\DoNotCallEntityMethodsFromOutsideOfAggregateRule.cs" />
+    <Compile Include="Rules\DoNotCallEntityMethodsFromOutsideOfAggregateViolation.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CodeModel\CodeModel.csproj">
