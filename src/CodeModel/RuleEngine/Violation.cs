@@ -32,6 +32,11 @@ namespace CodeModel.RuleEngine
 
             return this.Name + ": " + description;
         }
+
+        public override string ToString()
+        {
+            return this.DisplayText;
+        }
     }
 
     public interface IViolationWithSourceLocation
