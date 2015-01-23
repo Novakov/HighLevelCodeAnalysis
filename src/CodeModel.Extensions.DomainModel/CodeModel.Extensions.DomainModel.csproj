@@ -55,8 +55,10 @@
     <Compile Include="ReferenceLink.cs" />
     <Compile Include="Rules\AvoidBidirectionalReferenceRule.cs" />
     <Compile Include="Rules\BidirectionalReferenceViolation.cs" />
+    <Compile Include="Rules\DirectAggregateReferenceViolation.cs" />
     <Compile Include="Rules\DoNotCallEntityMethodsFromOutsideOfAggregateRule.cs" />
     <Compile Include="Rules\DoNotCallEntityMethodsFromOutsideOfAggregateViolation.cs" />
+    <Compile Include="Rules\DoNotReferenceAggregateDirectlyRule.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CodeModel\CodeModel.csproj">

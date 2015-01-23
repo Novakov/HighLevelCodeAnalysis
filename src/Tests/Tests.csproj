@@ -94,6 +94,7 @@
     <Compile Include="Extensions\DgmlExport\DgmlExportTest.cs" />
     <Compile Include="Extensions\DomainModel\AvoidBidirectionalReferenceRuleTest.cs" />
     <Compile Include="Extensions\DomainModel\DoNotCallEntityMethodsFromOutsideOfAggregateTest.cs" />
+    <Compile Include="Extensions\DomainModel\DoNotReferenceAggregateDirectlyRuleTest.cs" />
     <Compile Include="Extensions\DomainModel\MutatorsTest.cs" />
     <Compile Include="Extensions\EventSourcing\EventSourcingTest.cs" />
     <Compile Include="FlowAnalysisTests\Bugs.cs" />

@@ -63,10 +63,14 @@ namespace TestTarget.DomainModel
     public class OtherAggregate : EntityBase, IAggregate
     {
         public SomeOtherEntity OtherEntity { get; private set; }
+
+        public OrganizationUnit OrganizationUnit { get; private set; }
     }
 
     public class SomeOtherEntity : EntityBase
     {
+        public OrganizationUnit OrganizationUnit { get; private set; }
+
         public void DoSomething()
         {
         }
