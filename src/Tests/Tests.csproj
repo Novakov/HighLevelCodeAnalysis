@@ -111,6 +111,7 @@
     <Compile Include="GraphTests\GraphTest.cs" />
     <Compile Include="GraphTests\GraphViewTest.cs" />
     <Compile Include="GraphTests\TopologySortTest.cs" />
+    <Compile Include="MonadicParserTests\MonadicParserTest.cs" />
     <Compile Include="NodeTest.cs" />
     <Compile Include="PredicateBuilderTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
