@@ -15,8 +15,9 @@ namespace Tests
 
             var ast = AstBuilder.BuildForMethod(method);
 
-            ast = new RewriteIf().Rewrite(ast);
-            ast = new RewriteIfElse().Rewrite(ast);
+            ast = new InlineStoreLoadVariable().Rewrite(ast);
+            //ast = new RewriteIf().Rewrite(ast);
+            //ast = new RewriteIfElse().Rewrite(ast);            
 
             //ast.Dupa().Dupa2();
 

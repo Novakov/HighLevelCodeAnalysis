@@ -67,6 +67,7 @@
     <Compile Include="Annotations\Immutable.cs" />
     <Compile Include="ArrayComparer.cs" />
     <Compile Include="Ast\AstBuilder.cs" />
+    <Compile Include="Ast\InlineStoreLoadVariable.cs" />
     <Compile Include="Ast\RecognizeIfStatement.cs" />
     <Compile Include="Builder\CodeModelBuilder.cs" />
     <Compile Include="Builder\ICompositeMutator.cs" />

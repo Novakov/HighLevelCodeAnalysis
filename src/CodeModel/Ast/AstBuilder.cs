@@ -65,7 +65,7 @@ namespace CodeModel.Ast
         {
             var expression = this.expressions.Pop();
 
-            statements.Add(new StoreLocal(variable, expression).WithInstruction(instruction));
+            this.statements.Add(new StoreLocal(variable, expression).WithInstruction(instruction));
             return null;
         }
 
