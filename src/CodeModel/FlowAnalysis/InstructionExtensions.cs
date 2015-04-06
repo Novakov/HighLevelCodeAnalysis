@@ -8,8 +8,9 @@ namespace CodeModel.FlowAnalysis
 {
     public static class InstructionExtensions
     {
-        private static readonly OpCode[] StoreVariableOpCodes = {OpCodes.Stloc, OpCodes.Stloc_0, OpCodes.Stloc_1, OpCodes.Stloc_2, OpCodes.Stloc_3, OpCodes.Stloc_S};
-        private static readonly OpCode[] CallOpCodes = new[] {OpCodes.Call, OpCodes.Calli, OpCodes.Callvirt};
+        public static readonly OpCode[] StoreVariableOpCodes = {OpCodes.Stloc, OpCodes.Stloc_0, OpCodes.Stloc_1, OpCodes.Stloc_2, OpCodes.Stloc_3, OpCodes.Stloc_S};
+        public static readonly OpCode[] LoadVariableOpCodes = {OpCodes.Ldloc, OpCodes.Ldloc_0, OpCodes.Ldloc_1, OpCodes.Ldloc_2, OpCodes.Ldloc_3, OpCodes.Ldloc_S};
+        public static readonly OpCode[] CallOpCodes = new[] {OpCodes.Call, OpCodes.Calli, OpCodes.Callvirt};
 
         public static int PushedValuesCount(this Instruction instruction, MethodInfo analyzedMethod, MethodBody methodBody)
         {
