@@ -100,8 +100,7 @@
     <Compile Include="Extensions\DomainModel\DoNotReferenceAggregateDirectlyRuleTest.cs" />
     <Compile Include="Extensions\DomainModel\MutatorsTest.cs" />
     <Compile Include="Extensions\EventSourcing\EventSourcingTest.cs" />
-    <Compile Include="Extensions\Nancy\IlParser.cs" />
-    <Compile Include="Extensions\Nancy\Test.cs" />
+    <Compile Include="Extensions\Nancy\MutatorTests.cs" />
     <Compile Include="FlowAnalysisTests\Bugs.cs" />
     <Compile Include="FlowAnalysisTests\CalculateStackHeightsTest.cs" />
     <Compile Include="FlowAnalysisTests\CallParameterTypesRecorderTest.cs" />
