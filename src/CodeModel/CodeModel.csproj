@@ -110,6 +110,7 @@
     <Compile Include="Graphs\CannotSortGraphException.cs" />
     <Compile Include="Graphs\DepthFirstSearch.cs" />
     <Compile Include="Graphs\FindAllPaths.cs" />
+    <Compile Include="Graphs\FindCycles.cs" />
     <Compile Include="Graphs\Graph.cs" />
     <Compile Include="Graphs\GraphView.cs" />
     <Compile Include="Graphs\LambdaBreadthFirstSearch.cs" />

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace CodeModel.Graphs
 {
@@ -7,6 +8,7 @@ namespace CodeModel.Graphs
     {
         public Action<Node, IEnumerable<Link>> EnteringNode { get; set; }
         public Action<Node, IEnumerable<Link>> LeavingNode { get; set; }
+        public Func<Node, IEnumerable<IGrouping<Node, Link>>> OutboundTargets { get; set; }
 
         protected override void EnterNode(Node node, IEnumerable<Link> availableThrough)
         {
@@ -22,6 +24,16 @@ namespace CodeModel.Graphs
             {
                 this.LeavingNode(node, availableThrough);
             }
+        }
+
+        protected override IEnumerable<IGrouping<Node, Link>> GetOutboundTargets(Node node)
+        {
+            if (this.OutboundTargets != null)
+            {
+                return this.OutboundTargets(node);
+            }
+
+            return base.GetOutboundTargets(node);
         }
     }
 }

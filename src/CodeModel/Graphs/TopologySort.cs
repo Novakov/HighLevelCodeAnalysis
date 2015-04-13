@@ -5,23 +5,39 @@ using System.Linq;
 
 namespace CodeModel.Graphs
 {
+    public enum TopologySortDirection
+    {
+        ReduceInbound,
+        ReduceOutbound
+    }
+
     public class TopologySort
     {
-        public static IEnumerable<TNode> SortGraph<TNode, TLink>(Graph<TNode, TLink> graph, Func<TNode, IEnumerable<Link>> inLinks = null, Func<TNode, IEnumerable<Link>> outLinks = null) 
-            where TNode : Node 
+        public static IEnumerable<TNode> SortGraph<TNode, TLink>(Graph<TNode, TLink> graph, TopologySortDirection direction = TopologySortDirection.ReduceInbound)
+            where TNode : Node
             where TLink : Link
         {
-            if (inLinks == null)
+            Func<TNode, IEnumerable<TLink>> linksToReduce;
+            Func<TNode, IEnumerable<TLink>> linksThatReduce;
+            Func<TLink, TNode> reducedNode;
+
+            switch (direction)
             {
-                inLinks = n => n.InboundLinks;
+                case TopologySortDirection.ReduceInbound:
+                    linksToReduce = n => n.InboundLinks.OfType<TLink>();
+                    linksThatReduce = n => n.OutboundLinks.OfType<TLink>();
+                    reducedNode = l => (TNode)l.Target;
+                    break;
+                case TopologySortDirection.ReduceOutbound:
+                    linksToReduce = n => n.OutboundLinks.OfType<TLink>();
+                    linksThatReduce = n => n.InboundLinks.OfType<TLink>();
+                    reducedNode = l => (TNode)l.Source;
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException("direction");
             }
 
-            if (outLinks == null)
-            {
-                outLinks = n => n.OutboundLinks;
-            }
-
-            var inboundCount = graph.Nodes.ToDictionary(x => x, x => inLinks(x).Count());
+            var inboundCount = graph.Nodes.ToDictionary(x => x, x => linksToReduce(x).Count());
 
             var remainingNodes = new Stack<TNode>(inboundCount.Where(x => x.Value == 0).Select(x => x.Key));
 
@@ -32,13 +48,14 @@ namespace CodeModel.Graphs
                 var next = remainingNodes.Pop();
                 sorted.Add(next);
 
-                foreach (var outboundLink in outLinks(next))
+                foreach (var reducedLink in linksThatReduce(next))
                 {
-                    inboundCount[(TNode)outboundLink.Target]--;
+                    var target = reducedNode(reducedLink);
+                    inboundCount[target]--;
 
-                    if (inboundCount[(TNode)outboundLink.Target] == 0)
+                    if (inboundCount[target] == 0)
                     {
-                        remainingNodes.Push((TNode)outboundLink.Target);
+                        remainingNodes.Push(target);
                     }
                 }
             }
