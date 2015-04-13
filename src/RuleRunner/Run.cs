@@ -53,7 +53,10 @@ namespace RuleRunner
 
             RunRules();
 
-            ExportModelAsDgml();
+            if (this.config.Reports.Dgml != null)
+            {
+                ExportModelAsDgml();
+            }
 
             this.Report.RunFinished(this.modelBuilder);
 
@@ -134,7 +137,7 @@ namespace RuleRunner
 
             var exporter = new DgmlExporter();
 
-            using (var fs = File.Create(@"d:\tmp\360.dgml"))
+            using (var fs = File.Create(this.config.Reports.Dgml.Path))
             {
                 exporter.Export(this.modelBuilder.Model, fs);
             }
@@ -194,7 +197,7 @@ namespace RuleRunner
             this.Report.RunList(runlist);
 
             Log.Info("Order: {0}", string.Join(", ", runlist.Elements));
-           
+
             foreach (var mutatorType in this.runlist.Elements.Where(x => x.IsMutator))
             {
                 Log.Debug("Running mutator {0}", mutatorType);

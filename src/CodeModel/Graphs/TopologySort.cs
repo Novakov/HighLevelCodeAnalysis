@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,11 +7,21 @@ namespace CodeModel.Graphs
 {
     public class TopologySort
     {
-        public static IEnumerable<TNode> SortGraph<TNode, TLink>(Graph<TNode, TLink> graph) 
+        public static IEnumerable<TNode> SortGraph<TNode, TLink>(Graph<TNode, TLink> graph, Func<TNode, IEnumerable<Link>> inLinks = null, Func<TNode, IEnumerable<Link>> outLinks = null) 
             where TNode : Node 
             where TLink : Link
         {
-            var inboundCount = graph.Nodes.ToDictionary(x => x, x => x.InboundLinks.Count());
+            if (inLinks == null)
+            {
+                inLinks = n => n.InboundLinks;
+            }
+
+            if (outLinks == null)
+            {
+                outLinks = n => n.OutboundLinks;
+            }
+
+            var inboundCount = graph.Nodes.ToDictionary(x => x, x => inLinks(x).Count());
 
             var remainingNodes = new Stack<TNode>(inboundCount.Where(x => x.Value == 0).Select(x => x.Key));
 
@@ -21,7 +32,7 @@ namespace CodeModel.Graphs
                 var next = remainingNodes.Pop();
                 sorted.Add(next);
 
-                foreach (var outboundLink in next.OutboundLinks)
+                foreach (var outboundLink in outLinks(next))
                 {
                     inboundCount[(TNode)outboundLink.Target]--;
 
@@ -34,7 +45,7 @@ namespace CodeModel.Graphs
 
             if (sorted.Count != graph.Nodes.Count())
             {
-                throw new CannotSortGraphException();
+                throw new CannotSortGraphException(graph.Nodes.Except(sorted).ToList(), sorted);
             }
 
             return sorted;

@@ -23,5 +23,11 @@ namespace RuleRunner.Configuration
     public class ReportConfiguration
     {
         public HtmlReport Html { get; set; }
+        public DgmlResult Dgml { get; set; }
+    }
+
+    public class DgmlResult
+    {
+        public string Path { get; set; }
     }
 }
