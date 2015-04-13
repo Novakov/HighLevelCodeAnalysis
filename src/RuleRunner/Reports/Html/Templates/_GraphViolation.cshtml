@@ -12,7 +12,7 @@
     <ul>
         @foreach (var violation in Model.Violations)
         {
-            <li><span class="violation-name">@violation.Name</span></li>
+            <li><span class="violation-name">@violation.DisplayText</span></li>
         }
     </ul>
 }

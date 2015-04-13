@@ -14,7 +14,7 @@ namespace CodeModel.RuleEngine
             get { return this.GetType().Name; }
         }
 
-        public string DisplayText
+        public virtual string DisplayText
         {
             get { return this.FormatDisplayTextWith(new DefaultFormatter(CultureInfo.CurrentUICulture)); }
         }

@@ -6,8 +6,8 @@ using CodeModel.Dependencies;
 namespace CodeModel.Primitives.Mutators
 {
     [Provide(Resources.InlinedImplementations)]
-    [Need(Resources.ImplementsLink)]
-    [OptionalNeed(Resources.Types, Resources.LinkToContainer, Resources.Methods, Resources.MethodCallLinks)]
+    [Need(Resources.ImplementsLink, Resources.LinkToContainer)]
+    [OptionalNeed(Resources.Types, Resources.LinkToContainer, Resources.Methods, Resources.MethodCallLinks, Resources.Dependencies)]
     public class ReplaceInterfaceWithImplementation : ICompositeMutator
     {
         public void Mutate(CodeModelBuilder bulder)

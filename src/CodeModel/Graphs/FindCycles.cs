@@ -8,11 +8,17 @@ namespace CodeModel.Graphs
         where TNode : Node
         where TLink : Link
     {
+        public Func<TNode, bool> NodeFilter { get; set; }
+        public Func<TNode, IEnumerable<IGrouping<TNode, TLink>>> OutboundTargets { get; set; }
+
         public IEnumerable<IEnumerable<TNode>> Find(Graph<TNode, TLink> graph)
         {
             var cycles = new HashSet<IList<TNode>>(new CyclePathComparer());
 
-            foreach (var startNode in graph.Nodes)
+            var nodeFilter = this.NodeFilter ?? (n => true);
+            var outboundTarget = this.OutboundTargets ?? (n => n.OutboundLinks.OfType<TLink>().GroupBy(x => (TNode)x.Target));
+
+            foreach (var startNode in graph.Nodes.Where(nodeFilter))
             {
                 var path = new Stack<TNode>();
 
@@ -22,7 +28,7 @@ namespace CodeModel.Graphs
                     LeavingNode = (node, availableThrough) => path.Pop(),
                     OutboundTargets = node =>
                     {
-                        var targets = node.OutboundLinks.OfType<TLink>().GroupBy(x => x.Target).ToList();
+                        var targets = outboundTarget((TNode) node).ToList();
 
                         foreach (var target in targets.ToList())
                         {
@@ -33,12 +39,12 @@ namespace CodeModel.Graphs
                                 var cycle = path.Reverse().ToList();
                                 cycles.Add(cycle);
                             }
-                            else if(path.Contains(target.Key))
+                            else if (path.Contains(target.Key))
                             {
                                 targets.Remove(target);
                             }
                         }
-
+                     
                         return targets;
                     }
                 };

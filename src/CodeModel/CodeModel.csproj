@@ -75,6 +75,7 @@
     <Compile Include="Builder\MutateContext.cs" />
     <Compile Include="Conventions\IApplicationEntryPointConvention.cs" />
     <Compile Include="Conventions\IConvention.cs" />
+    <Compile Include="Conventions\IDependencyConvention.cs" />
     <Compile Include="Conventions\IImmutablityConvention.cs" />
     <Compile Include="Conventions\IImplementingConvention.cs" />
     <Compile Include="Dependencies\DependencyManager.cs" />
@@ -124,10 +125,12 @@
     <Compile Include="LambdaComparer.cs" />
     <Compile Include="Primitives\ApplicationEntryCall.cs" />
     <Compile Include="Primitives\ContainedInLink.cs" />
+    <Compile Include="Primitives\DependencyLink.cs" />
     <Compile Include="Primitives\GetFieldLink.cs" />
     <Compile Include="Primitives\GetPropertyLink.cs" />
     <Compile Include="Primitives\ImplementsLink.cs" />
     <Compile Include="Primitives\MethodCallLink.cs" />
+    <Compile Include="Primitives\Mutators\LinkTypeDependencies.cs" />
     <Compile Include="Primitives\SetFieldLink.cs" />
     <Compile Include="Primitives\SetPropertyLink.cs" />
     <Compile Include="ModelExtensions.cs" />
@@ -173,6 +176,7 @@
     <Compile Include="Rules\ImmutableTypeSetsPropertyOutsideOfConstructorViolation.cs" />
     <Compile Include="RuleEngine\INodeRule.cs" />
     <Compile Include="RuleEngine\IRule.cs" />
+    <Compile Include="Rules\NoCyclesInDependenciesRule.cs" />
     <Compile Include="Rules\TypeIsImmutable.cs" />
     <Compile Include="RuleEngine\VerificationContext.cs" />
     <Compile Include="RuleEngine\Violation.cs" />
