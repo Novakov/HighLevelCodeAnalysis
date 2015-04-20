@@ -5,12 +5,13 @@ using System.Reflection.Emit;
 using CodeModel.Builder;
 using CodeModel.Dependencies;
 using CodeModel.MonadicParser;
+using CodeModel.Primitives;
 using Mono.Reflection;
 
 namespace CodeModel.Extensions.Nancy.Mutators
 {
     [Provide(NancyResources.Actions)]
-    [Need(NancyResources.Modules)]
+    [Need(NancyResources.Modules, Resources.Methods)]
     public class DetectNancyRoutes : INodeMutator<NancyModuleNode>
     {
         public void Mutate(NancyModuleNode node, IMutateContext context)
@@ -23,7 +24,9 @@ namespace CodeModel.Extensions.Nancy.Mutators
 
             foreach (var route in routes)
             {
-                context.AddNode(new NancyRouteNode(route.Method, route.Path, route.RouteBuilder.Name.Substring(4)));
+                var methodNode = context.FindNode<MethodNode>(x => x.Method == route.Method);
+
+                context.ReplaceNode(methodNode, new NancyRouteNode(route.Method, route.Path, route.RouteBuilder.Name.Substring(4)));
             }            
         }
 

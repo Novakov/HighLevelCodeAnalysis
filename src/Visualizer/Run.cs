@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using CodeModel.Builder;
@@ -25,6 +26,8 @@ namespace Visualizer
         {
             Log.Info("Executing run");
 
+            AppDomain.CurrentDomain.AssemblyResolve += CurrentDomainOnAssemblyResolve;
+
             Log.Info("Loading extensions");
 
             foreach (var assembly in this.config.ExtensionAssemblies)
@@ -35,10 +38,24 @@ namespace Visualizer
 
             foreach (var output in this.config.Outputs)
             {
-                GenerateOutput(output);                
+                GenerateOutput(output);
             }
 
             Log.Info("Run finished");
+        }
+
+        private Assembly CurrentDomainOnAssemblyResolve(object sender, ResolveEventArgs args)
+        {
+            Log.Trace("Resolving assembly {0}", args.Name);
+
+            var name = new AssemblyName(args.Name);
+
+            return this.config
+                .ResolvePaths
+                .Select(x => Path.Combine(x, name.Name + ".dll"))                
+                .Where(File.Exists)
+                .Select(Assembly.LoadFrom)
+                .FirstOrDefault();
         }
 
         private void GenerateOutput(OutputConfiguration output)
@@ -47,7 +64,7 @@ namespace Visualizer
 
             var modelBuilder = SetUpCodeModelBuilder();
             RunList<StepDescriptor> runlist;
-            
+
             try
             {
                 runlist = BuildRunlist(modelBuilder, output.Resources);
@@ -67,7 +84,7 @@ namespace Visualizer
 
             Log.Info("Model built");
 
-            var outputType = Type.GetType(typeof (IOutput).Namespace + "." + output.Type.CamelCase() + "Output");
+            var outputType = Type.GetType(typeof(IOutput).Namespace + "." + output.Type.CamelCase() + "Output");
 
             var outputer = (IOutput)Activator.CreateInstance(outputType); //FIXME: just fix...
 
@@ -102,7 +119,7 @@ namespace Visualizer
 
             var dependencyNetwork = new DependencyManager<StepDescriptor>(x => x.Provides, x => x.Needs, x => x.OptionalNeeds);
 
-            dependencyNetwork.AddRange(mutators);           
+            dependencyNetwork.AddRange(mutators);
             dependencyNetwork.Add(finalResourcesStep);
             dependencyNetwork.RequireElements(finalResourcesStep);
 

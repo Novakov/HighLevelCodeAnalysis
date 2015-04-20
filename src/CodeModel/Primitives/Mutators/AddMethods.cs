@@ -9,7 +9,7 @@ namespace CodeModel.Primitives.Mutators
     [Need(Resources.Types)]
     public class AddMethods : INodeMutator<TypeNode>
     {
-        public const BindingFlags DefaultFlags = BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public;
+        public const BindingFlags DefaultFlags = BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic;
 
         public BindingFlags Flags { get; set; }
 
