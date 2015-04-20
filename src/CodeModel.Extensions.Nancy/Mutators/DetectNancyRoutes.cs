@@ -3,11 +3,14 @@ using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
 using CodeModel.Builder;
+using CodeModel.Dependencies;
 using CodeModel.MonadicParser;
 using Mono.Reflection;
 
-namespace CodeModel.Extensions.Nancy
+namespace CodeModel.Extensions.Nancy.Mutators
 {
+    [Provide(NancyResources.Actions)]
+    [Need(NancyResources.Modules)]
     public class DetectNancyRoutes : INodeMutator<NancyModuleNode>
     {
         public void Mutate(NancyModuleNode node, IMutateContext context)

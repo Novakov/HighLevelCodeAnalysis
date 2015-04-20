@@ -45,6 +45,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeModel.Extensions.Domain
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeModel.Extensions.Nancy", "CodeModel.Extensions.Nancy\CodeModel.Extensions.Nancy.csproj", "{92D771A8-DA4D-4E10-AA8C-6A0942819B1C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Visualizer", "Visualizer\Visualizer.csproj", "{9FC86CA3-2CC2-442E-A87E-322236169D73}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -99,6 +101,10 @@ Global
 		{92D771A8-DA4D-4E10-AA8C-6A0942819B1C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{92D771A8-DA4D-4E10-AA8C-6A0942819B1C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{92D771A8-DA4D-4E10-AA8C-6A0942819B1C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9FC86CA3-2CC2-442E-A87E-322236169D73}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9FC86CA3-2CC2-442E-A87E-322236169D73}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9FC86CA3-2CC2-442E-A87E-322236169D73}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9FC86CA3-2CC2-442E-A87E-322236169D73}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -116,5 +122,6 @@ Global
 		{3C45E4BC-7D2F-4B42-BB55-652ED0573FFD} = {B53EF507-EBDA-4C8D-BF0A-01FAAE663C74}
 		{65F7BF26-F7A4-4945-9416-5808A8F59E0D} = {B270694A-5360-46A2-AAEE-B4FADF1654CA}
 		{92D771A8-DA4D-4E10-AA8C-6A0942819B1C} = {B270694A-5360-46A2-AAEE-B4FADF1654CA}
+		{9FC86CA3-2CC2-442E-A87E-322236169D73} = {B53EF507-EBDA-4C8D-BF0A-01FAAE663C74}
 	EndGlobalSection
 EndGlobal
