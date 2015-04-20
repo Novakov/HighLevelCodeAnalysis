@@ -38,6 +38,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Mono.Reflection.1.0.0.0\lib\Mono.Reflection.dll</HintPath>
     </Reference>
+    <Reference Include="Nancy">
+      <HintPath>..\packages\Nancy.1.1\lib\net40\Nancy.dll</HintPath>
+    </Reference>
     <Reference Include="nunit.framework">
       <HintPath>..\packages\NUnit.2.6.3\lib\nunit.framework.dll</HintPath>
     </Reference>
@@ -97,6 +100,7 @@
     <Compile Include="Extensions\DomainModel\DoNotReferenceAggregateDirectlyRuleTest.cs" />
     <Compile Include="Extensions\DomainModel\MutatorsTest.cs" />
     <Compile Include="Extensions\EventSourcing\EventSourcingTest.cs" />
+    <Compile Include="Extensions\Nancy\MutatorTests.cs" />
     <Compile Include="FlowAnalysisTests\Bugs.cs" />
     <Compile Include="FlowAnalysisTests\CalculateStackHeightsTest.cs" />
     <Compile Include="FlowAnalysisTests\CallParameterTypesRecorderTest.cs" />
@@ -112,6 +116,7 @@
     <Compile Include="GraphTests\GraphTest.cs" />
     <Compile Include="GraphTests\GraphViewTest.cs" />
     <Compile Include="GraphTests\TopologySortTest.cs" />
+    <Compile Include="MonadicParserTests\MonadicParserTest.cs" />
     <Compile Include="NodeTest.cs" />
     <Compile Include="PredicateBuilderTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -146,6 +151,10 @@
     <ProjectReference Include="..\CodeModel.Extensions.EventSourcing\CodeModel.Extensions.EventSourcing.csproj">
       <Project>{ee94106e-b911-4e33-a19a-0c2dad04bd71}</Project>
       <Name>CodeModel.Extensions.EventSourcing</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CodeModel.Extensions.Nancy\CodeModel.Extensions.Nancy.csproj">
+      <Project>{92d771a8-da4d-4e10-aa8c-6a0942819b1c}</Project>
+      <Name>CodeModel.Extensions.Nancy</Name>
     </ProjectReference>
     <ProjectReference Include="..\CodeModel\CodeModel.csproj">
       <Project>{F585754A-EE95-491A-A9CA-E2FA417B992F}</Project>

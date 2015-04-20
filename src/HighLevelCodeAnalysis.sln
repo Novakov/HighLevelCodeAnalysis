@@ -43,6 +43,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RuleRunner", "RuleRunner\Ru
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeModel.Extensions.DomainModel", "CodeModel.Extensions.DomainModel\CodeModel.Extensions.DomainModel.csproj", "{65F7BF26-F7A4-4945-9416-5808A8F59E0D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeModel.Extensions.Nancy", "CodeModel.Extensions.Nancy\CodeModel.Extensions.Nancy.csproj", "{92D771A8-DA4D-4E10-AA8C-6A0942819B1C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -93,6 +95,10 @@ Global
 		{65F7BF26-F7A4-4945-9416-5808A8F59E0D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{65F7BF26-F7A4-4945-9416-5808A8F59E0D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{65F7BF26-F7A4-4945-9416-5808A8F59E0D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{92D771A8-DA4D-4E10-AA8C-6A0942819B1C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{92D771A8-DA4D-4E10-AA8C-6A0942819B1C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{92D771A8-DA4D-4E10-AA8C-6A0942819B1C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{92D771A8-DA4D-4E10-AA8C-6A0942819B1C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -109,5 +115,6 @@ Global
 		{CFCD8DAA-3C30-451E-BAC5-F81210586356} = {6E18EB8C-5739-4EE6-A0DD-D08E2C91A9D1}
 		{3C45E4BC-7D2F-4B42-BB55-652ED0573FFD} = {B53EF507-EBDA-4C8D-BF0A-01FAAE663C74}
 		{65F7BF26-F7A4-4945-9416-5808A8F59E0D} = {B270694A-5360-46A2-AAEE-B4FADF1654CA}
+		{92D771A8-DA4D-4E10-AA8C-6A0942819B1C} = {B270694A-5360-46A2-AAEE-B4FADF1654CA}
 	EndGlobalSection
 EndGlobal

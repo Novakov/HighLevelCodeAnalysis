@@ -14,7 +14,7 @@ let nunitParameters (defaults:NUnitParams) = { defaults with
                                                 ShowLabels = false
                                                 WorkingDir = tests
                                                 OutputFile = tests @@ "TestResult.xml"
-                                                DisableShadowCopy = true    
+                                                DisableShadowCopy = true                                                    
 }
 
 Target "Clean" (fun _ ->
@@ -27,6 +27,7 @@ Target "Build" (fun _ ->
                                 Targets = ["Build"]                                
                                 Properties = [
                                              "OutputPath", binaries |> trimSeparator
+                                             "Configuration", "Release"
                                 ]                                
     }
 

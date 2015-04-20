@@ -123,6 +123,9 @@
     <Compile Include="IAnnotable.cs" />
     <Compile Include="Dependencies\IDynamicNeed.cs" />
     <Compile Include="LambdaComparer.cs" />
+    <Compile Include="MonadicParser\IlParser.cs" />
+    <Compile Include="MonadicParser\ParserCombinators.cs" />
+    <Compile Include="MonadicParser\Parsers.cs" />
     <Compile Include="Primitives\ApplicationEntryCall.cs" />
     <Compile Include="Primitives\ContainedInLink.cs" />
     <Compile Include="Primitives\DependencyLink.cs" />

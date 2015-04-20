@@ -27,6 +27,8 @@ namespace CodeModel.Extensions.AspNetMvc.Mutators
                     context.ReplaceNode(node, new ControllerNode(node.Type));
                 }
             }
+
+            // TODO: Raise warning
         }
     }
 }
