@@ -10,3 +10,4 @@ build
 src/packages/OpenCover.*/SampleSln
 src/packages/OpenCover.*/Samples
 src/packages/OpenCover.*/docs
+src/packages/FAKE.Core.*/docs

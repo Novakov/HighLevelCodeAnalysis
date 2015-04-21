@@ -1,0 +1,8 @@
+version: 1.0.{build}
+skip_tags: true
+build_script:
+- cd src
+- build.cmd
+test: off
+artifacts:
+- path: build\**\*.*
