@@ -9,6 +9,7 @@ using CodeModel.Extensions.Nancy;
 using CodeModel.Extensions.Nancy.Mutators;
 using CodeModel.MonadicParser;
 using CodeModel.Primitives;
+using CodeModel.Primitives.Mutators;
 using Mono.Reflection;
 using NUnit.Framework;
 using Tests.Constraints;
@@ -46,7 +47,12 @@ namespace Tests.Extensions.Nancy
         {
             // arrange
             this.Builder.Model.AddNode(new TypeNode(typeof(MyModule)));
+            foreach (var nestedType in typeof(MyModule).GetNestedTypes(BindingFlags.NonPublic))
+            {
+                this.Builder.Model.AddNode(new TypeNode(nestedType));
+            }
             this.Builder.RunMutator<DetectNancyModules>();
+            this.Builder.RunMutator<AddMethods>();
 
             // act
             this.Builder.RunMutator<DetectNancyRoutes>();

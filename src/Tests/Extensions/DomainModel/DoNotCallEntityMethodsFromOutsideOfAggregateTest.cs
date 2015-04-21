@@ -158,6 +158,7 @@ namespace Tests.Extensions.DomainModel
             Builder.Model.AddNode(new TypeNode(typeof(Person)));
             Builder.Model.AddNode(new TypeNode(typeof(OtherAggregate)));
             Builder.Model.AddNode(new TypeNode(typeof(SomeOtherEntity)));
+            Builder.Model.AddNode(new TypeNode(typeof(ThirdAggregate)));
 
             BuildModel();
 
@@ -165,7 +166,7 @@ namespace Tests.Extensions.DomainModel
             this.Verify(Builder);
 
             // assert          
-            var doSomethingOnEntityInAggregate = Builder.Model.GetNodeForMethod(Get.MethodOf<OrganizationUnit>(x => x.DoSomethingOnEntityInAggregate(null)));
+            var doSomethingOnEntityInAggregate = Builder.Model.GetNodeForMethod(Get.MethodOf<ThirdAggregate>(x => x.DoSomethingOnEntityInAggregate(null)));
             var doSomething = Builder.Model.GetNodeForMethod(Get.MethodOf<SomeOtherEntity>(x => x.DoSomething()));
 
             Assert.That(this.VerificationContext.Violations, Has

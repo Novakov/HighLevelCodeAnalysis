@@ -46,8 +46,11 @@ namespace TestTarget.DomainModel
         public void LetManagerKnow()
         {
             this.Manager.DoSomething();
-        }
+        }      
+    }
 
+    public class ThirdAggregate : EntityBase, IAggregate
+    {
         public void DoSomethingOnEntityInAggregate(OtherAggregate other)
         {
             other.OtherEntity.DoSomething();

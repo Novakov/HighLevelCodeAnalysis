@@ -1,6 +1,7 @@
 #r "packages/FAKE.3.2.0/tools/FakeLib.dll"
 open Fake
 open Fake.OpenCoverHelper
+open Fake.AppVeyor
 
 let buildDir = "..\\build" |> FullName
 let binaries = buildDir @@ "binaries"
@@ -16,6 +17,11 @@ let nunitParameters (defaults:NUnitParams) = { defaults with
                                                 OutputFile = tests @@ "TestResult.xml"
                                                 DisableShadowCopy = true                                                    
 }
+
+TraceEnvironmentVariables()
+
+if buildServer = BuildServer.AppVeyor then
+    MSBuildLoggers <- @"""C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll""" :: MSBuildLoggers
 
 Target "Clean" (fun _ ->
     CleanDir buildDir
@@ -39,7 +45,7 @@ Target "Tests" (fun _ ->
 
     !! (binaries @@ "Tests.dll" )
     |> NUnit nunitParameters
-    |> DoNothing
+    |> DoNothing    
 )
 
 Target "TestsWithCoverage" (fun _ ->
