@@ -4,6 +4,7 @@ using CodeModel.RuleEngine;
 
 namespace CodeModel.Rules
 {
+    [Violation(DisplayText = "Property {ViolatingProperty} has non private setter")]
     public class ImmutableTypeHasNonPrivateSetterViolation : Violation, INodeViolation
     {
         public PropertyNode ViolatingProperty { get; private set; }

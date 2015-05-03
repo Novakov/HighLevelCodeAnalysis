@@ -1,9 +1,12 @@
 using CodeModel.Annotations;
 using CodeModel.Builder;
 using CodeModel.Conventions;
+using CodeModel.Dependencies;
 
 namespace CodeModel.Primitives.Mutators
 {
+    [Provide(Resources.ImmutableAnnotation)]
+    [Need(Resources.Types)]
     public class AnnonateImmutableTypes : INodeMutator<TypeNode>
     {
         private readonly IImmutablityConvention convention;
@@ -15,7 +18,7 @@ namespace CodeModel.Primitives.Mutators
 
         public void Mutate(TypeNode node, IMutateContext context)
         {
-            if (convention.IsImmutableType(node))
+            if (this.convention.IsImmutableType(node))
             {
                 node.Annonate(new Immutable());
             }

@@ -11,7 +11,7 @@ using CodeModel.Extensions.DomainModel.Mutators;
 namespace Tests.Extensions.DomainModel
 {
     [TestFixture]
-    public class DoNotCallEntityMethodsFromOutsideOfAggregateTest : BaseRuleTest<DoNotCallEntityMethodsFromOutsideOfAggregateRule>, IHaveBuilder
+    public class DoNotCallEntityMethodsFromOutsideOfAggregateTest : BaseRuleTest<DoNotCallEntityMethodsFromOutsideOfAggregate>, IHaveBuilder
     {
         public CodeModelBuilder Builder { get; private set; }
 

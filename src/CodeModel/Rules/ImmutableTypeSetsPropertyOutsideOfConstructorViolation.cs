@@ -4,6 +4,7 @@ using CodeModel.RuleEngine;
 
 namespace CodeModel.Rules
 {
+    [Violation(DisplayText = "{ViolatingMethod} sets property value")]
     public class ImmutableTypeSetsPropertyOutsideOfConstructorViolation : Violation, INodeViolation
     {
         public MethodNode ViolatingMethod { get; private set; }
@@ -12,7 +13,7 @@ namespace CodeModel.Rules
         public ImmutableTypeSetsPropertyOutsideOfConstructorViolation(TypeNode violatingType, MethodNode violatingMethod)            
         {
             this.Node = violatingType;
-            ViolatingMethod = violatingMethod;
+            this.ViolatingMethod = violatingMethod;
         }
     }
 }

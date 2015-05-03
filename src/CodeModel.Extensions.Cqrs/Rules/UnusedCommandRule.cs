@@ -25,7 +25,7 @@ namespace CodeModel.Extensions.Cqrs.Rules
                     var commandNode = node as CommandNode;
                     if (commandNode != null && links.OfType<ExecuteCommandLink>().Any())
                     {
-                        unusedCommands.Remove(commandNode);
+                        this.unusedCommands.Remove(commandNode);
                     }
                 }
             };

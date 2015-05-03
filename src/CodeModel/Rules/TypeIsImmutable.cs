@@ -2,12 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using CodeModel.Annotations;
+using CodeModel.Dependencies;
 using CodeModel.Graphs;
 using CodeModel.Primitives;
 using CodeModel.RuleEngine;
 
 namespace CodeModel.Rules
 {
+    [Need(Resources.ImmutableAnnotation, Resources.Properties, Resources.Fields, Resources.Methods, Resources.LinkToContainer, Resources.PropertyAccessLinks, Resources.FieldAccessLinks)]
     public class TypeIsImmutable : INodeRule
     {
         public IEnumerable<Violation> Verify(VerificationContext context, Node node)

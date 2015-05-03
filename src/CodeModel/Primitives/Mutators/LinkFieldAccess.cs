@@ -2,10 +2,13 @@ using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
 using CodeModel.Builder;
+using CodeModel.Dependencies;
 using Mono.Reflection;
 
 namespace CodeModel.Primitives.Mutators
 {
+    [Provide(Resources.FieldAccessLinks)]
+    [Need(Resources.Fields, Resources.Methods)]
     public class LinkFieldAccess : INodeMutator<MethodNode>
     {
         public void Mutate(MethodNode node, IMutateContext context)

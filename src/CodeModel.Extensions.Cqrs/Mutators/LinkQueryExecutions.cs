@@ -1,9 +1,12 @@
 using System.Linq;
 using CodeModel.Builder;
+using CodeModel.Dependencies;
 using CodeModel.Primitives;
 
 namespace CodeModel.Extensions.Cqrs.Mutators
 {
+    [Need(Resources.Methods, Resources.MethodCallLinks, CqrsResources.Queries)]
+    [Provide(CqrsResources.QueryExecutionLinks)]
     public class LinkQueryExecutions : INodeMutator<MethodNode>
     {
         private readonly ICqrsConvention convention;

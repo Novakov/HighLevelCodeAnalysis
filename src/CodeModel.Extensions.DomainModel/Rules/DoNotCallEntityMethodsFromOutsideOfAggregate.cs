@@ -7,7 +7,7 @@ using CodeModel.RuleEngine;
 
 namespace CodeModel.Extensions.DomainModel.Rules
 {
-    public class DoNotCallEntityMethodsFromOutsideOfAggregateRule : INodeRule, IRuleWithBootstrap
+    public class DoNotCallEntityMethodsFromOutsideOfAggregate : INodeRule, IRuleWithBootstrap
     {
         private Dictionary<MethodNode, AggregateNode> aggregateForMethod;
 

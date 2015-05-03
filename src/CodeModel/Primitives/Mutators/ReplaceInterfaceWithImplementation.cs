@@ -29,6 +29,11 @@ namespace CodeModel.Primitives.Mutators
             {
                 var containedIn = (TypeNode)node.GetContainer();
 
+                if (containedIn.Type.IsInterface)
+                {
+                    return;
+                }
+
                 var implementedInterfaces = containedIn.OutboundLinks.OfType<ImplementsLink>();
 
                 foreach (var implementedInterface in implementedInterfaces)

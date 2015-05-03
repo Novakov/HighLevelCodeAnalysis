@@ -4,6 +4,7 @@ using CodeModel.RuleEngine;
 
 namespace CodeModel.Rules
 {
+    [Violation(DisplayText = "Method {ViolatingMethod} sets field")]
     public class ImmutableTypeSetsFieldOutsideOfConstructorViolation : Violation, INodeViolation
     {
         public MethodNode ViolatingMethod { get; private set; }

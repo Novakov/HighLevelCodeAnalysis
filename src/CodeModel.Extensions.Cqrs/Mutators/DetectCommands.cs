@@ -22,7 +22,7 @@ namespace CodeModel.Extensions.Cqrs.Mutators
                 return;
             }
 
-            if (convention.IsCommand(node))
+            if (this.convention.IsCommand(node))
             {
                 context.ReplaceNode(node, new CommandNode(node.Type));
             }

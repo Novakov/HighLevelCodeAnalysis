@@ -1,8 +1,11 @@
 ﻿using CodeModel.Builder;
+using CodeModel.Dependencies;
 using CodeModel.Primitives;
 
 namespace CodeModel.Extensions.Cqrs.Mutators
 {
+    [Need(Resources.Types)]
+    [Provide(CqrsResources.Queries)]
     public class DetectQueries : INodeMutator<TypeNode>
     {
         private readonly ICqrsConvention convention;
@@ -19,7 +22,7 @@ namespace CodeModel.Extensions.Cqrs.Mutators
                 return;
             }
 
-            if (convention.IsQuery(node))
+            if (this.convention.IsQuery(node))
             {
                 context.ReplaceNode(node, new QueryNode(node.Type));
             }

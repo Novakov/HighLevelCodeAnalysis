@@ -60,6 +60,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="QueryExecutionLink.cs" />
     <Compile Include="QueryNode.cs" />
+    <Compile Include="Rules\CommandHandlerExecutesQueryViolation.cs" />
+    <Compile Include="Rules\DoNotUseQueriesInCommandHandlers.cs" />
     <Compile Include="Rules\InvokeOnlyOneCommandInMethod.cs" />
     <Compile Include="Rules\MethodCanLeadToExecutionOfMoreThanOneCommandViolation.cs" />
     <Compile Include="Rules\MethodExecutesMoreThanOneCommandViolation.cs" />

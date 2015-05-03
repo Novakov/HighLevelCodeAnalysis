@@ -7,6 +7,7 @@ using CodeModel;
 using CodeModel.Builder;
 using CodeModel.Dependencies;
 using CodeModel.Extensions.DgmlExport;
+using CodeModel.Graphs;
 using CodeModel.Primitives;
 using CodeModel.Primitives.Mutators;
 using CodeModel.RuleEngine;
@@ -28,6 +29,7 @@ namespace RuleRunner
         private RunList<StepDescriptor> runlist;
         private Verificator verificator;
         private VerificationContext verificationContext;
+        private List<Assembly> toolkitAssemblies; 
 
         private HtmlReport Report { get { return this.config.Reports.Html; } }
 
@@ -43,6 +45,8 @@ namespace RuleRunner
             AppDomain.CurrentDomain.AssemblyResolve += CurrentDomainOnAssemblyResolve;
 
             this.Report.Configuration(this.config);
+
+            this.toolkitAssemblies = new List<Assembly>();
 
             LoadExtensions();
 
@@ -68,12 +72,16 @@ namespace RuleRunner
 
         private void LoadExtensions()
         {
+            this.toolkitAssemblies.Add(typeof(Graph).Assembly);
+
             foreach (var path in this.config.ExtensionAssemblies)
             {
                 Log.Info("Loading extension {0}", path);
                 var extensionAssembly = Assembly.LoadFrom(path);
 
                 this.Report.LoadedExtension(extensionAssembly);
+
+                this.toolkitAssemblies.Add(extensionAssembly);
             }
         }
 
@@ -128,7 +136,13 @@ namespace RuleRunner
         {
             Log.Trace("Resolving assembly {0}", args.Name);
 
-            return null;
+            var name = new AssemblyName(args.Name);
+
+            return this.config.ResolvePaths
+                .Select(x => Path.Combine(x, name.Name + ".dll"))
+                .Where(File.Exists)
+                .Select(Assembly.LoadFrom)
+                .FirstOrDefault();
         }
 
         private void ExportModelAsDgml()
@@ -166,14 +180,20 @@ namespace RuleRunner
             Log.Trace("Adding assemblies to model");
             this.modelBuilder.RunMutator(new AddAssemblies(this.assembliesToAnalyze));
 
+            var enabledRules = this.toolkitAssemblies
+               .SelectMany(x => x.GetTypes())
+               .Where(x => typeof(IRule).IsAssignableFrom(x) && x.IsClass && !x.IsAbstract)
+               .Where(x => !this.config.DisabledRules.Contains(x.Name))
+               .ToList();
+
+            Log.Info("Enabled rules: {0}", string.Join(", ", enabledRules.Select(x => x.Name)));
+
             var mutators = AppDomain.CurrentDomain.GetAssemblies()
                 .SelectMany(x => x.GetTypes())
                 .Where(x => typeof(IMutator).IsAssignableFrom(x) && x.IsClass && !x.IsAbstract)
                 .Select(x => new StepDescriptor(this.modelBuilder, x));
-
-            var rules = AppDomain.CurrentDomain.GetAssemblies()
-                .SelectMany(x => x.GetTypes())
-                .Where(x => typeof(IRule).IsAssignableFrom(x) && x.IsClass && !x.IsAbstract)
+           
+            var rules = enabledRules
                 .Select(x => new StepDescriptor(this.modelBuilder, x))
                 .ToList();
 

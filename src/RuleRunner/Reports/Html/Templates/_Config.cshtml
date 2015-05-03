@@ -23,3 +23,11 @@
         <li>@assembly.Name</li>
     }
 </ul>
+
+<h2>Disabled rules</h2>
+<ul>
+    @foreach (var rule in Model.Configuration.DisabledRules)
+    {
+        <li>@rule</li>
+    }
+</ul>

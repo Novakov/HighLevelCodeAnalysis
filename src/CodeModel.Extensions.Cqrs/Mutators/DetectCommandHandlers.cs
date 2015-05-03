@@ -1,8 +1,11 @@
 ﻿using CodeModel.Builder;
+using CodeModel.Dependencies;
 using CodeModel.Primitives;
 
 namespace CodeModel.Extensions.Cqrs.Mutators
 {
+    [Need(Resources.Methods)]
+    [Provide(CqrsResources.CommandHandlers)]
     public class DetectCommandHandlers : INodeMutator<MethodNode>
     {
         private readonly ICqrsConvention convention;
@@ -19,7 +22,7 @@ namespace CodeModel.Extensions.Cqrs.Mutators
                 return;
             }
 
-            if (convention.IsCommandHandlerMethod(node.Method))
+            if (this.convention.IsCommandHandlerMethod(node.Method))
             {
                context.ReplaceNode(node, new CommandHandlerNode(node.Method, convention.GetHandledCommand(node.Method))); 
             }
